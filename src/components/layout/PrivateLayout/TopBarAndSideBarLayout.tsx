@@ -8,15 +8,16 @@ import {
   SIDE_BAR_WIDTH,
   TOP_BAR_DESKTOP_HEIGHT,
   TOP_BAR_MOBILE_HEIGHT
-} from './config'
+} from '../config'
 import { LinkToPage } from '~/types/common'
 import AppIconButton from '~/components/common/AppIconButton'
 import { useIsMobile } from '~/hooks/layout'
-import SideBar, { SideBarProps } from '~/components/layout/components/SideBar'
-import { TopBar } from '~/components/layout/components'
 import ErrorBoundary from '~/components/common/ErrorBoundary'
-import { useAppStore } from '~/store'
 import { useEventSwitchDarkMode } from '~/hooks/event'
+import { useSelector } from 'react-redux'
+import { RootState } from '~/store/store'
+import SideBar, { SideBarProps } from '~/components/layout/PrivateLayout/components/SideBar'
+import TopBar from '~/components/layout/PrivateLayout/components/TopBar'
 
 interface Props extends StackProps {
   sidebarItems: Array<LinkToPage>
@@ -29,7 +30,8 @@ interface Props extends StackProps {
  * @layout TopBarAndSideBarLayout
  */
 const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarItems, title, variant }) => {
-  const [state] = useAppStore()
+  const mode = useSelector((state: RootState) => state.theme.mode)
+  const isDarkMode = mode === 'dark'
   const [sidebarVisible, setSidebarVisible] = useState(false) // TODO: Verify is default value is correct
   const onMobile = useIsMobile()
   const onSwitchDarkMode = useEventSwitchDarkMode()
@@ -88,9 +90,9 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarIte
 
   const DarkModeButton = (
     <AppIconButton
-      icon={state.darkMode ? 'day' : 'night'} // Variant 1
+      icon={isDarkMode ? 'day' : 'night'} // Variant 1
       // icon="daynight" // Variant 2
-      title={state.darkMode ? 'Switch to Light mode' : 'Switch to Dark mode'}
+      title={isDarkMode ? 'Switch to Light mode' : 'Switch to Dark mode'}
       onClick={onSwitchDarkMode}
     />
   )
@@ -103,7 +105,7 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarIte
   IS_DEBUG &&
     console.log('Render <TopbarAndSidebarLayout/>', {
       onMobile,
-      darkMode: state.darkMode,
+      darkMode: isDarkMode,
       sidebarProps
     })
 

@@ -1,9 +1,10 @@
 import { FunctionComponent, PropsWithChildren } from 'react'
 import { IS_DEBUG } from '~/config'
-import TopBarAndSideBarLayout from './TopBarAndSideBarLayout'
 import { LinkToPage } from '~/types/common'
+import Stack from '@mui/material/Stack'
+import TopBarAndSideBarLayout from '~/components/layout/PrivateLayout/TopBarAndSideBarLayout'
 
-const TITLE_PRIVATE = '_TITLE_' // Title for pages after authentication
+const TITLE_PRIVATE = 'Weebuns | ENGLISH E LEARNING'
 
 /**
  * SideBar navigation items with links for Private Layout
@@ -45,12 +46,12 @@ IS_DEBUG &&
  */
 const PrivateLayout: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const title = TITLE_PRIVATE
-  document.title = title // Also Update Tab Title  // TODO: Do we need this? Move it to useEffect()?
+  document.title = title
 
   return (
     <TopBarAndSideBarLayout sidebarItems={SIDE_BAR_ITEMS} title={title} variant='sidebarPersistentOnDesktop'>
       {children}
-      {/* <Stack component="footer">Copyright &copy; </Stack> */}
+      <Stack component='footer'>Copyright &copy; by Javier</Stack>
     </TopBarAndSideBarLayout>
   )
 }

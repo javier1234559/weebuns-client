@@ -1,16 +1,16 @@
 import { Typography } from '@mui/material'
 import AppLink from '~/components/common/AppLink'
-import AppView from '~/components/common/AppView'
 
 /**
- * Renders "Welcome" view
+ * Renders "Landing" page
  * url: /
- * @page Welcome
+ * @page Landing
  */
-const WelcomeView = () => {
+const Landing = () => {
   return (
-    <AppView>
-      <Typography variant='h4'>Welcome to React App with MUI</Typography>
+    <>
+      <Typography variant='h1'>Boost your building</Typography>
+      <Typography variant='subtitle1'>Boost your building</Typography>
 
       <div>This is Welcome page, put your content here....</div>
       <div>
@@ -19,8 +19,8 @@ const WelcomeView = () => {
       <div>
         The source code is available at <AppLink href='https://github.com/karpolan/react-mui-vite-ts'>GitHub</AppLink>
       </div>
-    </AppView>
+    </>
   )
 }
 
-export default WelcomeView
+export default Landing

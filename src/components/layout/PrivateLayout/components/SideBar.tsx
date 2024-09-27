@@ -1,13 +1,14 @@
 import { FunctionComponent, useCallback, MouseEvent } from 'react'
 import { Stack, Divider, Drawer, DrawerProps, FormControlLabel, Switch, Tooltip } from '@mui/material'
-import { SIDE_BAR_WIDTH, TOP_BAR_DESKTOP_HEIGHT } from '../config'
 import SideBarNavList from './SideBarNavList'
 import { LinkToPage } from '~/types/common'
-import { useAppStore } from '~/store'
 import { useEventLogout, useIsAuthenticated } from '~/hooks/auth'
 import { useIsMobile } from '~/hooks/layout'
 import { useEventSwitchDarkMode } from '~/hooks/event'
 import AppIconButton from '~/components/common/AppIconButton'
+import { RootState } from '~/store/store'
+import { useSelector } from 'react-redux'
+import { SIDE_BAR_WIDTH, TOP_BAR_DESKTOP_HEIGHT } from '~/components/layout/config'
 
 export interface SideBarProps extends Pick<DrawerProps, 'anchor' | 'className' | 'open' | 'variant' | 'onClose'> {
   items: Array<LinkToPage>
@@ -23,9 +24,8 @@ export interface SideBarProps extends Pick<DrawerProps, 'anchor' | 'className' |
  * @param {function} onClose - called when the Drawer is closing
  */
 const SideBar: FunctionComponent<SideBarProps> = ({ anchor, open, variant, items, onClose, ...restOfProps }) => {
-  const [state] = useAppStore()
-  // const isAuthenticated = state.isAuthenticated; // Variant 1
-  const isAuthenticated = useIsAuthenticated() // Variant 2
+  const state = useSelector((state: RootState) => state)
+  const isAuthenticated = useIsAuthenticated()
   const onMobile = useIsMobile()
 
   const onSwitchDarkMode = useEventSwitchDarkMode()
@@ -82,10 +82,10 @@ const SideBar: FunctionComponent<SideBarProps> = ({ anchor, open, variant, items
             marginTop: 2
           }}
         >
-          <Tooltip title={state.darkMode ? 'Switch to Light mode' : 'Switch to Dark mode'}>
+          <Tooltip title={`Switch to ${state.theme.mode} mode`}>
             <FormControlLabel
-              label={!state.darkMode ? 'Light mode' : 'Dark mode'}
-              control={<Switch checked={state.darkMode} onChange={onSwitchDarkMode} />}
+              label={`${state.theme.mode} mode`}
+              control={<Switch checked={state.theme.mode === 'dark'} onChange={onSwitchDarkMode} />}
             />
           </Tooltip>
 

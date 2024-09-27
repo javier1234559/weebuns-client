@@ -2,12 +2,21 @@ import { FunctionComponent, useMemo, PropsWithChildren, useState, useEffect } fr
 import { ThemeProvider as EmotionThemeProvider } from '@emotion/react'
 import { CssBaseline } from '@mui/material'
 import { createTheme } from '@mui/material/styles'
-// import { useAppStore } from '@/store'
 import DARK_THEME from './dark'
 import LIGHT_THEME from './light'
+import { useSelector } from 'react-redux'
+import { RootState } from '~/store/store'
+import { ThemeKey } from '~/store/themeSlice'
 
-function getThemeByDarkMode(darkMode: boolean) {
-  return darkMode ? createTheme(DARK_THEME) : createTheme(LIGHT_THEME)
+function getThemeByDarkMode(themeState: ThemeKey) {
+  switch (themeState) {
+    case 'light':
+      return createTheme(LIGHT_THEME)
+    case 'dark':
+      return createTheme(DARK_THEME)
+    default:
+      return createTheme(LIGHT_THEME)
+  }
 }
 
 /**
@@ -16,15 +25,11 @@ function getThemeByDarkMode(darkMode: boolean) {
  */
 const AppThemeProvider: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const [loading, setLoading] = useState(true) // True until the component is mounted
-  // const [state] = useAppStore()
+  const mode = useSelector((state: RootState) => state.theme.mode)
 
   useEffect(() => setLoading(false), []) // Set .loading to false when the component is mounted
 
-  // const currentTheme = useMemo(
-  //   () => getThemeByDarkMode(state.darkMode),
-  //   [state.darkMode] // Observe AppStore and re-create the theme when .darkMode changes
-  // )
-  const currentTheme = getThemeByDarkMode(false)
+  const currentTheme = useMemo(() => getThemeByDarkMode(mode), [mode])
 
   if (loading) return null // Don't render anything until the component is mounted
 

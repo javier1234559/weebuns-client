@@ -1,9 +1,12 @@
-import { Card, CardContent, CardHeader, Divider, Grid, Typography } from '@mui/material'
+import { Alert, Box, Button, Card, CardContent, CardHeader, Divider, Grid, Typography } from '@mui/material'
 import AppButton from '~/components/common/AppButton'
 import AppIconButton from '~/components/common/AppIconButton'
 import AppLink from '~/components/common/AppLink'
 import AppView from '~/components/common/AppView'
 import { IS_DEBUG } from '~/config'
+import { OutlinedInput } from '@mui/material'
+import Snackbar from '@mui/material/Snackbar'
+import { useState } from 'react'
 
 /**
  * Renders Development tools when env.REACT_APP_DEBUG is true
@@ -11,13 +14,36 @@ import { IS_DEBUG } from '~/config'
  * @page Dev
  */
 const DevView = () => {
+  const [isOpen, setOpen] = useState(false)
   if (!IS_DEBUG) return null // Hide this page on when env.REACT_APP_DEBUG is not set
+
+  const handleClose = () => {
+    setOpen(false)
+  }
+  const handleClick = () => {
+    setOpen(true)
+  }
 
   return (
     <AppView>
       <Typography variant='h1'>Development Tools</Typography>
       <Typography variant='h2'>Debug controls and components on this page...</Typography>
 
+      <Box sx={{ border: 1, p: 8 }}>
+        <Snackbar
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          open={isOpen}
+          autoHideDuration={6000}
+          onClose={handleClose}
+        >
+          <Alert onClose={handleClose} severity='success' sx={{ width: '100%' }}>
+            This is a success Alert inside a Snackbar!
+          </Alert>
+        </Snackbar>
+        <Button onClick={handleClick}>Open Snackbar</Button>
+        <Typography variant='h3'>Box with border</Typography>
+        <OutlinedInput />
+      </Box>
       <Grid item xs={12} md={6}>
         <Card>
           <CardHeader title='AppLink' />

@@ -1,5 +1,6 @@
 import { ThemeOptions } from '@mui/material'
 import { PALETTE_COLORS } from './colors'
+import { TYPOGRAPHY } from '~/theme/typography'
 
 /**
  * MUI theme options for "Light Mode"
@@ -12,6 +13,9 @@ export const LIGHT_THEME: ThemeOptions = {
     //   paper: '#f5f5f5', // Gray 100 - Background of "Paper" based component
     //   default: '#FFFFFF',
     // },
+  },
+  typography: {
+    ...TYPOGRAPHY
   }
 }
 

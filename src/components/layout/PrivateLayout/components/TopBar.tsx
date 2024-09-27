@@ -1,10 +1,10 @@
-import { FunctionComponent, ReactNode } from 'react';
-import { AppBar, Toolbar, Typography } from '@mui/material';
+import { FunctionComponent, ReactNode } from 'react'
+import { AppBar, Toolbar, Typography } from '@mui/material'
 
 interface Props {
-  endNode?: ReactNode;
-  startNode?: ReactNode;
-  title?: string;
+  endNode?: ReactNode
+  startNode?: ReactNode
+  title?: string
 }
 
 /**
@@ -14,7 +14,7 @@ interface Props {
 const TopBar: FunctionComponent<Props> = ({ endNode, startNode, title = '', ...restOfProps }) => {
   return (
     <AppBar
-      component="div"
+      component='div'
       sx={
         {
           // boxShadow: 'none', // Uncomment to hide shadow
@@ -26,12 +26,12 @@ const TopBar: FunctionComponent<Props> = ({ endNode, startNode, title = '', ...r
         {startNode}
 
         <Typography
-          variant="h6"
+          variant='h6'
           sx={{
             marginX: 1,
             flexGrow: 1,
             textAlign: 'center',
-            whiteSpace: 'nowrap',
+            whiteSpace: 'nowrap'
           }}
         >
           {title}
@@ -40,7 +40,7 @@ const TopBar: FunctionComponent<Props> = ({ endNode, startNode, title = '', ...r
         {endNode}
       </Toolbar>
     </AppBar>
-  );
-};
+  )
+}
 
-export default TopBar;
+export default TopBar

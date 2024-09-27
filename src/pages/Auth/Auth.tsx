@@ -8,7 +8,6 @@ import AppLink from '~/components/common/AppLink'
 
 const AuthView = () => {
   const navigate = useNavigate()
-  // const [, dispatch] = useAppStore()
   const onLogout = useEventLogout()
 
   const onLogin = () => {
