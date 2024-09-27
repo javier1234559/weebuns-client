@@ -1,12 +1,12 @@
-import { FunctionComponent, MouseEventHandler } from 'react';
-import List from '@mui/material/List';
-import { LinkToPage } from '@/utils';
-import SideBarNavItem from './SideBarNavItem';
+import { FunctionComponent, MouseEventHandler } from 'react'
+import List from '@mui/material/List'
+import SideBarNavItem from './SideBarNavItem'
+import { LinkToPage } from '~/types/common'
 
 interface Props {
-  items: Array<LinkToPage>;
-  showIcons?: boolean;
-  onClick?: MouseEventHandler;
+  items: Array<LinkToPage>
+  showIcons?: boolean
+  onClick?: MouseEventHandler
 }
 
 /**
@@ -18,7 +18,7 @@ interface Props {
  */
 const SideBarNavList: FunctionComponent<Props> = ({ items, showIcons, onClick, ...restOfProps }) => {
   return (
-    <List component="nav" {...restOfProps}>
+    <List component='nav' {...restOfProps}>
       {items.map(({ icon, path, title }) => (
         <SideBarNavItem
           key={`${title}-${path}`}
@@ -29,7 +29,7 @@ const SideBarNavList: FunctionComponent<Props> = ({ items, showIcons, onClick, .
         />
       ))}
     </List>
-  );
-};
+  )
+}
 
-export default SideBarNavList;
+export default SideBarNavList

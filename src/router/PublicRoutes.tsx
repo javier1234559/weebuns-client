@@ -1,12 +1,13 @@
 import { IS_DEBUG } from '~/config'
 import { Navigate } from 'react-router-dom'
 import { PublicLayout } from '~/components/layout'
-import AuthView from '~/view/Auth/AuthView'
-import DevView from '~/view/DevView'
+import DevView from '~/pages/DevView'
+import Landing from '~/pages'
+import AuthView from '~/pages/Auth/Auth'
 
 const PUBLIC_ROUTES = [
   {
-    element: <PublicLayout />, // Layout as parent/wrapper component for all routes
+    element: <PublicLayout />,
     children: [
       {
         path: '*',
@@ -14,7 +15,7 @@ const PUBLIC_ROUTES = [
       },
       {
         path: '/',
-        element: <AuthView />
+        element: <Landing />
       },
       {
         path: '/auth',

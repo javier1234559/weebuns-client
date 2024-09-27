@@ -1,9 +1,8 @@
 import { PrivateLayout } from '~/components/layout'
 import { IS_DEBUG } from '~/config'
-import DevView from '~/view/DevView'
-import NotFoundView from '~/view/NotFoundView'
-import NotImplementedView from '~/view/NotImplementedView'
-import WelcomeView from '~/view/Welcome'
+import DevView from '~/pages/DevView'
+import NotFoundView from '~/pages/NotFoundView'
+import NotImplementedView from '~/pages/NotImplementedView'
 
 const PRIVATE_ROUTES = [
   {
@@ -13,17 +12,9 @@ const PRIVATE_ROUTES = [
         path: '*',
         element: <NotFoundView />
       },
-      {
-        path: '/',
-        element: <WelcomeView />
-      },
       // {
       //   path: 'auth/*',
       //   element: <Navigate to='/' replace />
-      // },
-      // {
-      //   path: 'about',
-      //   element: <AboutView />
       // },
       {
         path: '/me',
