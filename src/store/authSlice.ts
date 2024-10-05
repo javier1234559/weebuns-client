@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+
 import { deleteToken, setToken } from '~/utils/token'
 
 interface AuthState {

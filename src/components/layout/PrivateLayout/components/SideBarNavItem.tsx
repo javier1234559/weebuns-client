@@ -3,9 +3,10 @@ import { useLocation } from 'react-router'
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
-import { LinkToPage } from '~/types/common'
-import AppLink from '~/components/common/AppLink'
+
 import AppIcon from '~/components/common/AppIcon'
+import AppLink from '~/components/common/AppLink'
+import { LinkToPage } from '~/types/common'
 
 interface Props extends LinkToPage {
   openInNewTab?: boolean

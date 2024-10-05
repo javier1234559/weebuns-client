@@ -1,5 +1,6 @@
-import Stack from '@mui/material/Stack'
 import { FunctionComponent, PropsWithChildren } from 'react'
+import Stack from '@mui/material/Stack'
+
 import TopBarAndSideBarLayout from '~/components/layout/PrivateLayout/TopBarAndSideBarLayout'
 import { globalConfig } from '~/config'
 import { LinkToPage } from '~/types/common'

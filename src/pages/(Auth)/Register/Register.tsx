@@ -1,17 +1,18 @@
+import toast from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 
-import toast from 'react-hot-toast'
-import { useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import './Register.scss'
+
 import FaceBookForm from '~/components/form/FacebookForm/FaceBookForm'
 import GoogleForm from '~/components/form/GoogleForm/GoogleForm'
 import RegisterForm from '~/components/form/RegisterForm/RegisterForm'
 import { RouteNames } from '~/router/route-name'
 import { login } from '~/store/authSlice'
 import { AuthResponse } from '~/types/auth'
-import './Register.scss'
 
 function Register() {
   const dispatch = useDispatch()

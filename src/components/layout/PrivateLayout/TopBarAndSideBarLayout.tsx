@@ -2,6 +2,15 @@ import { StackProps } from '@mui/material'
 import Stack from '@mui/material/Stack'
 import { FunctionComponent, useMemo, useState } from 'react'
 import { Outlet } from 'react-router-dom'
+
+import {
+  SIDE_BAR_DESKTOP_ANCHOR,
+  SIDE_BAR_MOBILE_ANCHOR,
+  SIDE_BAR_WIDTH,
+  TOP_BAR_DESKTOP_HEIGHT,
+  TOP_BAR_MOBILE_HEIGHT
+} from '../config'
+
 import AppIconButton from '~/components/common/AppIconButton'
 import ErrorBoundary from '~/components/common/ErrorBoundary'
 import SideBar, { SideBarProps } from '~/components/layout/PrivateLayout/components/SideBar'
@@ -10,13 +19,6 @@ import { globalConfig } from '~/config'
 import { useEventSwitchDarkMode } from '~/hooks/event'
 import { useIsMobile } from '~/hooks/layout'
 import { LinkToPage } from '~/types/common'
-import {
-  SIDE_BAR_DESKTOP_ANCHOR,
-  SIDE_BAR_MOBILE_ANCHOR,
-  SIDE_BAR_WIDTH,
-  TOP_BAR_DESKTOP_HEIGHT,
-  TOP_BAR_MOBILE_HEIGHT
-} from '../config'
 
 interface Props extends StackProps {
   sidebarItems: Array<LinkToPage>

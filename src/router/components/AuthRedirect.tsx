@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+
 import AppLoading from '~/components/common/AppLoading'
 import { useIsAuthenticated } from '~/hooks/auth'
 import { RouteNames } from '~/router/route-name'

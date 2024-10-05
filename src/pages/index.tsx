@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+
 import { AppButton } from '~/components/common/AppButton'
 import AppLink from '~/components/common/AppLink'
 import { RouteNames } from '~/router/route-name'

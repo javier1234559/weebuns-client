@@ -1,13 +1,14 @@
 import { useCallback, useState } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { RouteObject } from 'react-router-dom'
+
+import ADMIN_ROUTES from './AdminRoutes'
+import USER_ROUTES from './UserRoutes'
+
 import AppLoading from '~/components/common/AppLoading'
 import { globalConfig } from '~/config'
 import { useAuthWatchdog, useIsAuthenticated } from '~/hooks/auth'
 import TransitionWrapper from '~/router/components/TransitionWrapper'
-import ADMIN_ROUTES from './AdminRoutes'
-import USER_ROUTES from './UserRoutes'
-
-import { RouteObject } from 'react-router-dom'
 import { checkIsRoleAdmin } from '~/utils/token'
 
 const createRouterWithTransition = (routes: RouteObject[]) => {

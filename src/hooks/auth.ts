@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
+
 import { logout } from '~/store/authSlice'
 import { RootState } from '~/store/store'
 import { getToken } from '~/utils/token'
@@ -50,5 +51,5 @@ export function useAuthWatchdog(afterLogin: () => void, afterLogout: () => void)
     } else {
       afterLogout?.()
     }
-  }, [afterLogin, afterLogout])
+  }, [afterLogin, afterLogout, isAuthenticated])
 }

@@ -1,3 +1,4 @@
+import toast from 'react-hot-toast'
 import {
   CodeResponse,
   CredentialResponse,
@@ -5,11 +6,12 @@ import {
   useGoogleLogin,
   useGoogleOneTapLogin
 } from '@react-oauth/google'
-import toast from 'react-hot-toast'
+
+import './GoogleForm.scss'
+
 import { AppIcon } from '~/components/common/AppIcon'
 import authApi from '~/services/auth'
 import { AuthResponse } from '~/types/auth'
-import './GoogleForm.scss'
 
 declare global {
   interface Window {

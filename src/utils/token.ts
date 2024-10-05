@@ -1,4 +1,5 @@
 import Cookies from 'js-cookie'
+
 import { RouteNames } from '~/router/route-name'
 
 export const getToken = () => {

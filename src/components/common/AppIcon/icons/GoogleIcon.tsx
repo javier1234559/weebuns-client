@@ -1,4 +1,5 @@
 import { FunctionComponent } from 'react'
+
 import { IconProps } from '../utils'
 
 const GoogleIcon: FunctionComponent<IconProps> = (props) => {

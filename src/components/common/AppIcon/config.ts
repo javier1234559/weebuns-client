@@ -1,5 +1,4 @@
 // SVG assets
-import LogoIcon from './icons/YellowPlanIcon'
 // MUI Icons
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import DayNightIcon from '@mui/icons-material/Brightness4'
@@ -18,6 +17,9 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import { Moon, Sun } from 'lucide-react'
+
+import LogoIcon from './icons/YellowPlanIcon'
+
 import GoogleIcon from '~/components/common/AppIcon/icons/GoogleIcon'
 
 /**

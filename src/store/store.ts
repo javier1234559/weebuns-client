@@ -1,8 +1,9 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit'
+import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
-import { persistStore, persistReducer, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist'
-import ThemeReducer from './themeSlice'
+
 import AuthReducer from './authSlice'
+import ThemeReducer from './themeSlice'
 
 const persistConfig = {
   key: 'root',

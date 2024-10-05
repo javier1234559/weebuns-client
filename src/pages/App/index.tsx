@@ -1,4 +1,4 @@
-import App from './App';
+import App from './App'
 
-export { App };
-export default App;
+export { App }
+export default App

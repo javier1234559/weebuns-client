@@ -24,6 +24,7 @@ import { globalConfig } from '~/config'
  */
 const DevView = () => {
   const [isOpen, setOpen] = useState(false)
+
   if (!globalConfig.IS_DEBUG) return null // Hide this page on when env.REACT_APP_DEBUG is not set
 
   const handleClose = () => {

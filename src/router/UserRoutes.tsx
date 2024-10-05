@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react'
+
 import AppLoading from '~/components/common/AppLoading'
 import { PrivateLayout, PublicLayout } from '~/components/layout'
 import { globalConfig } from '~/config'

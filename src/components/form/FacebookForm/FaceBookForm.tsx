@@ -1,9 +1,11 @@
 import FacebookLogin, { ReactFacebookFailureResponse, ReactFacebookLoginInfo } from 'react-facebook-login'
 import toast from 'react-hot-toast'
+
+import './FaceBookForm.scss'
+
 import { globalConfig } from '~/config'
 import authApi from '~/services/auth'
 import { AuthResponse } from '~/types/auth'
-import './FaceBookForm.scss'
 
 interface FaceBookFormProps {
   onSubmit: (data: AuthResponse) => void

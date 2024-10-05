@@ -1,8 +1,9 @@
+import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import Grid from '@mui/material/Grid'
 import TextField from '@mui/material/TextField'
-import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
+
 import { AppButton } from '~/components/common/AppButton'
 import { RegisterDto } from '~/services/api-axios'
 import authApi from '~/services/auth'
@@ -38,6 +39,7 @@ function RegisterForm({ onSubmit }: RegisterFormProps) {
 
   const handleFormSubmit = async (data: RegisterFormData) => {
     logOnDev(data)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { confirmPassword, ...registerData } = data
     const result = await authApi.register(registerData)
     if (result) {

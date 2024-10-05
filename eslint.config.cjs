@@ -5,10 +5,13 @@ const eslintPluginPrettier = require('eslint-plugin-prettier');
 const reactHooks = require('eslint-plugin-react-hooks');
 const reactRefresh = require('eslint-plugin-react-refresh');
 const globals = require('globals');
-const tseslint = require('typescript-eslint');
+const tseslint = require('@typescript-eslint/eslint-plugin');
+const tsParser = require('@typescript-eslint/parser');
 const simpleImportSort = require('eslint-plugin-simple-import-sort');
+const react = require('eslint-plugin-react');
 
-module.exports = tseslint.config(
+module.exports = [
+  js.configs.recommended,
   {
     ignores: ['dist', 'vite.config.ts']
   },
@@ -17,9 +20,12 @@ module.exports = tseslint.config(
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
-      parser: tseslint.parser,
+      parser: tsParser,
       parserOptions: {
         project: './tsconfig.json',
+        ecmaFeatures: {
+          jsx: true
+        }
       },
       globals: {
         ...globals.browser,
@@ -28,21 +34,23 @@ module.exports = tseslint.config(
       },
     },
     plugins: {
+      '@typescript-eslint': tseslint,
+      'react': react,
+      'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      prettier: eslintPluginPrettier,
+      'prettier': eslintPluginPrettier,
       'mui-path-imports': muiPathImports,
-      '@typescript-eslint': tseslint.plugin,
       'simple-import-sort': simpleImportSort,
     },
-    extends: [
-      'airbnb',
-      'airbnb-typescript',
-      'airbnb/hooks',
-      'plugin:react/recommended',
-      'plugin:prettier/recommended',
-      ...tseslint.configs.recommended,
-    ],
+    settings: {
+      react: {
+        version: 'detect'
+      }
+    },
     rules: {
+      ...tseslint.configs.recommended.rules,
+      ...react.configs.recommended.rules,
+      ...reactHooks.configs.recommended.rules,
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },
@@ -93,37 +101,31 @@ module.exports = tseslint.config(
       'react/no-unescaped-entities': 0,
       'react/jsx-props-no-spreading': 0,
       'jsx-a11y/label-has-associated-control': 0,
-      "react-hooks/exhaustive-deps": 'error'
     },
-    overrides: [
-      {
-        files: ['.eslintrc.{js,cjs}'],
-        env: {
-          node: true,
-        },
-        parserOptions: {
-          sourceType: 'script',
-        },
-      },
-      {
-        files: ['./src/components/ui/**/*.{js,jsx,ts,tsx}'],
-        rules: {
-          'react/jsx-props-no-spreading': 0,
-          'react/prop-types': 0,
-          'no-use-before-define': 0,
-          'react/jsx-no-constructed-context-values': 0,
-        },
-      },
-      {
-        files: [
-          './src/components/common/**/*.{js,jsx,ts,tsx}',
-          './src/components/forms/**/*.{js,jsx,ts,tsx}',
-          './src/components/modals/**/*.{js,jsx,ts,tsx}',
-        ],
-        rules: {
-          'react/jsx-props-no-spreading': 0,
-        },
-      },
-    ],
   },
-);
+  {
+    files: ['.eslintrc.{js,cjs}'],
+    languageOptions: {
+      sourceType: 'script',
+    },
+  },
+  {
+    files: ['./src/components/ui/**/*.{js,jsx,ts,tsx}'],
+    rules: {
+      'react/jsx-props-no-spreading': 0,
+      'react/prop-types': 0,
+      'no-use-before-define': 0,
+      'react/jsx-no-constructed-context-values': 0,
+    },
+  },
+  {
+    files: [
+      './src/components/common/**/*.{js,jsx,ts,tsx}',
+      './src/components/forms/**/*.{js,jsx,ts,tsx}',
+      './src/components/modals/**/*.{js,jsx,ts,tsx}',
+    ],
+    rules: {
+      'react/jsx-props-no-spreading': 0,
+    },
+  },
+];

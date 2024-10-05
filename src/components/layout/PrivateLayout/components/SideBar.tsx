@@ -1,20 +1,22 @@
-import { FunctionComponent, useCallback, MouseEvent } from 'react'
-import Stack from '@mui/material/Stack'
+import { DrawerProps } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import Drawer from '@mui/material/Drawer'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import Stack from '@mui/material/Stack'
 import Switch from '@mui/material/Switch'
 import Tooltip from '@mui/material/Tooltip'
-import { DrawerProps } from '@mui/material'
-import SideBarNavList from './SideBarNavList'
-import { LinkToPage } from '~/types/common'
-import { useEventLogout, useIsAuthenticated } from '~/hooks/auth'
-import { useIsMobile } from '~/hooks/layout'
-import { useEventSwitchDarkMode } from '~/hooks/event'
-import AppIconButton from '~/components/common/AppIconButton'
-import { RootState } from '~/store/store'
+import { FunctionComponent, MouseEvent, useCallback } from 'react'
 import { useSelector } from 'react-redux'
+
+import SideBarNavList from './SideBarNavList'
+
+import AppIconButton from '~/components/common/AppIconButton'
 import { SIDE_BAR_WIDTH, TOP_BAR_DESKTOP_HEIGHT } from '~/components/layout/config'
+import { useEventLogout, useIsAuthenticated } from '~/hooks/auth'
+import { useEventSwitchDarkMode } from '~/hooks/event'
+import { useIsMobile } from '~/hooks/layout'
+import { RootState } from '~/store/store'
+import { LinkToPage } from '~/types/common'
 
 export interface SideBarProps extends Pick<DrawerProps, 'anchor' | 'className' | 'open' | 'variant' | 'onClose'> {
   items: Array<LinkToPage>
@@ -34,7 +36,7 @@ const SideBar: FunctionComponent<SideBarProps> = ({ anchor, open, variant, items
   const isAuthenticated = useIsAuthenticated()
   const onMobile = useIsMobile()
 
-  const onSwitchDarkMode = useEventSwitchDarkMode()
+  const { onSwitchDarkMode } = useEventSwitchDarkMode()
   const onLogout = useEventLogout()
 
   const handleAfterLinkClick = useCallback(

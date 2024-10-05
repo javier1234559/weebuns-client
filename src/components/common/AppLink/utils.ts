@@ -1,5 +1,5 @@
-import { LinkProps as MuiLinkProps } from '@mui/material/Link'
 import { ReactNode } from 'react'
+import { LinkProps as MuiLinkProps } from '@mui/material/Link'
 
 export const EXTERNAL_LINK_PROPS = {
   target: '_blank',

@@ -1,6 +1,8 @@
 import { ThemeOptions } from '@mui/material'
-import { TYPOGRAPHY } from '~/theme/typography'
+
 import { PALETTE_COLORS } from './colors'
+
+import { TYPOGRAPHY } from '~/theme/typography'
 
 /**
  * MUI theme options for "Dark Mode"

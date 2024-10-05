@@ -1,8 +1,8 @@
 import { lazy, Suspense } from 'react'
+
 import AppLoading from '~/components/common/AppLoading'
 import { PrivateLayout } from '~/components/layout'
 import { globalConfig } from '~/config'
-
 import { RouteNames } from '~/router/route-name'
 
 // Lazy load components
