@@ -1,8 +1,9 @@
 import { FunctionComponent, PropsWithChildren } from 'react'
-import { IS_DEBUG } from '~/config'
-import { LinkToPage } from '~/types/common'
 import Stack from '@mui/material/Stack'
+
 import TopBarAndSideBarLayout from '~/components/layout/PrivateLayout/TopBarAndSideBarLayout'
+import { globalConfig } from '~/config'
+import { LinkToPage } from '~/types/common'
 
 const TITLE_PRIVATE = 'Weebuns | ENGLISH E LEARNING'
 
@@ -33,12 +34,13 @@ const SIDE_BAR_ITEMS: Array<LinkToPage> = [
 ]
 
 // Add debug links
-IS_DEBUG &&
+if (globalConfig.IS_DEBUG) {
   SIDE_BAR_ITEMS.push({
     title: '[Debug Tools]',
     path: '/dev',
     icon: 'settings'
   })
+}
 
 /**
  * Renders "Private Layout" composition

@@ -1,6 +1,7 @@
-import { useMediaQuery } from '@mui/material'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useMediaQuery } from '@mui/material'
+
 import Routes from '~/router'
 import { RootState } from '~/store/store'
 import { setTheme } from '~/store/themeSlice' // Import the action creator with correct type

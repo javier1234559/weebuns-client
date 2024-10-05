@@ -1,5 +1,5 @@
-import { Breakpoint, useMediaQuery, useTheme } from '@mui/material'
 import { useCallback, useEffect, useState } from 'react'
+import { Breakpoint, useMediaQuery, useTheme } from '@mui/material'
 
 /**
  * Hook to detect isMobile vs. onDesktop using "resize" event listener

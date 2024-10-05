@@ -1,8 +1,10 @@
 import { FunctionComponent, useCallback } from 'react'
 import { useLocation, useNavigate } from 'react-router'
-import { BottomNavigation, BottomNavigationAction } from '@mui/material'
-import { LinkToPage } from '~/types/common'
+import BottomNavigation from '@mui/material/BottomNavigation'
+import BottomNavigationAction from '@mui/material/BottomNavigationAction'
+
 import AppIcon from '~/components/common/AppIcon'
+import { LinkToPage } from '~/types/common'
 
 interface Props {
   items: Array<LinkToPage>

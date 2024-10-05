@@ -1,7 +1,8 @@
-import { IconButtonProps, TooltipProps } from '@mui/material'
-import { IconName } from '../AppIcon/config'
-import { AppIconProps } from '../AppIcon/AppIcon'
 import { ElementType } from 'react'
+import { IconButtonProps, TooltipProps } from '@mui/material'
+
+import { AppIconProps } from '../AppIcon/AppIcon'
+import { IconName } from '../AppIcon/config'
 
 export const MUI_ICON_BUTTON_COLORS = [
   'inherit',

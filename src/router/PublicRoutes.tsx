@@ -1,9 +1,10 @@
-import { IS_DEBUG } from '~/config'
 import { Navigate } from 'react-router-dom'
+
 import { PublicLayout } from '~/components/layout'
-import DevView from '~/pages/DevView'
+import { globalConfig } from '~/config'
 import Landing from '~/pages'
 import AuthView from '~/pages/Auth/Auth'
+import DevView from '~/pages/DevView'
 
 const PUBLIC_ROUTES = [
   {
@@ -26,10 +27,11 @@ const PUBLIC_ROUTES = [
 ]
 
 // Add debug routes
-IS_DEBUG &&
+if (globalConfig.IS_DEBUG) {
   PUBLIC_ROUTES[0].children.push({
     path: '/dev',
     element: <DevView />
   })
+}
 
 export default PUBLIC_ROUTES

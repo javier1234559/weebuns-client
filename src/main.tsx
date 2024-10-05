@@ -1,24 +1,31 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { ThemeProvider } from './theme'
-import { PersistGate } from 'redux-persist/integration/react'
+import { Toaster } from 'react-hot-toast'
 import { Provider } from 'react-redux'
 import { GoogleOAuthProvider } from '@react-oauth/google'
-import { persistor, store } from '~/store/store'
-import App from './App.tsx'
-import './index.css'
+import { PersistGate } from 'redux-persist/integration/react'
 
-const CLIENT_ID = '1084448509397-5gd8k5ti7apd88khaupg0f2st3h556k3.apps.googleusercontent.com'
+import App from './App.tsx'
+import { AppThemeProvider } from './theme'
+
+import './assets/css/index.scss'
+import './assets/css/responsive.scss'
+
+import { globalConfig } from '~/config.ts'
+import { persistor, store } from '~/store/store'
+
+const CLIENT_ID = globalConfig.GOOGLE_CLIENT_ID
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-        <ThemeProvider>
+        <AppThemeProvider>
           <GoogleOAuthProvider clientId={CLIENT_ID}>
             <App />
+            <Toaster />
           </GoogleOAuthProvider>
-        </ThemeProvider>
+        </AppThemeProvider>
       </PersistGate>
     </Provider>
   </StrictMode>

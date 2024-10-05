@@ -1,6 +1,8 @@
 import { ComponentType, FunctionComponent, SVGAttributes } from 'react'
-import { APP_ICON_SIZE } from '~/components/config'
+
 import { IconName, ICONS } from './config'
+
+import { APP_ICON_SIZE } from '~/components/config'
 
 /**
  * Props of the AppIcon component, also can be used for SVG icons

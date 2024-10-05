@@ -1,9 +1,12 @@
 import { FunctionComponent, MouseEventHandler } from 'react'
 import { useLocation } from 'react-router'
-import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
-import { LinkToPage } from '~/types/common'
-import AppLink from '~/components/common/AppLink'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+
 import AppIcon from '~/components/common/AppIcon'
+import AppLink from '~/components/common/AppLink'
+import { LinkToPage } from '~/types/common'
 
 interface Props extends LinkToPage {
   openInNewTab?: boolean

@@ -1,7 +1,8 @@
+import { StackProps } from '@mui/material'
+import Stack from '@mui/material/Stack'
 import { FunctionComponent, useMemo, useState } from 'react'
 import { Outlet } from 'react-router-dom'
-import { Stack, StackProps } from '@mui/material'
-import { IS_DEBUG } from '~/config'
+
 import {
   SIDE_BAR_DESKTOP_ANCHOR,
   SIDE_BAR_MOBILE_ANCHOR,
@@ -9,15 +10,15 @@ import {
   TOP_BAR_DESKTOP_HEIGHT,
   TOP_BAR_MOBILE_HEIGHT
 } from '../config'
-import { LinkToPage } from '~/types/common'
+
 import AppIconButton from '~/components/common/AppIconButton'
-import { useIsMobile } from '~/hooks/layout'
 import ErrorBoundary from '~/components/common/ErrorBoundary'
-import { useEventSwitchDarkMode } from '~/hooks/event'
-import { useSelector } from 'react-redux'
-import { RootState } from '~/store/store'
 import SideBar, { SideBarProps } from '~/components/layout/PrivateLayout/components/SideBar'
 import TopBar from '~/components/layout/PrivateLayout/components/TopBar'
+import { globalConfig } from '~/config'
+import { useEventSwitchDarkMode } from '~/hooks/event'
+import { useIsMobile } from '~/hooks/layout'
+import { LinkToPage } from '~/types/common'
 
 interface Props extends StackProps {
   sidebarItems: Array<LinkToPage>
@@ -30,11 +31,9 @@ interface Props extends StackProps {
  * @layout TopBarAndSideBarLayout
  */
 const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarItems, title, variant }) => {
-  const mode = useSelector((state: RootState) => state.theme.mode)
-  const isDarkMode = mode === 'dark'
   const [sidebarVisible, setSidebarVisible] = useState(false) // TODO: Verify is default value is correct
   const onMobile = useIsMobile()
-  const onSwitchDarkMode = useEventSwitchDarkMode()
+  const { onSwitchDarkMode, isDarkMode } = useEventSwitchDarkMode()
 
   const sidebarProps = useMemo((): Partial<SideBarProps> => {
     const anchor = onMobile ? SIDE_BAR_MOBILE_ANCHOR : SIDE_BAR_DESKTOP_ANCHOR
@@ -91,7 +90,6 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarIte
   const DarkModeButton = (
     <AppIconButton
       icon={isDarkMode ? 'day' : 'night'} // Variant 1
-      // icon="daynight" // Variant 2
       title={isDarkMode ? 'Switch to Light mode' : 'Switch to Dark mode'}
       onClick={onSwitchDarkMode}
     />
@@ -102,12 +100,13 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarIte
     ? { startNode: LogoButton, endNode: DarkModeButton }
     : { startNode: DarkModeButton, endNode: LogoButton }
 
-  IS_DEBUG &&
+  if (globalConfig.IS_DEBUG) {
     console.log('Render <TopbarAndSidebarLayout/>', {
       onMobile,
       darkMode: isDarkMode,
       sidebarProps
     })
+  }
 
   return (
     <Stack sx={stackStyles}>

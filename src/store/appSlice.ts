@@ -1,5 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+import { ThemeKey } from '~/store/themeSlice'
+
 interface ThemeState {
   mode: ThemeKey
 }

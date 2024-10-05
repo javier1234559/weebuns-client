@@ -1,23 +1,34 @@
 import { useCallback, useState } from 'react'
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { IS_DEBUG } from '~/config'
-import PRIVATE_ROUTES from './PrivateRoutes'
-import PUBLIC_ROUTES from './PublicRoutes'
-import { useAuthWatchdog, useIsAuthenticated } from '~/hooks/auth'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { RouteObject } from 'react-router-dom'
+
+import ADMIN_ROUTES from './AdminRoutes'
+import USER_ROUTES from './UserRoutes'
+
 import AppLoading from '~/components/common/AppLoading'
+import { globalConfig } from '~/config'
+import { useAuthWatchdog, useIsAuthenticated } from '~/hooks/auth'
+import TransitionWrapper from '~/router/components/TransitionWrapper'
+import { checkIsRoleAdmin } from '~/utils/token'
 
-const routesPrivate = createBrowserRouter(PRIVATE_ROUTES)
-const routesPublic = createBrowserRouter(PUBLIC_ROUTES)
+const createRouterWithTransition = (routes: RouteObject[]) => {
+  return createBrowserRouter([
+    {
+      path: '/',
+      element: <TransitionWrapper />,
+      children: routes
+    }
+  ])
+}
 
-/**
- * Renders routes depending on Authenticated or Anonymous users
- * @component Routes
- */
+const routesPrivate = createRouterWithTransition(ADMIN_ROUTES)
+const routesPublic = createRouterWithTransition(USER_ROUTES)
+
 const Routes = () => {
   const [loading, setLoading] = useState(false)
   const [refreshCount, setRefreshCount] = useState(0)
-  const isAuthenticated = false
-  // const isAuthenticated = useIsAuthenticated()
+  const isAuthenticated = useIsAuthenticated()
+  const isRoleAdmin = checkIsRoleAdmin()
 
   const afterLogin = useCallback(() => {
     setRefreshCount((old) => old + 1) // Force re-render
@@ -36,8 +47,10 @@ const Routes = () => {
     return <AppLoading />
   }
 
-  IS_DEBUG && console.log('Render <Routes/>', { isAuthenticated, refresh: refreshCount })
+  if (globalConfig.IS_DEBUG) {
+    console.log('Render <Routes/>', { isAuthenticated, isRoleAdmin, refresh: refreshCount })
+  }
 
-  return <RouterProvider router={isAuthenticated ? routesPrivate : routesPublic} />
+  return <RouterProvider router={isRoleAdmin ? routesPrivate : routesPublic} />
 }
 export default Routes

@@ -1,9 +1,10 @@
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { IS_FAKE_LOGIN } from '~/config'
+
 import { logout } from '~/store/authSlice'
 import { RootState } from '~/store/store'
+import { getToken } from '~/utils/token'
 
 /**
  * Hook to get currently logged user
@@ -19,10 +20,7 @@ export function useCurrentUser() {
  * @returns {boolean} true if user is authenticated, false otherwise
  */
 export function useIsAuthenticated(): boolean {
-  const auth = useSelector((state: RootState) => state.auth)
-
-  const result = IS_FAKE_LOGIN || auth.accessToken !== ''
-  return result
+  return !!getToken()
 }
 
 /**
@@ -53,5 +51,5 @@ export function useAuthWatchdog(afterLogin: () => void, afterLogout: () => void)
     } else {
       afterLogout?.()
     }
-  }, [afterLogin, afterLogout])
+  }, [afterLogin, afterLogout, isAuthenticated])
 }
