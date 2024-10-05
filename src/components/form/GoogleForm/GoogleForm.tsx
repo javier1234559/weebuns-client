@@ -6,8 +6,9 @@ import {
   useGoogleOneTapLogin
 } from '@react-oauth/google'
 import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
 import { AppIcon } from '~/components/common/AppIcon'
+import authApi from '~/services/auth'
+import { AuthResponse } from '~/types/auth'
 import './GoogleForm.scss'
 
 declare global {
@@ -22,24 +23,20 @@ declare global {
   }
 }
 
-function GoogleForm() {
-  const navigate = useNavigate()
+interface GoogleFormProps {
+  onSubmit: (data: AuthResponse) => void
+}
 
+function GoogleForm({ onSubmit }: GoogleFormProps) {
   const handleGoogleResponse = async (response: CredentialResponse | TokenResponse | CodeResponse) => {
-    console.log('Google One Tap login successful', response)
+    if ('access_token' in response) {
+      const result = await authApi.loginGoogle(response.access_token)
 
-    try {
-      // Here you would typically send the credential to your backend
-      // const authResponse = await authApi.verifyAndSignIn({
-      //   credential: credentialResponse.credential
-      // });
-
-      toast.success('Sign in successful. Redirecting to home page.')
-      navigate('/')
-    } catch (error) {
-      console.error('Sign in failed:', error)
-      toast.error('Sign in failed. Please try again.')
+      onSubmit(result)
+      return
     }
+    console.error('Google One Tap login failed:', response)
+    toast.error('Google login failed. Please try again.')
   }
 
   const handleError = () => {
@@ -59,7 +56,7 @@ function GoogleForm() {
   return (
     <button className='custom-google-btn' onClick={() => login()}>
       <AppIcon icon='google' style={{ marginRight: 4 }} />
-      <span>Sign in with Google</span>
+      <span>Login with Google</span>
     </button>
   )
 }

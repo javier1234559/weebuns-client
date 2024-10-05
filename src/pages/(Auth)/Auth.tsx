@@ -19,11 +19,6 @@ const AuthView = () => {
     }
 
     handleGetCurrentUser()
-    handleGetCurrentUser()
-    handleGetCurrentUser()
-    handleGetCurrentUser()
-    handleGetCurrentUser()
-    handleGetCurrentUser()
   }, [])
 
   const onLogin = () => {

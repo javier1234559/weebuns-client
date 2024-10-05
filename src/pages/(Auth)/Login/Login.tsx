@@ -2,39 +2,35 @@ import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 
+import toast from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import FaceBookForm from '~/components/form/FacebookForm/FaceBookForm'
 import GoogleForm from '~/components/form/GoogleForm/GoogleForm'
 import LoginForm from '~/components/form/LoginForm/LoginForm'
-import { LoginDto } from '~/services/api-axios'
-import authApi from '~/services/auth'
+import { RouteNames } from '~/router/route-name'
 import { login } from '~/store/authSlice'
-import { RouteNames } from '~/types/contains'
+import { AuthResponse } from '~/types/auth'
 import './Login.scss'
 
 function Login() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const onSubmit = async (data: unknown) => {
-    console.log(data)
-    const res = await authApi.login(data as LoginDto)
-    if (res) {
-      console.log(res)
-      dispatch(
-        login({
-          id: res.user.id,
-          email: res.user.email,
-          name: `${res.user.first_name} ${res.user.last_name}`,
-          avatar_img: res.user.profile_picture,
-          accessToken: res.access_token,
-          role: res.user.role
-        })
-      )
+  const handleLogin = async (data: AuthResponse) => {
+    dispatch(
+      login({
+        id: data.user.id,
+        email: data.user.email,
+        name: `${data.user.first_name} ${data.user.last_name}`,
+        avatar_img: data.user.profile_picture,
+        accessToken: data.access_token,
+        role: data.user.role
+      })
+    )
 
-      navigate(RouteNames.Auth)
-    }
+    toast.success('Login successfully! Redirecting to dashboard...')
+    navigate(RouteNames.Dashboard)
   }
 
   return (
@@ -58,10 +54,10 @@ function Login() {
               Hi there , let’s improve languages together
             </Typography>
             <Box display='flex' flexDirection='column' my={2} gap={2}>
-              <GoogleForm />
-              <FaceBookForm />
+              <GoogleForm onSubmit={handleLogin} />
+              <FaceBookForm onSubmit={handleLogin} />
             </Box>
-            <LoginForm onSubmit={onSubmit} />
+            <LoginForm onSubmit={handleLogin} />
           </Box>
         </Box>
       </Box>

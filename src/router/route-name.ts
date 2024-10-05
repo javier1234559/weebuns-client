@@ -5,7 +5,10 @@ export enum RouteNames {
 
   Auth = '/auth',
   Register = '/register',
-  SignIn = '/sign-in',
+  Login = '/login',
+  ME = '/me',
+  Logout = '/logout',
+
   ForgotPassword = '/forgot-password',
   UNAUTHORIZED = '/401',
   SERVER_ERROR = '/500'

@@ -1,41 +1,35 @@
 import MenuIcon from '@mui/icons-material/Menu'
 import AppBar from '@mui/material/AppBar'
-import Avatar from '@mui/material/Avatar'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Toolbar from '@mui/material/Toolbar'
-import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
+import { useSelector } from 'react-redux'
 import AppButton from '~/components/common/AppButton'
 import { AppLink } from '~/components/common/AppLink'
+import ProfileMenu from '~/components/feature/ProfileMenu'
 import ThemSwitcher from '~/components/feature/ThemSwitcher'
-import { RouteNames } from '~/types/contains'
+import { RouteNames } from '~/router/route-name'
+import { RootState } from '~/store/store'
 import './Navbar.scss'
 
 const pages = ['Home', 'Blog', 'About']
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout']
 
 function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
-  const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null)
+  const auth = useSelector((state: RootState) => state.auth)
+  const isAuthenticated = !!auth.accessToken
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget)
   }
-  const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(event.currentTarget)
-  }
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null)
-  }
-
-  const handleCloseUserMenu = () => {
-    setAnchorElUser(null)
   }
 
   return (
@@ -99,48 +93,19 @@ function Header() {
 
           <Box display={'flex'} gap={2}>
             <ThemSwitcher />
-            <Box>
-              <Tooltip title='Open settings'>
-                <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                  <Avatar
-                    alt='Remy Sharp'
-                    src='https://assets.minimals.cc/public/assets/images/mock/avatar/avatar-2.webp'
-                  />
-                </IconButton>
-              </Tooltip>
-              <Menu
-                sx={{ mt: '45px' }}
-                id='menu-appbar'
-                anchorEl={anchorElUser}
-                anchorOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right'
-                }}
-                keepMounted
-                transformOrigin={{
-                  vertical: 'top',
-                  horizontal: 'right'
-                }}
-                open={Boolean(anchorElUser)}
-                onClose={handleCloseUserMenu}
-              >
-                {settings.map((setting) => (
-                  <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                    <Typography textAlign='center'>{setting}</Typography>
-                  </MenuItem>
-                ))}
-              </Menu>
-            </Box>
-            <Box display='flex' px='8'>
-              <AppButton
-                variant='outlined'
-                to={RouteNames.Register}
-                sx={{ mr: 2, color: 'inherit' }}
-                size='small'
-                label='Register'
-              />
-              <AppButton variant='black' to={RouteNames.SignIn} sx={{ mr: 2 }} size='small' label='Sign In' />
-            </Box>
+            {isAuthenticated && <ProfileMenu />}
+            {!isAuthenticated && (
+              <Box display='flex' px='8'>
+                <AppButton
+                  variant='outlined'
+                  to={RouteNames.Register}
+                  sx={{ mr: 2, color: 'inherit' }}
+                  size='small'
+                  label='Register'
+                />
+                <AppButton variant='black' to={RouteNames.Login} sx={{ mr: 2 }} size='small' label='Login' />
+              </Box>
+            )}
           </Box>
         </Toolbar>
       </Container>

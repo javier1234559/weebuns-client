@@ -6,6 +6,10 @@ import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { AppButton } from '~/components/common/AppButton'
+import { LoginDto } from '~/services/api-axios'
+import authApi from '~/services/auth'
+import { AuthResponse } from '~/types/auth'
+import logOnDev from '~/utils/log-on-dev'
 
 const schema = yup.object().shape({
   email: yup.string().email('Invalid email address').required('Email is required'),
@@ -20,8 +24,9 @@ interface LoginFormData {
 }
 
 interface LoginFormProps {
-  onSubmit: (data: unknown) => void
+  onSubmit: (data: AuthResponse) => void
 }
+
 function LoginForm({ onSubmit }: LoginFormProps) {
   const {
     register,
@@ -46,7 +51,7 @@ function LoginForm({ onSubmit }: LoginFormProps) {
     }
   }, [setValue])
 
-  const handleFormSubmit = (data: LoginFormData) => {
+  const handleFormSubmit = async (data: LoginFormData) => {
     if (data.rememberMe) {
       localStorage.setItem('rememberedEmail', data.email)
       localStorage.setItem('rememberMe', 'true')
@@ -55,8 +60,11 @@ function LoginForm({ onSubmit }: LoginFormProps) {
       localStorage.removeItem('rememberMe')
     }
 
-    // Only send email and password to the API
-    onSubmit({ email: data.email, password: data.password })
+    logOnDev(data)
+    const result = await authApi.login(data as LoginDto)
+    if (result) {
+      onSubmit(result)
+    }
   }
 
   return (

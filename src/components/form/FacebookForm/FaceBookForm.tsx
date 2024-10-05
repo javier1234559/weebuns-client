@@ -1,16 +1,27 @@
 import FacebookLogin, { ReactFacebookFailureResponse, ReactFacebookLoginInfo } from 'react-facebook-login'
+import toast from 'react-hot-toast'
 import { globalConfig } from '~/config'
+import authApi from '~/services/auth'
+import { AuthResponse } from '~/types/auth'
 import './FaceBookForm.scss'
 
-function FaceBookForm() {
+interface FaceBookFormProps {
+  onSubmit: (data: AuthResponse) => void
+}
+
+function FaceBookForm({ onSubmit }: FaceBookFormProps) {
   const APP_ID = globalConfig.FACEBOOK_APP_ID
 
-  const handleFacebookCallback = (userInfo: ReactFacebookLoginInfo | ReactFacebookFailureResponse) => {
-    if ('status' in userInfo) {
-      console.error('Sorry!', 'Something went wrong with facebook Login.')
-      return
+  const handleFacebookCallback = async (userInfo: ReactFacebookLoginInfo | ReactFacebookFailureResponse) => {
+    if ('accessToken' in userInfo) {
+      const result = await authApi.loginFacebook(userInfo.accessToken)
+
+      if (result) {
+        onSubmit(result)
+      }
+    } else {
+      toast.error('Failed to retrieve access token from Facebook')
     }
-    console.log(userInfo)
   }
 
   return (

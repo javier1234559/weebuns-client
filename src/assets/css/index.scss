@@ -32,6 +32,7 @@ code {
   background-image: linear-gradient(var(--bg-patterns-line-color1) 1px, transparent 1px),
     linear-gradient(to right, var(--bg-patterns-line-color2) 1px, var(--bg-patterns-line-color3) 1px);
   background-size: 20px 20px;
+  padding: 60px 0;
 }
 
 input:autofill {

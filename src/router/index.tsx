@@ -2,12 +2,13 @@ import { useCallback, useState } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import AppLoading from '~/components/common/AppLoading'
 import { globalConfig } from '~/config'
-import { useAuthWatchdog } from '~/hooks/auth'
-import TransitionWrapper from '~/router/TransitionWrapper'
-import PRIVATE_ROUTES from './PrivateRoutes'
-import PUBLIC_ROUTES from './PublicRoutes'
+import { useAuthWatchdog, useIsAuthenticated } from '~/hooks/auth'
+import TransitionWrapper from '~/router/components/TransitionWrapper'
+import ADMIN_ROUTES from './AdminRoutes'
+import USER_ROUTES from './UserRoutes'
 
 import { RouteObject } from 'react-router-dom'
+import { checkIsRoleAdmin } from '~/utils/token'
 
 const createRouterWithTransition = (routes: RouteObject[]) => {
   return createBrowserRouter([
@@ -19,14 +20,14 @@ const createRouterWithTransition = (routes: RouteObject[]) => {
   ])
 }
 
-const routesPrivate = createRouterWithTransition(PRIVATE_ROUTES)
-const routesPublic = createRouterWithTransition(PUBLIC_ROUTES)
+const routesPrivate = createRouterWithTransition(ADMIN_ROUTES)
+const routesPublic = createRouterWithTransition(USER_ROUTES)
 
 const Routes = () => {
   const [loading, setLoading] = useState(false)
   const [refreshCount, setRefreshCount] = useState(0)
-  const isAuthenticated = false
-  // const isAuthenticated = useIsAuthenticated()
+  const isAuthenticated = useIsAuthenticated()
+  const isRoleAdmin = checkIsRoleAdmin()
 
   const afterLogin = useCallback(() => {
     setRefreshCount((old) => old + 1) // Force re-render
@@ -46,9 +47,9 @@ const Routes = () => {
   }
 
   if (globalConfig.IS_DEBUG) {
-    console.log('Render <Routes/>', { isAuthenticated, refresh: refreshCount })
+    console.log('Render <Routes/>', { isAuthenticated, isRoleAdmin, refresh: refreshCount })
   }
 
-  return <RouterProvider router={isAuthenticated ? routesPrivate : routesPublic} />
+  return <RouterProvider router={isRoleAdmin ? routesPrivate : routesPublic} />
 }
 export default Routes

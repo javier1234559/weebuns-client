@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { AppButton } from '~/components/common/AppButton'
 import AppLink from '~/components/common/AppLink'
-import { RouteNames } from '~/types/contains'
+import { RouteNames } from '~/router/route-name'
 
 /**
  * Renders "Landing" page
@@ -40,7 +40,7 @@ const Landing = () => {
           The source code is available at <AppLink href='https://github.com/karpolan/react-mui-vite-ts'>GitHub</AppLink>
         </div>
         <Box mx='auto'>
-          <AppButton variant='black' to={RouteNames.SignIn} sx={{ px: 4, py: 1 }} size='small' label='Get started' />
+          <AppButton variant='black' to={RouteNames.Login} sx={{ px: 4, py: 1 }} size='small' label='Get started' />
         </Box>
       </Box>
     </>

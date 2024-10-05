@@ -1,4 +1,5 @@
 import { GoogleOAuthProvider } from '@react-oauth/google'
+import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Toaster } from 'react-hot-toast'
 import { Provider } from 'react-redux'
@@ -11,19 +12,18 @@ import './assets/css/responsive.scss'
 import { AppThemeProvider } from './theme'
 
 const CLIENT_ID = globalConfig.GOOGLE_CLIENT_ID
-console.log('CLIENT_ID', CLIENT_ID)
 
 createRoot(document.getElementById('root')!).render(
-  // <StrictMode>
-  <Provider store={store}>
-    <PersistGate loading={null} persistor={persistor}>
-      <AppThemeProvider>
-        <GoogleOAuthProvider clientId={CLIENT_ID}>
-          <App />
-          <Toaster />
-        </GoogleOAuthProvider>
-      </AppThemeProvider>
-    </PersistGate>
-  </Provider>
-  // </StrictMode>
+  <StrictMode>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <AppThemeProvider>
+          <GoogleOAuthProvider clientId={CLIENT_ID}>
+            <App />
+            <Toaster />
+          </GoogleOAuthProvider>
+        </AppThemeProvider>
+      </PersistGate>
+    </Provider>
+  </StrictMode>
 )
