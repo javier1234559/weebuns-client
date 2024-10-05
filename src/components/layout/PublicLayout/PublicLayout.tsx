@@ -1,9 +1,10 @@
+import Box from '@mui/material/Box'
 import { FunctionComponent, PropsWithChildren } from 'react'
-import { IS_DEBUG } from '~/config'
-import { LinkToPage } from '~/types/common'
-import ErrorBoundary from '~/components/common/ErrorBoundary'
 import { Outlet } from 'react-router-dom'
+import ErrorBoundary from '~/components/common/ErrorBoundary'
 import Header from '~/components/layout/PublicLayout/components/Navbar'
+import { globalConfig } from '~/config'
+import { LinkToPage } from '~/types/common'
 
 const TITLE_PUBLIC = 'Weebuns Elearning'
 
@@ -31,12 +32,13 @@ const SIDE_BAR_ITEMS: Array<LinkToPage> = [
 ]
 
 // Add debug links
-IS_DEBUG &&
+if (globalConfig.IS_DEBUG) {
   SIDE_BAR_ITEMS.push({
     title: '[Debug Tools]',
     path: '/dev',
     icon: 'settings'
   })
+}
 
 const PublicLayout: FunctionComponent<PropsWithChildren> = ({ children }) => {
   const title = TITLE_PUBLIC
@@ -44,9 +46,11 @@ const PublicLayout: FunctionComponent<PropsWithChildren> = ({ children }) => {
 
   return (
     <ErrorBoundary name='Content'>
-      <Header />
-      <Outlet />
-      {children}
+      <Box className='bg-patterns'>
+        <Header />
+        <Outlet />
+        {children}
+      </Box>
     </ErrorBoundary>
   )
 }

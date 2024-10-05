@@ -1,21 +1,29 @@
-import { FunctionComponent, useMemo, PropsWithChildren, useState, useEffect } from 'react'
-import { ThemeProvider as EmotionThemeProvider } from '@emotion/react'
-import { CssBaseline } from '@mui/material'
-import { createTheme } from '@mui/material/styles'
-import DARK_THEME from './dark'
-import LIGHT_THEME from './light'
+// import { ThemeProvider as EmotionThemeProvider } from '@emotion/react'
+import CssBaseline from '@mui/material/CssBaseline'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { FunctionComponent, PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '~/store/store'
 import { ThemeKey } from '~/store/themeSlice'
+import DARK_THEME from './dark'
+import LIGHT_THEME from './light'
 
 function getThemeByDarkMode(themeState: ThemeKey) {
   switch (themeState) {
     case 'light':
-      return createTheme(LIGHT_THEME)
+      return createTheme({
+        ...LIGHT_THEME,
+        cssVariables: true
+      })
     case 'dark':
-      return createTheme(DARK_THEME)
+      return createTheme({
+        ...DARK_THEME,
+        cssVariables: true
+      })
     default:
-      return createTheme(LIGHT_THEME)
+      return createTheme({
+        ...LIGHT_THEME
+      })
   }
 }
 
@@ -31,13 +39,17 @@ const AppThemeProvider: FunctionComponent<PropsWithChildren> = ({ children }) =>
 
   const currentTheme = useMemo(() => getThemeByDarkMode(mode), [mode])
 
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', mode)
+  }, [mode])
+
   if (loading) return null // Don't render anything until the component is mounted
 
   return (
-    <EmotionThemeProvider theme={currentTheme}>
-      <CssBaseline /* MUI Styles */ />
+    <ThemeProvider theme={currentTheme}>
+      <CssBaseline /* MUI Styles */ enableColorScheme />
       {children}
-    </EmotionThemeProvider>
+    </ThemeProvider>
   )
 }
 

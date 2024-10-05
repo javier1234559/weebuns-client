@@ -1,5 +1,7 @@
 import { FunctionComponent, useMemo } from 'react'
-import { Tooltip, IconButton, IconButtonProps } from '@mui/material'
+import Tooltip from '@mui/material/Tooltip'
+import IconButton from '@mui/material/IconButton'
+import { IconButtonProps } from '@mui/material'
 import { alpha } from '@mui/material'
 import { AppIconButtonProps, MUI_ICON_BUTTON_COLORS } from './utils'
 import AppIcon from '~/components/common/AppIcon'

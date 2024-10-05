@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { IS_FAKE_LOGIN } from '~/config'
+import { globalConfig } from '~/config'
 import { logout } from '~/store/authSlice'
 import { RootState } from '~/store/store'
 
@@ -21,7 +21,7 @@ export function useCurrentUser() {
 export function useIsAuthenticated(): boolean {
   const auth = useSelector((state: RootState) => state.auth)
 
-  const result = IS_FAKE_LOGIN || auth.accessToken !== ''
+  const result = globalConfig.IS_FAKE_LOGIN || auth.accessToken !== ''
   return result
 }
 

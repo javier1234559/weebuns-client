@@ -1,24 +1,24 @@
 // SVG assets
 import LogoIcon from './icons/YellowPlanIcon'
 // MUI Icons
+import AccountCircle from '@mui/icons-material/AccountCircle'
+import DayNightIcon from '@mui/icons-material/Brightness4'
+import CloseIcon from '@mui/icons-material/Close'
+import DangerousIcon from '@mui/icons-material/Dangerous'
+import ExitToAppIcon from '@mui/icons-material/ExitToApp'
+import HomeIcon from '@mui/icons-material/Home'
+import InfoIcon from '@mui/icons-material/Info'
+import MenuIcon from '@mui/icons-material/Menu'
 import DefaultIcon from '@mui/icons-material/MoreHoriz'
+import NotificationsIcon from '@mui/icons-material/NotificationsOutlined'
+import PersonIcon from '@mui/icons-material/Person'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import SearchIcon from '@mui/icons-material/Search'
 import SettingsIcon from '@mui/icons-material/Settings'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
-import MenuIcon from '@mui/icons-material/Menu'
-import CloseIcon from '@mui/icons-material/Close'
-import DayNightIcon from '@mui/icons-material/Brightness4'
-import NightIcon from '@mui/icons-material/Brightness3'
-import DayIcon from '@mui/icons-material/Brightness5'
-import SearchIcon from '@mui/icons-material/Search'
-import InfoIcon from '@mui/icons-material/Info'
-import HomeIcon from '@mui/icons-material/Home'
-import AccountCircle from '@mui/icons-material/AccountCircle'
-import PersonAddIcon from '@mui/icons-material/PersonAdd'
-import PersonIcon from '@mui/icons-material/Person'
-import ExitToAppIcon from '@mui/icons-material/ExitToApp'
-import NotificationsIcon from '@mui/icons-material/NotificationsOutlined'
-import DangerousIcon from '@mui/icons-material/Dangerous'
+import { Moon, Sun } from 'lucide-react'
+import GoogleIcon from '~/components/common/AppIcon/icons/GoogleIcon'
 
 /**
  * List of all available Icon names
@@ -42,8 +42,8 @@ export const ICONS /* Note: Setting type disables property autocomplete :( was -
   visibilityon: VisibilityIcon,
   visibilityoff: VisibilityOffIcon,
   daynight: DayNightIcon,
-  night: NightIcon,
-  day: DayIcon,
+  night: Moon,
+  day: Sun,
   search: SearchIcon,
   info: InfoIcon,
   home: HomeIcon,
@@ -52,5 +52,6 @@ export const ICONS /* Note: Setting type disables property autocomplete :( was -
   login: PersonIcon,
   logout: ExitToAppIcon,
   notifications: NotificationsIcon,
-  error: DangerousIcon
+  error: DangerousIcon,
+  google: GoogleIcon
 }

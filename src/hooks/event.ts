@@ -1,5 +1,6 @@
 import { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '~/store/store'
 import { toggleTheme } from '~/store/themeSlice'
 
 /**
@@ -7,10 +8,17 @@ import { toggleTheme } from '~/store/themeSlice'
  * @returns {function} calling this event toggles dark/light mode
  */
 export function useEventSwitchDarkMode() {
+  const mode = useSelector((state: RootState) => state.theme.mode)
+  const isDarkMode = mode === 'dark'
   const dispatch = useDispatch()
 
+  const onSwitchDarkMode = useCallback(() => {
+    dispatch(toggleTheme())
+  }, [])
+
   // Toggle dark mode
-  return useCallback(() => {
-    dispatch(toggleTheme()) // Dispatches the toggleTheme action
-  }, [dispatch])
+  return {
+    isDarkMode,
+    onSwitchDarkMode
+  }
 }

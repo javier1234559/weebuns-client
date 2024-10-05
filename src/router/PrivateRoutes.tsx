@@ -1,6 +1,6 @@
 import { PrivateLayout } from '~/components/layout'
-import { IS_DEBUG } from '~/config'
-import DevView from '~/pages/DevView'
+import { globalConfig } from '~/config'
+import DevView from '~/pages/Dev'
 import NotFoundView from '~/pages/NotFoundView'
 import NotImplementedView from '~/pages/NotImplementedView'
 
@@ -25,10 +25,11 @@ const PRIVATE_ROUTES = [
 ]
 
 // Add debug routes
-IS_DEBUG &&
+if (globalConfig.IS_DEBUG) {
   PRIVATE_ROUTES[0].children.push({
     path: '/dev',
     element: <DevView />
   })
+}
 
 export default PRIVATE_ROUTES

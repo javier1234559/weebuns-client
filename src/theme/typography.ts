@@ -65,6 +65,6 @@ export const TYPOGRAPHY: Partial<TypographyOptions> = {
   button: {
     fontSize: '14px',
     lineHeight: 1.71,
-    fontWeight: 700
+    fontWeight: 500
   }
 }

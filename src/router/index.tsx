@@ -1,18 +1,27 @@
 import { useCallback, useState } from 'react'
-import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { IS_DEBUG } from '~/config'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import AppLoading from '~/components/common/AppLoading'
+import { globalConfig } from '~/config'
+import { useAuthWatchdog } from '~/hooks/auth'
+import TransitionWrapper from '~/router/TransitionWrapper'
 import PRIVATE_ROUTES from './PrivateRoutes'
 import PUBLIC_ROUTES from './PublicRoutes'
-import { useAuthWatchdog, useIsAuthenticated } from '~/hooks/auth'
-import AppLoading from '~/components/common/AppLoading'
 
-const routesPrivate = createBrowserRouter(PRIVATE_ROUTES)
-const routesPublic = createBrowserRouter(PUBLIC_ROUTES)
+import { RouteObject } from 'react-router-dom'
 
-/**
- * Renders routes depending on Authenticated or Anonymous users
- * @component Routes
- */
+const createRouterWithTransition = (routes: RouteObject[]) => {
+  return createBrowserRouter([
+    {
+      path: '/',
+      element: <TransitionWrapper />,
+      children: routes
+    }
+  ])
+}
+
+const routesPrivate = createRouterWithTransition(PRIVATE_ROUTES)
+const routesPublic = createRouterWithTransition(PUBLIC_ROUTES)
+
 const Routes = () => {
   const [loading, setLoading] = useState(false)
   const [refreshCount, setRefreshCount] = useState(0)
@@ -36,7 +45,9 @@ const Routes = () => {
     return <AppLoading />
   }
 
-  IS_DEBUG && console.log('Render <Routes/>', { isAuthenticated, refresh: refreshCount })
+  if (globalConfig.IS_DEBUG) {
+    console.log('Render <Routes/>', { isAuthenticated, refresh: refreshCount })
+  }
 
   return <RouterProvider router={isAuthenticated ? routesPrivate : routesPublic} />
 }

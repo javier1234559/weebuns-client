@@ -1,12 +1,20 @@
-import { Alert, Box, Button, Card, CardContent, CardHeader, Divider, Grid, Typography } from '@mui/material'
+import Alert from '@mui/material/Alert'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CardHeader from '@mui/material/CardHeader'
+import Container from '@mui/material/Container'
+import Divider from '@mui/material/Divider'
+import Grid from '@mui/material/Grid'
+import OutlinedInput from '@mui/material/OutlinedInput'
+import Snackbar from '@mui/material/Snackbar'
+import Typography from '@mui/material/Typography'
+import { useState } from 'react'
 import AppButton from '~/components/common/AppButton'
 import AppIconButton from '~/components/common/AppIconButton'
 import AppLink from '~/components/common/AppLink'
-import AppView from '~/components/common/AppView'
-import { IS_DEBUG } from '~/config'
-import { OutlinedInput } from '@mui/material'
-import Snackbar from '@mui/material/Snackbar'
-import { useState } from 'react'
+import { globalConfig } from '~/config'
 
 /**
  * Renders Development tools when env.REACT_APP_DEBUG is true
@@ -15,7 +23,7 @@ import { useState } from 'react'
  */
 const DevView = () => {
   const [isOpen, setOpen] = useState(false)
-  if (!IS_DEBUG) return null // Hide this page on when env.REACT_APP_DEBUG is not set
+  if (!globalConfig.IS_DEBUG) return null // Hide this page on when env.REACT_APP_DEBUG is not set
 
   const handleClose = () => {
     setOpen(false)
@@ -25,7 +33,7 @@ const DevView = () => {
   }
 
   return (
-    <AppView>
+    <Container sx={{ p: 4 }}>
       <Typography variant='h1'>Development Tools</Typography>
       <Typography variant='h2'>Debug controls and components on this page...</Typography>
 
@@ -74,14 +82,20 @@ const DevView = () => {
         <Card>
           <CardHeader title='AppButton' />
           <CardContent>
-            <AppButton sx={{ ml: 0 }}>Default</AppButton>
+            <AppButton sx={{ ml: 0 }} variant='black'>
+              Default
+            </AppButton>
+            <AppButton variant='outlined'>Black</AppButton>
             <AppButton disabled>Disabled</AppButton>
             <AppButton color='primary'>Primary</AppButton>
             <AppButton color='secondary'>Secondary</AppButton>
             <AppButton color='error'>Error</AppButton>
+            <AppButton variant='text'>Error outlined</AppButton>
             <AppButton color='warning'>Warning</AppButton>
             <AppButton color='info'>Info</AppButton>
-            <AppButton color='success'>Success</AppButton>
+            <AppButton tooltip='Click here to show a success' label='This a success Button' color='success'>
+              Success
+            </AppButton>
             <AppButton color='#FF8C00'>#FF8C00</AppButton>
             <AppButton color='rgb(50, 205, 50)'>rgb(50, 205, 50)</AppButton>
             <AppButton color='inherit' sx={{ mr: 0 }}>
@@ -154,7 +168,7 @@ const DevView = () => {
           </CardContent>
         </Card>
       </Grid>
-    </AppView>
+    </Container>
   )
 }
 

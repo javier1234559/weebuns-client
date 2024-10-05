@@ -1,0 +1,57 @@
+html[data-theme='light'] {
+  --button-bg-custom: #141a21;
+  --button-text-custom: #ffffff;
+
+  --bg-patterns-line-color1: #b1b2c2a1;
+  --bg-patterns-line-color2: #b1b2c261;
+  --bg-patterns-line-color3: #e5e5f739;
+
+  --login-bg-custom: var(--mui-palette-primary-contrastText);
+  --login-text-custom: var(--mui-palette-warning-contrastText);
+}
+
+html[data-theme='dark'] {
+  --button-bg-custom: #ffffff;
+  --button-text-custom: #141a21;
+
+  --bg-patterns-line-color1: #545458a1;
+  --bg-patterns-line-color2: #b1b2c261;
+  --bg-patterns-line-color3: #e5e5f739;
+
+  --login-bg-custom: #343333;
+  --login-text-custom: #ffffff;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+.bg-patterns {
+  min-height: 100vh;
+  opacity: 0.8;
+  background-image: linear-gradient(var(--bg-patterns-line-color1) 1px, transparent 1px),
+    linear-gradient(to right, var(--bg-patterns-line-color2) 1px, var(--bg-patterns-line-color3) 1px);
+  background-size: 20px 20px;
+}
+
+input:autofill {
+  -webkit-box-shadow: 0 0 0 100px transparent inset !important;
+  -webkit-text-fill-color: unset !important;
+  caret-color: #000;
+}
+
+// Animation page router
+.fade-enter {
+  opacity: 0;
+}
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease-in;
+}
+.fade-exit {
+  opacity: 1;
+}
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 300ms ease-in;
+}

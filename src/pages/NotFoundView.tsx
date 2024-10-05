@@ -1,15 +1,11 @@
+import Container from '@mui/material/Container'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 import { useNavigate } from 'react-router-dom'
-import { Stack, Typography } from '@mui/material'
-import AppView from '~/components/common/AppView'
-import AppLink from '~/components/common/AppLink'
 import AppButton from '~/components/common/AppButton'
+import AppLink from '~/components/common/AppLink'
 
-/**
- * "Not Found" aka "Error 404" view
- * url: any unknown :)
- * @page NotFoundView
- */
-const NotFoundView = () => {
+const NotFound = () => {
   const navigate = useNavigate()
 
   const onClose = () => {
@@ -17,19 +13,27 @@ const NotFoundView = () => {
   }
 
   return (
-    <AppView>
-      <Typography variant='h3'>Page not found!</Typography>
+    <Container
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: 'calc(100vh - 64px)',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: 2
+      }}
+    >
+      <Typography variant='h1'>Page not found!</Typography>
       <Typography variant='body1'>
         Requested address is unknown, please check your URL or go to the <AppLink to='/'>home page</AppLink>.
       </Typography>
-      {/* <AppAlert severity='error' onClose={onClose}>
-        Error 404 - Page not found
-      </AppAlert> */}
       <Stack direction='row' justifyContent='center'>
-        <AppButton onClick={onClose}>Go to Home Page</AppButton>
+        <AppButton variant='black' onClick={onClose}>
+          Go to Home Page
+        </AppButton>
       </Stack>
-    </AppView>
+    </Container>
   )
 }
 
-export default NotFoundView
+export default NotFound
