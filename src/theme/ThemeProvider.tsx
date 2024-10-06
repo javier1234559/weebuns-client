@@ -1,7 +1,16 @@
+<<<<<<< Updated upstream
 import { FunctionComponent, useMemo, PropsWithChildren, useState, useEffect } from 'react'
 import { ThemeProvider as EmotionThemeProvider } from '@emotion/react'
 import { CssBaseline } from '@mui/material'
 import { createTheme } from '@mui/material/styles'
+=======
+// import { ThemeProvider as EmotionThemeProvider } from '@emotion/react'
+import CssBaseline from '@mui/material/CssBaseline'
+import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { FunctionComponent, PropsWithChildren, useEffect, useMemo, useState } from 'react'
+import { useSelector } from 'react-redux'
+
+>>>>>>> Stashed changes
 import DARK_THEME from './dark'
 import LIGHT_THEME from './light'
 import { useSelector } from 'react-redux'

@@ -5,6 +5,7 @@ import DefaultIcon from '@mui/icons-material/MoreHoriz'
 import SettingsIcon from '@mui/icons-material/Settings'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
+<<<<<<< Updated upstream
 import MenuIcon from '@mui/icons-material/Menu'
 import CloseIcon from '@mui/icons-material/Close'
 import DayNightIcon from '@mui/icons-material/Brightness4'
@@ -19,6 +20,17 @@ import PersonIcon from '@mui/icons-material/Person'
 import ExitToAppIcon from '@mui/icons-material/ExitToApp'
 import NotificationsIcon from '@mui/icons-material/NotificationsOutlined'
 import DangerousIcon from '@mui/icons-material/Dangerous'
+=======
+import { Moon, Sun } from 'lucide-react'
+
+import LogoIcon from './icons/YellowPlanIcon'
+
+import Assignment from '~/components/common/AppIcon/icons/Assignment'
+import Course from '~/components/common/AppIcon/icons/Course'
+import GoogleIcon from '~/components/common/AppIcon/icons/GoogleIcon'
+import Logo from '~/components/common/AppIcon/icons/Logo'
+import Vocabulary from '~/components/common/AppIcon/icons/Vocabulary'
+>>>>>>> Stashed changes
 
 /**
  * List of all available Icon names
@@ -35,7 +47,7 @@ export type IconName = keyof typeof ICONS
  */
 export const ICONS /* Note: Setting type disables property autocomplete :( was - : Record<string, ComponentType> */ = {
   default: DefaultIcon,
-  logo: LogoIcon,
+  logo: Logo,
   close: CloseIcon,
   menu: MenuIcon,
   settings: SettingsIcon,
@@ -52,5 +64,13 @@ export const ICONS /* Note: Setting type disables property autocomplete :( was -
   login: PersonIcon,
   logout: ExitToAppIcon,
   notifications: NotificationsIcon,
+<<<<<<< Updated upstream
   error: DangerousIcon
+=======
+  error: DangerousIcon,
+  google: GoogleIcon,
+  course: Course,
+  vocabulary: Vocabulary,
+  assignment: Assignment
+>>>>>>> Stashed changes
 }

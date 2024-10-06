@@ -1,10 +1,20 @@
+<<<<<<< Updated upstream
 import { FunctionComponent, PropsWithChildren } from 'react'
 import { IS_DEBUG } from '~/config'
+=======
+import Stack from '@mui/material/Stack'
+import { FunctionComponent, PropsWithChildren } from 'react'
+import AppLink from '~/components/common/AppLink'
+
+import TopBarAndSideBarLayout from '~/components/layout/PrivateLayout/TopBarAndSideBarLayout'
+import { globalConfig } from '~/config'
+import { RouteNames } from '~/router/route-name'
+>>>>>>> Stashed changes
 import { LinkToPage } from '~/types/common'
 import Stack from '@mui/material/Stack'
 import TopBarAndSideBarLayout from '~/components/layout/PrivateLayout/TopBarAndSideBarLayout'
 
-const TITLE_PRIVATE = 'Weebuns | ENGLISH E LEARNING'
+const TITLE_PRIVATE = 'Weebuns - English Learning'
 
 /**
  * SideBar navigation items with links for Private Layout
@@ -12,23 +22,23 @@ const TITLE_PRIVATE = 'Weebuns | ENGLISH E LEARNING'
 const SIDE_BAR_ITEMS: Array<LinkToPage> = [
   {
     title: 'Home',
-    path: '/',
+    path: RouteNames.Dashboard,
     icon: 'home'
   },
   {
-    title: 'My Profile',
-    path: '/me',
-    icon: 'account'
+    title: 'Assignment',
+    path: RouteNames.Assignment,
+    icon: 'assignment'
   },
   {
-    title: '404',
-    path: '/wrong-url',
-    icon: 'error'
+    title: 'Course',
+    path: RouteNames.Course,
+    icon: 'course'
   },
   {
-    title: 'About',
-    path: '/about',
-    icon: 'info'
+    title: 'Vocabulary',
+    path: RouteNames.Vocabulary,
+    icon: 'vocabulary'
   }
 ]
 
@@ -51,7 +61,6 @@ const PrivateLayout: FunctionComponent<PropsWithChildren> = ({ children }) => {
   return (
     <TopBarAndSideBarLayout sidebarItems={SIDE_BAR_ITEMS} title={title} variant='sidebarPersistentOnDesktop'>
       {children}
-      <Stack component='footer'>Copyright &copy; by Javier</Stack>
     </TopBarAndSideBarLayout>
   )
 }

@@ -1,8 +1,15 @@
+<<<<<<< Updated upstream
+=======
+import { Box, StackProps, Typography } from '@mui/material'
+import Stack from '@mui/material/Stack'
+>>>>>>> Stashed changes
 import { FunctionComponent, useMemo, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 import { Stack, StackProps } from '@mui/material'
 import { IS_DEBUG } from '~/config'
 import {
+  MINI_DRAWER_WIDTH,
+  MINI_SIDE_BAR_WIDTH,
   SIDE_BAR_DESKTOP_ANCHOR,
   SIDE_BAR_MOBILE_ANCHOR,
   SIDE_BAR_WIDTH,
@@ -11,6 +18,7 @@ import {
 } from '../config'
 import { LinkToPage } from '~/types/common'
 import AppIconButton from '~/components/common/AppIconButton'
+<<<<<<< Updated upstream
 import { useIsMobile } from '~/hooks/layout'
 import ErrorBoundary from '~/components/common/ErrorBoundary'
 import { useEventSwitchDarkMode } from '~/hooks/event'
@@ -18,6 +26,20 @@ import { useSelector } from 'react-redux'
 import { RootState } from '~/store/store'
 import SideBar, { SideBarProps } from '~/components/layout/PrivateLayout/components/SideBar'
 import TopBar from '~/components/layout/PrivateLayout/components/TopBar'
+=======
+import AppLink from '~/components/common/AppLink'
+import ErrorBoundary from '~/components/common/ErrorBoundary'
+import ProfileMenu from '~/components/feature/ProfileMenu'
+import SideBar, { SideBarProps } from '~/components/layout/PrivateLayout/components/SideBar'
+import TopBar from '~/components/layout/PrivateLayout/components/TopBar'
+import { globalConfig } from '~/config'
+import { useIsAuthenticated } from '~/hooks/auth'
+import { useEventSwitchDarkMode } from '~/hooks/event'
+import { useIsMobile } from '~/hooks/layout'
+import { RouteNames } from '~/router/route-name'
+import { LinkToPage } from '~/types/common'
+import { getSideBarMini } from '~/utils/localStorage'
+>>>>>>> Stashed changes
 
 interface Props extends StackProps {
   sidebarItems: Array<LinkToPage>
@@ -34,7 +56,13 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarIte
   const isDarkMode = mode === 'dark'
   const [sidebarVisible, setSidebarVisible] = useState(false) // TODO: Verify is default value is correct
   const onMobile = useIsMobile()
+<<<<<<< Updated upstream
   const onSwitchDarkMode = useEventSwitchDarkMode()
+=======
+  const isAuthenticated = useIsAuthenticated()
+  const { onSwitchDarkMode, isDarkMode } = useEventSwitchDarkMode()
+  const [mini, setMini] = useState(getSideBarMini())
+>>>>>>> Stashed changes
 
   const sidebarProps = useMemo((): Partial<SideBarProps> => {
     const anchor = onMobile ? SIDE_BAR_MOBILE_ANCHOR : SIDE_BAR_DESKTOP_ANCHOR
@@ -61,14 +89,19 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarIte
       paddingTop: onMobile ? TOP_BAR_MOBILE_HEIGHT : TOP_BAR_DESKTOP_HEIGHT,
       paddingLeft:
         sidebarProps.variant === 'persistent' && sidebarProps.open && sidebarProps?.anchor?.includes('left')
-          ? SIDE_BAR_WIDTH
+          ? mini
+            ? MINI_SIDE_BAR_WIDTH
+            : SIDE_BAR_WIDTH
           : undefined,
       paddingRight:
         sidebarProps.variant === 'persistent' && sidebarProps.open && sidebarProps?.anchor?.includes('right')
-          ? SIDE_BAR_WIDTH
-          : undefined
+          ? mini
+            ? MINI_SIDE_BAR_WIDTH
+            : SIDE_BAR_WIDTH
+          : undefined,
+      transition: 'padding 0.3s'
     }),
-    [onMobile, sidebarProps]
+    [onMobile, sidebarProps, mini]
   )
 
   const onSideBarOpen = () => {
@@ -81,20 +114,36 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarIte
 
   const LogoButton = (
     <AppIconButton
-      icon='logo'
-      title={sidebarProps.open ? undefined : 'Open Sidebar'}
-      to={sidebarProps.open ? '/' : undefined} // Navigate to Home only when SideBar is closed
+      icon={onMobile ? 'menu' : 'logo'}
+      // title={sidebarProps.open ? undefined : 'Open Sidebar'}
+      to={sidebarProps.open ? RouteNames.Home : undefined} // Navigate to Home only when SideBar is closed
       onClick={sidebarProps.open ? undefined : onSideBarOpen} // Open SideBar only when it's closed
-    />
+      sx={{
+        hover: {
+          '&:hover': { backgroundColor: 'transparent !important' }
+        }
+      }}
+    ></AppIconButton>
   )
 
   const DarkModeButton = (
+<<<<<<< Updated upstream
     <AppIconButton
       icon={isDarkMode ? 'day' : 'night'} // Variant 1
       // icon="daynight" // Variant 2
       title={isDarkMode ? 'Switch to Light mode' : 'Switch to Dark mode'}
       onClick={onSwitchDarkMode}
     />
+=======
+    <>
+      <AppIconButton
+        icon={isDarkMode ? 'day' : 'night'} // Variant 1
+        title={isDarkMode ? 'Switch to Light mode' : 'Switch to Dark mode'}
+        onClick={onSwitchDarkMode}
+      />
+      {isAuthenticated && <ProfileMenu />}
+    </>
+>>>>>>> Stashed changes
   )
 
   // Note: useMemo() is not needed for startNode, endNode. We need respect store.darkMode and so on.
@@ -113,7 +162,7 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarIte
     <Stack sx={stackStyles}>
       <Stack component='header'>
         <TopBar startNode={startNode} title={title} endNode={endNode} />
-        <SideBar items={sidebarItems} onClose={onSideBarClose} {...sidebarProps} />
+        <SideBar items={sidebarItems} onClose={onSideBarClose} mini={mini} setMini={setMini} {...sidebarProps} />
       </Stack>
 
       <Stack
@@ -129,6 +178,11 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarIte
           <Outlet />
           {/* Also render children when it is provided */}
           {children}
+          <Box component='footer' mx='auto' py={2} textAlign='center' bgcolor='transpa'>
+            <span>
+              Copyright &copy; by Javier and <AppLink href='https://www.behance.net/jensuytu'>jensuytu</AppLink>
+            </span>
+          </Box>
         </ErrorBoundary>
       </Stack>
     </Stack>

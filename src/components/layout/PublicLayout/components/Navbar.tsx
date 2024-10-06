@@ -1,9 +1,14 @@
+<<<<<<< Updated upstream
 import * as React from 'react'
+=======
+import MenuIcon from '@mui/icons-material/Menu'
+>>>>>>> Stashed changes
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
+<<<<<<< Updated upstream
 import Menu from '@mui/material/Menu'
 import MenuIcon from '@mui/icons-material/Menu'
 import Container from '@mui/material/Container'
@@ -12,6 +17,19 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import AdbIcon from '@mui/icons-material/Adb'
+=======
+import * as React from 'react'
+import { useSelector } from 'react-redux'
+
+import './Navbar.scss'
+
+import AppButton from '~/components/common/AppButton'
+import { AppLink } from '~/components/common/AppLink'
+import ProfileMenu from '~/components/feature/ProfileMenu'
+import ThemSwitcher from '~/components/feature/ThemSwitcher'
+import { RouteNames } from '~/router/route-name'
+import { RootState } from '~/store/store'
+>>>>>>> Stashed changes
 
 const pages = ['Home', 'Blog', 'About']
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout']

@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { FunctionComponent, useCallback, MouseEvent } from 'react'
 import { Stack, Divider, Drawer, DrawerProps, FormControlLabel, Switch, Tooltip } from '@mui/material'
 import SideBarNavList from './SideBarNavList'
@@ -9,11 +10,25 @@ import AppIconButton from '~/components/common/AppIconButton'
 import { RootState } from '~/store/store'
 import { useSelector } from 'react-redux'
 import { SIDE_BAR_WIDTH, TOP_BAR_DESKTOP_HEIGHT } from '~/components/layout/config'
+=======
+import { Box, Drawer, DrawerProps, IconButton, Typography } from '@mui/material'
+import Divider from '@mui/material/Divider'
+import Stack from '@mui/material/Stack'
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
+import React, { useCallback } from 'react'
+import { MINI_DRAWER_WIDTH, SIDE_BAR_WIDTH } from '~/components/layout/config'
+import { LinkToPage } from '~/types/common'
+import { setSideBarMini } from '~/utils/localStorage'
+import SideBarNavList from './SideBarNavList'
+>>>>>>> Stashed changes
 
 export interface SideBarProps extends Pick<DrawerProps, 'anchor' | 'className' | 'open' | 'variant' | 'onClose'> {
+  mini: boolean
+  setMini: (mini: boolean) => void
   items: Array<LinkToPage>
 }
 
+<<<<<<< Updated upstream
 /**
  * Renders SideBar with Menu and User details
  * Actually for Authenticated users only, rendered in "Private Layout"
@@ -30,9 +45,16 @@ const SideBar: FunctionComponent<SideBarProps> = ({ anchor, open, variant, items
 
   const onSwitchDarkMode = useEventSwitchDarkMode()
   const onLogout = useEventLogout()
+=======
+const SideBar: React.FC<SideBarProps> = ({ mini, setMini, anchor, open, variant, items, onClose, ...restOfProps }) => {
+  const handleDrawerToggle = () => {
+    setMini(!mini)
+    setSideBarMini(!mini)
+  }
+>>>>>>> Stashed changes
 
   const handleAfterLinkClick = useCallback(
-    (event: MouseEvent) => {
+    (event: React.MouseEvent) => {
       if (variant === 'temporary' && typeof onClose === 'function') {
         onClose(event, 'backdropClick')
       }
@@ -47,50 +69,42 @@ const SideBar: FunctionComponent<SideBarProps> = ({ anchor, open, variant, items
       variant={variant}
       PaperProps={{
         sx: {
-          width: SIDE_BAR_WIDTH,
-          marginTop: onMobile ? 0 : variant === 'temporary' ? 0 : TOP_BAR_DESKTOP_HEIGHT,
-          height: onMobile ? '100%' : variant === 'temporary' ? '100%' : `calc(100% - ${TOP_BAR_DESKTOP_HEIGHT})`
+          width: mini ? MINI_DRAWER_WIDTH : SIDE_BAR_WIDTH,
+          transition: 'width 0.3s',
+          overflowX: 'hidden',
+          overflow: 'visible'
         }
       }}
       onClose={onClose}
     >
       <Stack
         sx={{
+          position: 'relative',
           height: '100%',
-          padding: 2
+          padding: mini ? 1 : 2,
+          overflow: 'visible'
         }}
         {...restOfProps}
         onClick={handleAfterLinkClick}
       >
-        {isAuthenticated && (
-          <>
-            {/* <UserInfo showAvatar /> */}
-            <Divider />
-          </>
-        )}
+        <IconButton
+          sx={{
+            position: 'absolute',
+            right: -12,
+            top: '50%',
+            zIndex: 100,
+            p: 0,
+            border: '1px solid var(--mui-palette-divider)',
+            backgroundColor: 'var(--mui-palette-background-paper)'
+          }}
+          onClick={handleDrawerToggle}
+        >
+          {mini ? <ChevronRightIcon size={18} /> : <ChevronLeftIcon size={18} />}
+        </IconButton>
 
-        <SideBarNavList items={items} showIcons />
+        <SideBarNavList items={items} showIcons mini={mini} />
 
         <Divider />
-
-        <Stack
-          sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-evenly',
-            alignItems: 'center',
-            marginTop: 2
-          }}
-        >
-          <Tooltip title={`Switch to ${state.theme.mode} mode`}>
-            <FormControlLabel
-              label={`${state.theme.mode} mode`}
-              control={<Switch checked={state.theme.mode === 'dark'} onChange={onSwitchDarkMode} />}
-            />
-          </Tooltip>
-
-          {isAuthenticated && <AppIconButton icon='logout' title='Logout Current User' onClick={onLogout} />}
-        </Stack>
       </Stack>
     </Drawer>
   )

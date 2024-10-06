@@ -1,5 +1,13 @@
+<<<<<<< Updated upstream
 import { FunctionComponent, ReactNode } from 'react'
 import { AppBar, Toolbar, Typography } from '@mui/material'
+=======
+import AppBar from '@mui/material/AppBar'
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
+import Toolbar from '@mui/material/Toolbar'
+import { FunctionComponent, ReactNode } from 'react'
+>>>>>>> Stashed changes
 
 interface Props {
   endNode?: ReactNode
@@ -15,17 +23,24 @@ const TopBar: FunctionComponent<Props> = ({ endNode, startNode, title = '', ...r
   return (
     <AppBar
       component='div'
-      sx={
-        {
-          // boxShadow: 'none', // Uncomment to hide shadow
-        }
-      }
+      sx={{
+        boxShadow: 'none' // Uncomment to hide shadow
+      }}
       {...restOfProps}
+      style={{
+        background: 'transparent'
+      }}
     >
-      <Toolbar disableGutters sx={{ paddingX: 1 }}>
-        {startNode}
+      <Container
+        maxWidth='xl'
+        // sx={{
+        //   maxWidth: '98% !important'
+        // }}
+      >
+        <Toolbar disableGutters sx={{ paddingX: 1 }}>
+          {startNode}
 
-        <Typography
+          {/* <Typography
           variant='h6'
           sx={{
             marginX: 1,
@@ -35,10 +50,13 @@ const TopBar: FunctionComponent<Props> = ({ endNode, startNode, title = '', ...r
           }}
         >
           {title}
-        </Typography>
+        </Typography> */}
 
-        {endNode}
-      </Toolbar>
+          <Box ml='auto' display='flex' gap={2}>
+            {endNode}
+          </Box>
+        </Toolbar>
+      </Container>
     </AppBar>
   )
 }

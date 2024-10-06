@@ -1,5 +1,11 @@
 import { ThemeOptions } from '@mui/material'
 import { PALETTE_COLORS } from './colors'
+<<<<<<< Updated upstream
+=======
+
+import { BREAKPOINTS } from '~/theme/breakpoint'
+import { BUTTON_STYLES } from '~/theme/components/button'
+>>>>>>> Stashed changes
 import { TYPOGRAPHY } from '~/theme/typography'
 
 /**
@@ -16,6 +22,10 @@ export const LIGHT_THEME: ThemeOptions = {
   },
   typography: {
     ...TYPOGRAPHY
+  },
+  breakpoints: BREAKPOINTS,
+  components: {
+    ...BUTTON_STYLES
   }
 }
 

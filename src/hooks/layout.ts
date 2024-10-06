@@ -43,5 +43,14 @@ export function useIsWideScreen() {
   return useMediaQuery(theme.breakpoints.up('md'))
 }
 
+export function useIsTabletOnlyByMediaQuery() {
+  const theme = useTheme()
+  const isAboveMobile = useMediaQuery(theme.breakpoints.up('sm'))
+  const isBelowXL = useMediaQuery(theme.breakpoints.down('lg'))
+  return isAboveMobile && isBelowXL
+}
+
 // export const useIsMobile = useIsMobileByTrackingWindowsResize;
 export const useIsMobile = useIsMobileByMediaQuery
+
+export const useIsTablet = useIsTabletOnlyByMediaQuery
