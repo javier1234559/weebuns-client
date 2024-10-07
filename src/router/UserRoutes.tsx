@@ -15,6 +15,9 @@ const AuthView = lazy(() => import('~/pages/(Auth)/Auth'))
 const Login = lazy(() => import('~/pages/(Auth)/Login/Login'))
 const DevView = lazy(() => import('~/pages/Dev'))
 const NotFoundView = lazy(() => import('~/pages/NotFoundView'))
+const Assignment = lazy(() => import('~/pages/Assignment'))
+const Course = lazy(() => import('~/pages/Course'))
+const Vocabulary = lazy(() => import('~/pages/Vocabulary'))
 
 const USER_ROUTES = [
   {
@@ -84,10 +87,34 @@ const USER_ROUTES = [
         )
       },
       {
-        path: '/app',
+        path: RouteNames.Dashboard,
         element: (
           <Suspense fallback={<AppLoading />}>
             <App />
+          </Suspense>
+        )
+      },
+      {
+        path: RouteNames.Assignment,
+        element: (
+          <Suspense fallback={<AppLoading />}>
+            <Assignment />
+          </Suspense>
+        )
+      },
+      {
+        path: '/course',
+        element: (
+          <Suspense fallback={<AppLoading />}>
+            <Course />
+          </Suspense>
+        )
+      },
+      {
+        path: RouteNames.Vocabulary,
+        element: (
+          <Suspense fallback={<AppLoading />}>
+            <Vocabulary />
           </Suspense>
         )
       }
@@ -96,15 +123,15 @@ const USER_ROUTES = [
 ]
 
 // Add debug routes
-if (globalConfig.IS_DEBUG) {
-  USER_ROUTES[0].children.push({
-    path: '/dev',
-    element: (
-      <Suspense fallback={<AppLoading />}>
-        <DevView />
-      </Suspense>
-    )
-  })
-}
+// if (globalConfig.IS_DEBUG) {
+USER_ROUTES[0].children.push({
+  path: '/dev',
+  element: (
+    <Suspense fallback={<AppLoading />}>
+      <DevView />
+    </Suspense>
+  )
+})
+// }
 
 export default USER_ROUTES

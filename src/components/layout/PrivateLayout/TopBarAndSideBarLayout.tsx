@@ -1,9 +1,10 @@
-import { StackProps } from '@mui/material'
+import { Box, StackProps } from '@mui/material'
 import Stack from '@mui/material/Stack'
 import { FunctionComponent, useMemo, useState } from 'react'
 import { Outlet } from 'react-router-dom'
 
 import {
+  MINI_SIDE_BAR_WIDTH,
   SIDE_BAR_DESKTOP_ANCHOR,
   SIDE_BAR_MOBILE_ANCHOR,
   SIDE_BAR_WIDTH,
@@ -12,13 +13,18 @@ import {
 } from '../config'
 
 import AppIconButton from '~/components/common/AppIconButton'
+import { AppLink } from '~/components/common/AppLink'
 import ErrorBoundary from '~/components/common/ErrorBoundary'
+import ProfileMenu from '~/components/feature/ProfileMenu'
 import SideBar, { SideBarProps } from '~/components/layout/PrivateLayout/components/SideBar'
 import TopBar from '~/components/layout/PrivateLayout/components/TopBar'
 import { globalConfig } from '~/config'
+import { useIsAuthenticated } from '~/hooks/auth'
 import { useEventSwitchDarkMode } from '~/hooks/event'
 import { useIsMobile } from '~/hooks/layout'
+import { RouteNames } from '~/router/route-name'
 import { LinkToPage } from '~/types/common'
+import { getSideBarMini } from '~/utils/localStorage'
 
 interface Props extends StackProps {
   sidebarItems: Array<LinkToPage>
@@ -26,14 +32,12 @@ interface Props extends StackProps {
   variant: 'sidebarAlwaysTemporary' | 'sidebarPersistentOnDesktop' | 'sidebarAlwaysPersistent'
 }
 
-/**
- * Renders "TopBar and SideBar" composition
- * @layout TopBarAndSideBarLayout
- */
 const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarItems, title, variant }) => {
-  const [sidebarVisible, setSidebarVisible] = useState(false) // TODO: Verify is default value is correct
+  const [sidebarVisible, setSidebarVisible] = useState(false)
   const onMobile = useIsMobile()
+  const isAuthenticated = useIsAuthenticated()
   const { onSwitchDarkMode, isDarkMode } = useEventSwitchDarkMode()
+  const [mini, setMini] = useState(getSideBarMini())
 
   const sidebarProps = useMemo((): Partial<SideBarProps> => {
     const anchor = onMobile ? SIDE_BAR_MOBILE_ANCHOR : SIDE_BAR_DESKTOP_ANCHOR
@@ -60,14 +64,19 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarIte
       paddingTop: onMobile ? TOP_BAR_MOBILE_HEIGHT : TOP_BAR_DESKTOP_HEIGHT,
       paddingLeft:
         sidebarProps.variant === 'persistent' && sidebarProps.open && sidebarProps?.anchor?.includes('left')
-          ? SIDE_BAR_WIDTH
+          ? mini
+            ? MINI_SIDE_BAR_WIDTH
+            : SIDE_BAR_WIDTH
           : undefined,
       paddingRight:
         sidebarProps.variant === 'persistent' && sidebarProps.open && sidebarProps?.anchor?.includes('right')
-          ? SIDE_BAR_WIDTH
-          : undefined
+          ? mini
+            ? MINI_SIDE_BAR_WIDTH
+            : SIDE_BAR_WIDTH
+          : undefined,
+      transition: 'padding 0.3s'
     }),
-    [onMobile, sidebarProps]
+    [onMobile, sidebarProps, mini]
   )
 
   const onSideBarOpen = () => {
@@ -80,19 +89,26 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarIte
 
   const LogoButton = (
     <AppIconButton
-      icon='logo'
-      title={sidebarProps.open ? undefined : 'Open Sidebar'}
-      to={sidebarProps.open ? '/' : undefined} // Navigate to Home only when SideBar is closed
-      onClick={sidebarProps.open ? undefined : onSideBarOpen} // Open SideBar only when it's closed
-    />
+      icon={onMobile ? 'menu' : 'logo'}
+      to={sidebarProps.open ? RouteNames.Home : undefined}
+      onClick={sidebarProps.open ? undefined : onSideBarOpen}
+      sx={{
+        hover: {
+          '&:hover': { backgroundColor: 'transparent !important' }
+        }
+      }}
+    ></AppIconButton>
   )
 
   const DarkModeButton = (
-    <AppIconButton
-      icon={isDarkMode ? 'day' : 'night'} // Variant 1
-      title={isDarkMode ? 'Switch to Light mode' : 'Switch to Dark mode'}
-      onClick={onSwitchDarkMode}
-    />
+    <>
+      <AppIconButton
+        icon={isDarkMode ? 'day' : 'night'} // Variant 1
+        title={isDarkMode ? 'Switch to Light mode' : 'Switch to Dark mode'}
+        onClick={onSwitchDarkMode}
+      />
+      {isAuthenticated && <ProfileMenu />}
+    </>
   )
 
   // Note: useMemo() is not needed for startNode, endNode. We need respect store.darkMode and so on.
@@ -112,7 +128,7 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarIte
     <Stack sx={stackStyles}>
       <Stack component='header'>
         <TopBar startNode={startNode} title={title} endNode={endNode} />
-        <SideBar items={sidebarItems} onClose={onSideBarClose} {...sidebarProps} />
+        <SideBar items={sidebarItems} onClose={onSideBarClose} mini={mini} setMini={setMini} {...sidebarProps} />
       </Stack>
 
       <Stack
@@ -128,6 +144,11 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarIte
           <Outlet />
           {/* Also render children when it is provided */}
           {children}
+          <Box component='footer' mx='auto' mt={8} py={2} textAlign='center' bgcolor='transpa'>
+            <span>
+              Copyright &copy; by Javier and <AppLink href='https://www.behance.net/jensuytu'>jensuytu</AppLink>
+            </span>
+          </Box>
         </ErrorBoundary>
       </Stack>
     </Stack>

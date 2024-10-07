@@ -1,5 +1,3 @@
-import * as React from 'react'
-import { useSelector } from 'react-redux'
 import MenuIcon from '@mui/icons-material/Menu'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
@@ -9,6 +7,8 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
+import * as React from 'react'
+import { useSelector } from 'react-redux'
 
 import './Navbar.scss'
 

@@ -5,9 +5,12 @@
 /**
  * SideBar configuration
  */
-export const SIDE_BAR_MOBILE_ANCHOR = 'right' // 'right';
+export const SIDE_BAR_MOBILE_ANCHOR = 'left' // 'right';
 export const SIDE_BAR_DESKTOP_ANCHOR = 'left' // 'right';
 export const SIDE_BAR_WIDTH = '240px'
+
+export const MINI_DRAWER_WIDTH = 80 // Width of the mini drawer
+export const MINI_SIDE_BAR_WIDTH = '140px'
 
 /**
  * TopBar configuration

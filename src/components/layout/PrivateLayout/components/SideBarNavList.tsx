@@ -1,26 +1,32 @@
-import { FunctionComponent, MouseEventHandler } from 'react'
 import List from '@mui/material/List'
+import { FunctionComponent, MouseEventHandler } from 'react'
 
 import SideBarNavItem from './SideBarNavItem'
 
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { AppIconButton } from '~/components/common/AppIconButton'
 import { LinkToPage } from '~/types/common'
 
 interface Props {
   items: Array<LinkToPage>
   showIcons?: boolean
-  onClick?: MouseEventHandler
+  mini?: boolean
+  onClick?: React.MouseEventHandler
 }
 
-/**
- * Renders list of Navigation Items inside SideBar
- * @component SideBarNavList
- * @param {array} items - list of objects to render as navigation items
- * @param {boolean} [showIcons] - icons in navigation items are visible when true
- * @param {function} [onAfterLinkClick] - optional callback called when some navigation item was clicked
- */
-const SideBarNavList: FunctionComponent<Props> = ({ items, showIcons, onClick, ...restOfProps }) => {
+const SideBarNavList: React.FC<Props> = ({ items, showIcons, mini, onClick, ...restOfProps }) => {
   return (
     <List component='nav' {...restOfProps}>
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: mini ? 'center' : 'space-between', mb: 2 }}>
+        <AppIconButton icon={'logo'} title='Logo'>
+          {!mini && (
+            <Typography variant='h6' marginLeft={2} fontWeight={600} color='textPrimary'>
+              Weebuns
+            </Typography>
+          )}
+        </AppIconButton>
+      </Box>
       {items.map(({ icon, path, title }) => (
         <SideBarNavItem
           key={`${title}-${path}`}
@@ -28,6 +34,7 @@ const SideBarNavList: FunctionComponent<Props> = ({ items, showIcons, onClick, .
           path={path}
           title={title}
           onClick={onClick}
+          mini={mini}
         />
       ))}
     </List>

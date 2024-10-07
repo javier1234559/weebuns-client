@@ -1,4 +1,3 @@
-// @ts-nocheck
 const js = require('@eslint/js');
 const muiPathImports = require('eslint-plugin-mui-path-imports');
 const eslintPluginPrettier = require('eslint-plugin-prettier');
@@ -47,6 +46,9 @@ module.exports = [
         version: 'detect'
       }
     },
+    extends: [
+      "prettier",
+    ],
     rules: {
       ...tseslint.configs.recommended.rules,
       ...react.configs.recommended.rules,
@@ -128,4 +130,5 @@ module.exports = [
       'react/jsx-props-no-spreading': 0,
     },
   },
+
 ];

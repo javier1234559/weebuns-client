@@ -22,7 +22,9 @@ function FaceBookForm({ onSubmit }: FaceBookFormProps) {
         onSubmit(result)
       }
     } else {
-      toast.error('Failed to retrieve access token from Facebook')
+      toast('Failed to retrieve access token from Facebook', {
+        icon: '🤕'
+      })
     }
   }
 
