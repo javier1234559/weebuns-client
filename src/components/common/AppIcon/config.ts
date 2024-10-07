@@ -18,13 +18,12 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
 import { Moon, Sun } from 'lucide-react'
 
-import LogoIcon from './icons/YellowPlanIcon'
-
+import Assignment from '~/components/common/AppIcon/icons/Assignment'
+import Course from '~/components/common/AppIcon/icons/Course'
 import GoogleIcon from '~/components/common/AppIcon/icons/GoogleIcon'
+import Logo from '~/components/common/AppIcon/icons/Logo'
+import Vocabulary from '~/components/common/AppIcon/icons/Vocabulary'
 
-/**
- * List of all available Icon names
- */
 export type IconName = keyof typeof ICONS
 
 /**
@@ -37,7 +36,7 @@ export type IconName = keyof typeof ICONS
  */
 export const ICONS /* Note: Setting type disables property autocomplete :( was - : Record<string, ComponentType> */ = {
   default: DefaultIcon,
-  logo: LogoIcon,
+  logo: Logo,
   close: CloseIcon,
   menu: MenuIcon,
   settings: SettingsIcon,
@@ -55,5 +54,8 @@ export const ICONS /* Note: Setting type disables property autocomplete :( was -
   logout: ExitToAppIcon,
   notifications: NotificationsIcon,
   error: DangerousIcon,
-  google: GoogleIcon
+  google: GoogleIcon,
+  course: Course,
+  vocabulary: Vocabulary,
+  assignment: Assignment
 }

@@ -9,6 +9,10 @@ export enum RouteNames {
   ME = '/me',
   Logout = '/logout',
 
+  Course = '/course',
+  Assignment = '/assignment',
+  Vocabulary = '/vocabulary',
+
   ForgotPassword = '/forgot-password',
   UNAUTHORIZED = '/401',
   SERVER_ERROR = '/500'

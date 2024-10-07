@@ -1,5 +1,5 @@
-const AuthPage = () => {
-  return <div className='w-full'></div>
+function AuthPage() {
+  return <div className='w-full' />
 }
 
 export default AuthPage

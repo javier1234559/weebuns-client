@@ -1,7 +1,7 @@
 import { useLocation, useOutlet } from 'react-router-dom'
 import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
-const TransitionWrapper = () => {
+function TransitionWrapper() {
   const location = useLocation()
   const currentOutlet = useOutlet()
 

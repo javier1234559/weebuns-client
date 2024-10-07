@@ -1,6 +1,6 @@
-import { FunctionComponent, PropsWithChildren } from 'react'
 import { StackProps, useMediaQuery, useTheme } from '@mui/material'
 import Stack from '@mui/material/Stack'
+import { FunctionComponent, PropsWithChildren } from 'react'
 
 import { CONTENT_MAX_WIDTH, CONTENT_MIN_WIDTH } from '~/components/config'
 

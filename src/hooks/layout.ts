@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react'
 import { Breakpoint, useMediaQuery, useTheme } from '@mui/material'
+import { useCallback, useEffect, useState } from 'react'
 
 /**
  * Hook to detect isMobile vs. onDesktop using "resize" event listener
@@ -45,3 +45,12 @@ export function useIsWideScreen() {
 
 // export const useIsMobile = useIsMobileByTrackingWindowsResize;
 export const useIsMobile = useIsMobileByMediaQuery
+
+export function useIsTabletOnlyByMediaQuery() {
+  const theme = useTheme()
+  const isAboveMobile = useMediaQuery(theme.breakpoints.up('sm'))
+  const isBelowXL = useMediaQuery(theme.breakpoints.down('lg'))
+  return isAboveMobile && isBelowXL
+}
+
+export const useIsTablet = useIsTabletOnlyByMediaQuery

@@ -1,8 +1,8 @@
-import { FunctionComponent } from 'react'
 import { CircularProgressProps, StackProps } from '@mui/material'
 import CircularProgress from '@mui/material/CircularProgress'
 import LinearProgress from '@mui/material/LinearProgress'
 import Stack from '@mui/material/Stack'
+import { FunctionComponent } from 'react'
 
 import { APP_LOADING_COLOR, APP_LOADING_SIZE, APP_LOADING_TYPE } from '~/components/config'
 

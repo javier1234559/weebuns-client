@@ -1,4 +1,5 @@
-import toast from 'react-hot-toast'
+import './GoogleForm.scss'
+
 import {
   CodeResponse,
   CredentialResponse,
@@ -6,8 +7,7 @@ import {
   useGoogleLogin,
   useGoogleOneTapLogin
 } from '@react-oauth/google'
-
-import './GoogleForm.scss'
+import toast from 'react-hot-toast'
 
 import { AppIcon } from '~/components/common/AppIcon'
 import authApi from '~/services/auth'
@@ -42,7 +42,9 @@ function GoogleForm({ onSubmit }: GoogleFormProps) {
   }
 
   const handleError = () => {
-    toast.error('Google login failed.')
+    toast('Failed to retrieve access token from Google', {
+      icon: '🤕'
+    })
   }
 
   const login = useGoogleLogin({

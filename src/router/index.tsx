@@ -1,15 +1,14 @@
 import { useCallback, useState } from 'react'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
-import { RouteObject } from 'react-router-dom'
-
-import ADMIN_ROUTES from './AdminRoutes'
-import USER_ROUTES from './UserRoutes'
+import { createBrowserRouter, RouteObject, RouterProvider } from 'react-router-dom'
 
 import AppLoading from '~/components/common/AppLoading'
 import { globalConfig } from '~/config'
 import { useAuthWatchdog, useIsAuthenticated } from '~/hooks/auth'
 import TransitionWrapper from '~/router/components/TransitionWrapper'
 import { checkIsRoleAdmin } from '~/utils/token'
+
+import ADMIN_ROUTES from './AdminRoutes'
+import USER_ROUTES from './UserRoutes'
 
 const createRouterWithTransition = (routes: RouteObject[]) => {
   return createBrowserRouter([
@@ -24,7 +23,7 @@ const createRouterWithTransition = (routes: RouteObject[]) => {
 const routesPrivate = createRouterWithTransition(ADMIN_ROUTES)
 const routesPublic = createRouterWithTransition(USER_ROUTES)
 
-const Routes = () => {
+function Routes() {
   const [loading, setLoading] = useState(false)
   const [refreshCount, setRefreshCount] = useState(0)
   const isAuthenticated = useIsAuthenticated()

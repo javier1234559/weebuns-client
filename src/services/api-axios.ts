@@ -372,12 +372,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags auth
      * @name AuthControllerRefreshToken
-     * @request GET:/api/auth/refresh
+     * @request POST:/api/auth/refresh-token
      */
     authControllerRefreshToken: (params: RequestParams = {}) =>
       this.request<void, any>({
-        path: `/api/auth/refresh`,
-        method: 'GET',
+        path: `/api/auth/refresh-token`,
+        method: 'POST',
         ...params
       }),
 

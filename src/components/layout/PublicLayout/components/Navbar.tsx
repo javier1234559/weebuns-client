@@ -1,5 +1,5 @@
-import * as React from 'react'
-import { useSelector } from 'react-redux'
+import './Navbar.scss'
+
 import MenuIcon from '@mui/icons-material/Menu'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
@@ -9,8 +9,8 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
-
-import './Navbar.scss'
+import * as React from 'react'
+import { useSelector } from 'react-redux'
 
 import AppButton from '~/components/common/AppButton'
 import { AppLink } from '~/components/common/AppLink'
@@ -93,7 +93,7 @@ function Header() {
             ))}
           </Box>
 
-          <Box display={'flex'} gap={2}>
+          <Box display='flex' gap={2}>
             <ThemSwitcher />
             {isAuthenticated && <ProfileMenu />}
             {!isAuthenticated && (

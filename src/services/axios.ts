@@ -69,7 +69,7 @@ export const TokenManager = new TokenManagement({
       console.log('Error while refreshing token', error)
       axiosService.abortRequests()
 
-      //delete cookie
+      // delete cookie
       await axiosInstant.post('/api/auth/logout')
 
       deleteToken()
@@ -89,6 +89,7 @@ export const TokenManager = new TokenManagement({
   }
 })
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const injectHeaders = async (headers: any) => {
   const token: string = (await TokenManager.getToken()) as string
 

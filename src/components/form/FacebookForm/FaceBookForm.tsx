@@ -1,7 +1,7 @@
+import './FaceBookForm.scss'
+
 import FacebookLogin, { ReactFacebookFailureResponse, ReactFacebookLoginInfo } from 'react-facebook-login'
 import toast from 'react-hot-toast'
-
-import './FaceBookForm.scss'
 
 import { globalConfig } from '~/config'
 import authApi from '~/services/auth'
@@ -22,7 +22,9 @@ function FaceBookForm({ onSubmit }: FaceBookFormProps) {
         onSubmit(result)
       }
     } else {
-      toast.error('Failed to retrieve access token from Facebook')
+      toast('Failed to retrieve access token from Facebook', {
+        icon: '🤕'
+      })
     }
   }
 

@@ -1,13 +1,12 @@
-import { FunctionComponent, useMemo } from 'react'
-import { IconButtonProps } from '@mui/material'
-import { alpha } from '@mui/material'
+import { alpha, IconButtonProps } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
-
-import { AppIconButtonProps, MUI_ICON_BUTTON_COLORS } from './utils'
+import { FunctionComponent, useMemo } from 'react'
 
 import AppIcon from '~/components/common/AppIcon'
 import { AppLink } from '~/components/common/AppLink'
+
+import { AppIconButtonProps, MUI_ICON_BUTTON_COLORS } from './utils'
 
 /**
  * Renders MUI IconButton with SVG image by given Icon name
@@ -44,7 +43,7 @@ const AppIconButton: FunctionComponent<AppIconButtonProps> = ({
     const sxToRender = {
       ...sx,
       ...(!isMuiColor && {
-        color: color,
+        color,
         ':hover': {
           backgroundColor: alpha(color, 0.04)
         }

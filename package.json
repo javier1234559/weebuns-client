@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "build": "yarn lint:fix && tsc -b && vite build",
     "preview": "vite preview",
-    "lint:fix": "eslint --fix \"src/**/*.{ts,tsx}\"",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx --config .eslintrc.cjs",
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix --config .eslintrc.cjs",
     "prettier": "prettier --check \"src/**/(*.tsx|*.ts|*.css|*.scss)\"",
     "prettier:fix": "prettier --write \"src/**/(*.tsx|*.ts|*.css|*.scss)\"",
     "gen:types": "swagger-typescript-api-es"
@@ -42,7 +42,6 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.9.0",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^22.7.0",
     "@types/react": "^18.3.3",
@@ -55,22 +54,14 @@
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "@vitejs/plugin-react": "^4.3.1",
     "eslint": "^8.55.0",
-    "eslint-config-airbnb": "^19.0.4",
-    "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-prettier": "^9.1.0",
-    "eslint-import-resolver-typescript": "^3.6.3",
-    "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-jsx-a11y": "^6.10.0",
     "eslint-plugin-mui-path-imports": "^0.0.15",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.37.1",
     "eslint-plugin-react-hooks": "^4.6.2",
-    "eslint-plugin-react-refresh": "^0.4.9",
     "eslint-plugin-simple-import-sort": "^12.1.1",
-    "globals": "^15.9.0",
     "prettier": "^3.3.3",
     "typescript": "^5.5.3",
-    "typescript-eslint": "^8.0.1",
     "vite": "^5.4.1"
   }
 }

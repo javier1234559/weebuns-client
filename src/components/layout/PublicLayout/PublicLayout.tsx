@@ -1,6 +1,6 @@
+import Box from '@mui/material/Box'
 import { FunctionComponent, PropsWithChildren } from 'react'
 import { Outlet } from 'react-router-dom'
-import Box from '@mui/material/Box'
 
 import ErrorBoundary from '~/components/common/ErrorBoundary'
 import Header from '~/components/layout/PublicLayout/components/Navbar'
