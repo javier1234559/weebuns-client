@@ -1,7 +1,7 @@
+import './FaceBookForm.scss'
+
 import FacebookLogin, { ReactFacebookFailureResponse, ReactFacebookLoginInfo } from 'react-facebook-login'
 import toast from 'react-hot-toast'
-
-import './FaceBookForm.scss'
 
 import { globalConfig } from '~/config'
 import authApi from '~/services/auth'

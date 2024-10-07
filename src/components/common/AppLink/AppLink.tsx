@@ -1,10 +1,10 @@
+import MuiLink from '@mui/material/Link'
 import { forwardRef, useMemo } from 'react'
 import { Link as RouterLink, useLocation } from 'react-router-dom'
-import MuiLink from '@mui/material/Link'
-
-import { AppLinkProps, EXTERNAL_LINK_PROPS } from './utils'
 
 import { APP_LINK_COLOR, APP_LINK_UNDERLINE } from '~/components/config'
+
+import { AppLinkProps, EXTERNAL_LINK_PROPS } from './utils'
 
 /**
  * Restyled Link for navigation in the App, support internal links by "to" prop and external links by "href" prop

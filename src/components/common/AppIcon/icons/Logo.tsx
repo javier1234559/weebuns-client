@@ -2,7 +2,7 @@ import { FunctionComponent } from 'react'
 
 import { IconProps } from '../utils'
 
-const LogoIcon: FunctionComponent<IconProps> = (props) => {
+const LogoIcon: FunctionComponent<IconProps> = () => {
   return (
     <img
       src='/seo/favicon.ico'

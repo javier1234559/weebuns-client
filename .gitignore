@@ -24,3 +24,8 @@ dist-ssr
 *.sw?
 
 .env
+
+# vite
+tsconfig.node.tsbuildinfo
+vite.config.js
+tsconfig.tsbuildinfo

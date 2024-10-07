@@ -1,4 +1,3 @@
-import Stack from '@mui/material/Stack'
 import { FunctionComponent, PropsWithChildren } from 'react'
 
 import TopBarAndSideBarLayout from '~/components/layout/PrivateLayout/TopBarAndSideBarLayout'

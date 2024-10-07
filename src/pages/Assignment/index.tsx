@@ -1,4 +1,4 @@
-import Assignment from './Assignment';
+import Assignment from './Assignment'
 
-export { Assignment };
-export default Assignment;
+export { Assignment }
+export default Assignment

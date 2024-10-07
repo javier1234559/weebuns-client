@@ -1,4 +1,4 @@
-import Vocabulary from './Vocabulary';
+import Vocabulary from './Vocabulary'
 
-export { Vocabulary };
-export default Vocabulary;
+export { Vocabulary }
+export default Vocabulary

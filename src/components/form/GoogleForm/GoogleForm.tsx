@@ -1,3 +1,5 @@
+import './GoogleForm.scss'
+
 import {
   CodeResponse,
   CredentialResponse,
@@ -6,8 +8,6 @@ import {
   useGoogleOneTapLogin
 } from '@react-oauth/google'
 import toast from 'react-hot-toast'
-
-import './GoogleForm.scss'
 
 import { AppIcon } from '~/components/common/AppIcon'
 import authApi from '~/services/auth'

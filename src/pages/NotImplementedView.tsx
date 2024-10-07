@@ -20,7 +20,7 @@ const NotImplementedView: FunctionComponent<Props> = ({ name }) => {
         This view is not implemented yet. Go to <Link to='/'>home page</Link>
       </p>
       <p>
-        You've called the <b>{location?.pathname}</b> url
+        You&apos;ve called the <b>{location?.pathname}</b> url
         {paramId && (
           <span>
             {' '}

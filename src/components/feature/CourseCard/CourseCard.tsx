@@ -1,16 +1,17 @@
-import { Edit, MoreVert, Person, Share } from '@mui/icons-material'
-import {
-  Box,
-  Card,
-  CardContent,
-  CardMedia,
-  Divider,
-  IconButton,
-  Menu,
-  MenuItem,
-  Typography,
-  useTheme
-} from '@mui/material'
+import Edit from '@mui/icons-material/Edit'
+import MoreVert from '@mui/icons-material/MoreVert'
+import Person from '@mui/icons-material/Person'
+import Share from '@mui/icons-material/Share'
+import { useTheme } from '@mui/material'
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CardMedia from '@mui/material/CardMedia'
+import Divider from '@mui/material/Divider'
+import IconButton from '@mui/material/IconButton'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import Typography from '@mui/material/Typography'
 import { LogOut } from 'lucide-react'
 import React, { memo, useState } from 'react'
 

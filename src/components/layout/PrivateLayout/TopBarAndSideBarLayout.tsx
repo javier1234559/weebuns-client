@@ -1,16 +1,8 @@
-import { Box, StackProps } from '@mui/material'
+import { StackProps } from '@mui/material'
+import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import { FunctionComponent, useMemo, useState } from 'react'
 import { Outlet } from 'react-router-dom'
-
-import {
-  MINI_SIDE_BAR_WIDTH,
-  SIDE_BAR_DESKTOP_ANCHOR,
-  SIDE_BAR_MOBILE_ANCHOR,
-  SIDE_BAR_WIDTH,
-  TOP_BAR_DESKTOP_HEIGHT,
-  TOP_BAR_MOBILE_HEIGHT
-} from '../config'
 
 import AppIconButton from '~/components/common/AppIconButton'
 import { AppLink } from '~/components/common/AppLink'
@@ -25,6 +17,15 @@ import { useIsMobile } from '~/hooks/layout'
 import { RouteNames } from '~/router/route-name'
 import { LinkToPage } from '~/types/common'
 import { getSideBarMini } from '~/utils/localStorage'
+
+import {
+  MINI_SIDE_BAR_WIDTH,
+  SIDE_BAR_DESKTOP_ANCHOR,
+  SIDE_BAR_MOBILE_ANCHOR,
+  SIDE_BAR_WIDTH,
+  TOP_BAR_DESKTOP_HEIGHT,
+  TOP_BAR_MOBILE_HEIGHT
+} from '../config'
 
 interface Props extends StackProps {
   sidebarItems: Array<LinkToPage>
@@ -97,7 +98,7 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarIte
           '&:hover': { backgroundColor: 'transparent !important' }
         }
       }}
-    ></AppIconButton>
+    />
   )
 
   const DarkModeButton = (
@@ -140,7 +141,7 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarIte
         paddingTop={1}
       >
         <ErrorBoundary name='Content'>
-          {/* Always Render Router's Outlet*/}
+          {/* Always Render Router's Outlet */}
           <Outlet />
           {/* Also render children when it is provided */}
           {children}

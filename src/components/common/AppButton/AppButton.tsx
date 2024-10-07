@@ -1,13 +1,13 @@
-import { ElementType, FunctionComponent, ReactNode, useMemo } from 'react'
+import './AppButton.scss'
+
 import Button, { ButtonProps } from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
+import { ElementType, FunctionComponent, ReactNode, useMemo } from 'react'
+
+import { APP_BUTTON_VARIANT } from '~/components/config'
 
 import AppIcon from '../AppIcon'
 import AppLink from '../AppLink'
-
-import './AppButton.scss'
-
-import { APP_BUTTON_VARIANT } from '~/components/config'
 
 declare module '@mui/material/Button' {
   interface ButtonPropsVariantOverrides {

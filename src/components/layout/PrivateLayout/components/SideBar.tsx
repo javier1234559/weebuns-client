@@ -1,14 +1,16 @@
-import { DrawerProps, IconButton } from '@mui/material'
+import { DrawerProps } from '@mui/material'
 import Divider from '@mui/material/Divider'
 import Drawer from '@mui/material/Drawer'
+import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
-import { MouseEvent, useCallback } from 'react'
-import SideBarNavList from './SideBarNavList'
-
 import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
+import { MouseEvent, useCallback } from 'react'
+
 import { MINI_DRAWER_WIDTH, SIDE_BAR_WIDTH } from '~/components/layout/config'
 import { LinkToPage } from '~/types/common'
 import { setSideBarMini } from '~/utils/localStorage'
+
+import SideBarNavList from './SideBarNavList'
 
 export interface SideBarProps extends Pick<DrawerProps, 'anchor' | 'className' | 'open' | 'variant' | 'onClose'> {
   mini: boolean

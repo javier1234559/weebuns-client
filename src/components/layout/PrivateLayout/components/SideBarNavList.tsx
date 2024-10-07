@@ -1,12 +1,11 @@
-import List from '@mui/material/List'
-import { FunctionComponent, MouseEventHandler } from 'react'
-
-import SideBarNavItem from './SideBarNavItem'
-
 import Box from '@mui/material/Box'
+import List from '@mui/material/List'
 import Typography from '@mui/material/Typography'
+
 import { AppIconButton } from '~/components/common/AppIconButton'
 import { LinkToPage } from '~/types/common'
+
+import SideBarNavItem from './SideBarNavItem'
 
 interface Props {
   items: Array<LinkToPage>
@@ -19,7 +18,7 @@ const SideBarNavList: React.FC<Props> = ({ items, showIcons, mini, onClick, ...r
   return (
     <List component='nav' {...restOfProps}>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: mini ? 'center' : 'space-between', mb: 2 }}>
-        <AppIconButton icon={'logo'} title='Logo'>
+        <AppIconButton icon='logo' title='Logo'>
           {!mini && (
             <Typography variant='h6' marginLeft={2} fontWeight={600} color='textPrimary'>
               Weebuns

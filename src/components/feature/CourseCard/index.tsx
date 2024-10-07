@@ -1,4 +1,4 @@
-import CourseCard from './CourseCard';
+import CourseCard from './CourseCard'
 
-export { CourseCard };
-export default CourseCard;
+export { CourseCard }
+export default CourseCard

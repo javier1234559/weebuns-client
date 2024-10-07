@@ -1,10 +1,10 @@
 import { ThemeOptions } from '@mui/material'
 
-import { PALETTE_COLORS } from './colors'
-
 import { BREAKPOINTS } from '~/theme/breakpoint'
 import { BUTTON_STYLES } from '~/theme/components/button'
 import { TYPOGRAPHY } from '~/theme/typography'
+
+import { PALETTE_COLORS } from './colors'
 
 /**
  * MUI theme options for "Light Mode"

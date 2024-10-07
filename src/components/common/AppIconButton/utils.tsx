@@ -1,5 +1,5 @@
-import { ElementType } from 'react'
 import { IconButtonProps, TooltipProps } from '@mui/material'
+import { ElementType } from 'react'
 
 import { AppIconProps } from '../AppIcon/AppIcon'
 import { IconName } from '../AppIcon/config'

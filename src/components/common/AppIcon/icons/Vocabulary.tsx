@@ -2,7 +2,7 @@ import { FunctionComponent } from 'react'
 
 import { IconProps } from '../utils'
 
-const Vocabulary: FunctionComponent<IconProps> = (props) => {
+const Vocabulary: FunctionComponent<IconProps> = () => {
   return (
     <svg
       xmlns='http://www.w3.org/2000/svg'
@@ -11,9 +11,9 @@ const Vocabulary: FunctionComponent<IconProps> = (props) => {
       viewBox='0 0 24 24'
       fill='none'
       stroke='currentColor'
-      stroke-width='2'
-      stroke-linecap='round'
-      stroke-linejoin='round'
+      strokeWidth='2'
+      strokeLinecap='round'
+      strokeLinejoin='round'
       className='lucide lucide-whole-word'
     >
       <circle cx='7' cy='12' r='3' />

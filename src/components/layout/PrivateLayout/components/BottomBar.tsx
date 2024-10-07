@@ -1,7 +1,7 @@
-import { FunctionComponent, useCallback } from 'react'
-import { useLocation, useNavigate } from 'react-router'
 import BottomNavigation from '@mui/material/BottomNavigation'
 import BottomNavigationAction from '@mui/material/BottomNavigationAction'
+import { FunctionComponent, useCallback } from 'react'
+import { useLocation, useNavigate } from 'react-router'
 
 import AppIcon from '~/components/common/AppIcon'
 import { LinkToPage } from '~/types/common'

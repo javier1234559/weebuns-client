@@ -1,8 +1,6 @@
+import Stack from '@mui/material/Stack'
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Stack from '@mui/material/Stack'
-
-import NotImplementedView from '../NotImplementedView'
 
 import AppButton from '~/components/common/AppButton'
 import AppLink from '~/components/common/AppLink'
@@ -10,7 +8,9 @@ import AppView from '~/components/common/AppView'
 import { useEventLogout } from '~/hooks/auth'
 import authApi from '~/services/auth'
 
-const AuthView = () => {
+import NotImplementedView from '../NotImplementedView'
+
+function AuthView() {
   const navigate = useNavigate()
   const onLogout = useEventLogout()
 

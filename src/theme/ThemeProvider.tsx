@@ -4,11 +4,11 @@ import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { FunctionComponent, PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import DARK_THEME from './dark'
-import LIGHT_THEME from './light'
-
 import { RootState } from '~/store/store'
 import { ThemeKey } from '~/store/themeSlice'
+
+import DARK_THEME from './dark'
+import LIGHT_THEME from './light'
 
 function getThemeByDarkMode(themeState: ThemeKey) {
   switch (themeState) {

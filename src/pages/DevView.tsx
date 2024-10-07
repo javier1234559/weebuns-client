@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -11,6 +10,7 @@ import Grid from '@mui/material/Grid'
 import OutlinedInput from '@mui/material/OutlinedInput'
 import Snackbar from '@mui/material/Snackbar'
 import Typography from '@mui/material/Typography'
+import { useState } from 'react'
 
 import AppButton from '~/components/common/AppButton'
 import AppIconButton from '~/components/common/AppIconButton'
@@ -22,7 +22,7 @@ import { globalConfig } from '~/config'
  * url: /dev
  * @page Dev
  */
-const DevView = () => {
+function DevView() {
   const [isOpen, setOpen] = useState(false)
 
   if (!globalConfig.IS_DEBUG) return null // Hide this page on when env.REACT_APP_DEBUG is not set

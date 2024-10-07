@@ -2,7 +2,6 @@ import { lazy, Suspense } from 'react'
 
 import AppLoading from '~/components/common/AppLoading'
 import { PrivateLayout, PublicLayout } from '~/components/layout'
-import { globalConfig } from '~/config'
 import Register from '~/pages/(Auth)/Register'
 import AuthWrapper from '~/router/components/AuthRedirect'
 import PrivateRoute from '~/router/components/PrivateRoute'
