@@ -12,18 +12,34 @@ import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
-import { LogOut } from 'lucide-react'
+import { CaseUpper, CircleHelp, LogOut, PenLine } from 'lucide-react'
 import React, { memo, useState } from 'react'
 
-interface CourseCardProps {
+import { AppLink } from '~/components/common/AppLink'
+
+interface LearningSpaceCardProps {
+  id: string | number
   name: string
   thumbnail: string
   summary: string
-  memberNumber: string
-  createdBy: string
+  followerNumber: number
+  essay: number
+  quiz: number
+  vocabulary: number
+  createAt: string
 }
 
-function CourseCard({ thumbnail, name, summary, memberNumber, createdBy }: CourseCardProps) {
+function LearningSpaceCard({
+  id,
+  thumbnail,
+  name,
+  summary,
+  essay,
+  quiz,
+  vocabulary,
+  followerNumber,
+  createAt
+}: LearningSpaceCardProps) {
   const theme = useTheme()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
@@ -93,9 +109,11 @@ function CourseCard({ thumbnail, name, summary, memberNumber, createdBy }: Cours
           '&:last-child': { pb: 2 }
         }}
       >
-        <Typography gutterBottom variant='h6' component='div' sx={{ fontWeight: 'bold' }}>
-          {name}
-        </Typography>
+        <AppLink to={`/learning-space?spaceId=${id}`}>
+          <Typography gutterBottom variant='h6' component='div' sx={{ fontWeight: 'bold' }}>
+            {name}
+          </Typography>
+        </AppLink>
         <Typography variant='body2' color='text.body'>
           {summary}
         </Typography>
@@ -104,13 +122,44 @@ function CourseCard({ thumbnail, name, summary, memberNumber, createdBy }: Cours
       {/* Footer */}
       <Box sx={{ p: 2, pt: 0 }}>
         <Typography variant='body2' color='text.secondary' sx={{ mb: 1 }}>
-          {createdBy}
+          {createAt}
         </Typography>
         <Divider sx={{ my: 1, bgcolor: 'grey.700' }} />
-        <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-          <Person sx={{ mr: 1, fontSize: 20, color: 'grey.400' }} />
-          <Typography variant='body2' color='text.secondary' sx={{ color: 'grey.400' }}>
-            {memberNumber}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Typography
+            variant='body2'
+            color='text.secondary'
+            sx={{ color: 'grey.400', display: 'flex', alignItems: 'center' }}
+          >
+            <Person sx={{ mr: 1, fontSize: 20, color: 'grey.400' }} />
+            {followerNumber}
+          </Typography>
+
+          <Typography
+            variant='body2'
+            color='text.secondary'
+            sx={{ color: 'grey.400', display: 'flex', alignItems: 'center' }}
+          >
+            <CircleHelp style={{ marginRight: 'calc(1* var(--mui-spacing))', fontSize: 20, color: 'grey.400' }} />
+            {quiz}
+          </Typography>
+
+          <Typography
+            variant='body2'
+            color='text.secondary'
+            sx={{ color: 'grey.400', display: 'flex', alignItems: 'center' }}
+          >
+            <PenLine style={{ marginRight: 'calc(1* var(--mui-spacing))', fontSize: 20, color: 'grey.400' }} />
+            {essay}
+          </Typography>
+
+          <Typography
+            variant='body2'
+            color='text.secondary'
+            sx={{ color: 'grey.400', display: 'flex', alignItems: 'center' }}
+          >
+            <CaseUpper style={{ marginRight: 'calc(1* var(--mui-spacing))', fontSize: 20, color: 'grey.400' }} />
+            {vocabulary}
           </Typography>
         </Box>
       </Box>
@@ -118,6 +167,6 @@ function CourseCard({ thumbnail, name, summary, memberNumber, createdBy }: Cours
   )
 }
 
-CourseCard.displayName = 'CourseCard'
+LearningSpaceCard.displayName = 'LearningSpaceCard'
 
-export default memo(CourseCard)
+export default memo(LearningSpaceCard)

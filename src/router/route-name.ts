@@ -9,9 +9,26 @@ export enum RouteNames {
   ME = '/me',
   Logout = '/logout',
 
-  Course = '/course',
+  LearningSpace = '/learning-space',
+  LearningSpaceDetail = '/learning-space/:id',
+
+  Vocabulary = '/learning-space/:id/vocabulary',
+  VocabularyDetail = '/learning-space/:id/vocabulary/:subId',
+
+  Feed = '/feed',
+  FeedDetail = '/feed/:id',
+
+  Essay = '/learning-space/:id/essay',
+  EssayCreate = '/learning-space/:id/essay/create',
+  EssayDetail = '/learning-space/:id/essay/:subId',
+
+  Quiz = '/learning-space/:id/quiz',
+  QuizDetail = '/learning-space/:id/quiz/:subId',
+  QuizCreate = '/learning-space/:id/quiz/create',
+
   Assignment = '/assignment',
-  Vocabulary = '/vocabulary',
+
+  Setting = '/setting',
 
   ForgotPassword = '/forgot-password',
   UNAUTHORIZED = '/401',

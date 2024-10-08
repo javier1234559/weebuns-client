@@ -16,12 +16,17 @@ import SearchIcon from '@mui/icons-material/Search'
 import SettingsIcon from '@mui/icons-material/Settings'
 import VisibilityIcon from '@mui/icons-material/Visibility'
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff'
-import { Moon, Sun } from 'lucide-react'
+import { Moon, Sun } from 'lucide-react/'
 
 import Assignment from '~/components/common/AppIcon/icons/Assignment'
-import Course from '~/components/common/AppIcon/icons/Course'
+import Chat from '~/components/common/AppIcon/icons/Chat'
+import Essay from '~/components/common/AppIcon/icons/Essay'
 import GoogleIcon from '~/components/common/AppIcon/icons/GoogleIcon'
+import LearningSpace from '~/components/common/AppIcon/icons/LearningSpace'
+import Like from '~/components/common/AppIcon/icons/Like'
 import Logo from '~/components/common/AppIcon/icons/Logo'
+import Plus from '~/components/common/AppIcon/icons/Plus'
+import Quiz from '~/components/common/AppIcon/icons/Quiz'
 import Vocabulary from '~/components/common/AppIcon/icons/Vocabulary'
 
 export type IconName = keyof typeof ICONS
@@ -55,7 +60,12 @@ export const ICONS /* Note: Setting type disables property autocomplete :( was -
   notifications: NotificationsIcon,
   error: DangerousIcon,
   google: GoogleIcon,
-  course: Course,
+  space: LearningSpace,
   vocabulary: Vocabulary,
-  assignment: Assignment
+  assignment: Assignment,
+  essay: Essay,
+  quiz: Quiz,
+  like: Like,
+  chat: Chat,
+  plus: Plus
 }

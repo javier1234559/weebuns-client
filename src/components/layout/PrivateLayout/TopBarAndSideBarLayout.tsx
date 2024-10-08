@@ -29,11 +29,18 @@ import {
 
 interface Props extends StackProps {
   sidebarItems: Array<LinkToPage>
+  sidebarItemsSpace: Array<LinkToPage>
   title: string
   variant: 'sidebarAlwaysTemporary' | 'sidebarPersistentOnDesktop' | 'sidebarAlwaysPersistent'
 }
 
-const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarItems, title, variant }) => {
+const TopBarAndSideBarLayout: FunctionComponent<Props> = ({
+  children,
+  sidebarItems,
+  title,
+  variant,
+  sidebarItemsSpace
+}) => {
   const [sidebarVisible, setSidebarVisible] = useState(false)
   const onMobile = useIsMobile()
   const isAuthenticated = useIsAuthenticated()
@@ -129,7 +136,14 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({ children, sidebarIte
     <Stack sx={stackStyles}>
       <Stack component='header'>
         <TopBar startNode={startNode} title={title} endNode={endNode} />
-        <SideBar items={sidebarItems} onClose={onSideBarClose} mini={mini} setMini={setMini} {...sidebarProps} />
+        <SideBar
+          items={sidebarItems}
+          itemsSpace={sidebarItemsSpace}
+          onClose={onSideBarClose}
+          mini={mini}
+          setMini={setMini}
+          {...sidebarProps}
+        />
       </Stack>
 
       <Stack

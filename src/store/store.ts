@@ -3,6 +3,7 @@ import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, R
 import storage from 'redux-persist/lib/storage'
 
 import AuthReducer from './authSlice'
+import SpaceReducer from './spaceSlice'
 import ThemeReducer from './themeSlice'
 
 const persistConfig = {
@@ -11,7 +12,7 @@ const persistConfig = {
 }
 
 // Combine reducer
-const rootReducer = combineReducers({ theme: ThemeReducer, auth: AuthReducer })
+const rootReducer = combineReducers({ theme: ThemeReducer, auth: AuthReducer, space: SpaceReducer })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 

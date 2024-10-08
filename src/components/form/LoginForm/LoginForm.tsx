@@ -14,7 +14,7 @@ import logOnDev from '~/utils/log-on-dev'
 
 const schema = yup.object().shape({
   email: yup.string().email('Invalid email address').required('Email is required'),
-  password: yup.string().required('Password is required').min(8, 'Password must be at least 8 characters'),
+  password: yup.string().required('Password is required').min(6, 'Password must be at least 6 characters'),
   rememberMe: yup.boolean().optional()
 })
 

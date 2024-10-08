@@ -4,6 +4,8 @@ import Container from '@mui/material/Container'
 import Toolbar from '@mui/material/Toolbar'
 import { FunctionComponent, ReactNode } from 'react'
 
+import SpaceSelect from '~/components/feature/SpaceSelect'
+
 interface Props {
   endNode?: ReactNode
   startNode?: ReactNode
@@ -19,7 +21,9 @@ const TopBar: FunctionComponent<Props> = ({ endNode, startNode, title = '', ...r
     <AppBar
       component='div'
       sx={{
-        boxShadow: 'none' // Uncomment to hide shadow
+        boxShadow: 'none',
+        backdropFilter: 'blur(6px)',
+        color: 'text.primary'
       }}
       {...restOfProps}
       style={{
@@ -29,7 +33,9 @@ const TopBar: FunctionComponent<Props> = ({ endNode, startNode, title = '', ...r
       <Container maxWidth='xl'>
         <Toolbar disableGutters sx={{ paddingX: 1 }}>
           {startNode}
+
           <Box ml='auto' display='flex' gap={2}>
+            <SpaceSelect />
             {endNode}
           </Box>
         </Toolbar>
