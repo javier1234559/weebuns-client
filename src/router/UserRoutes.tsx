@@ -15,8 +15,13 @@ const Login = lazy(() => import('~/pages/(Auth)/Login/Login'))
 const DevView = lazy(() => import('~/pages/Dev'))
 const NotFoundView = lazy(() => import('~/pages/NotFoundView'))
 const Assignment = lazy(() => import('~/pages/Assignment'))
-const Course = lazy(() => import('~/pages/Course'))
 const Vocabulary = lazy(() => import('~/pages/Vocabulary'))
+const LearningSpace = lazy(() => import('~/pages/LearningSpace'))
+const Quiz = lazy(() => import('~/pages/Quiz'))
+const Essay = lazy(() => import('~/pages/Essay'))
+const EssayCreate = lazy(() => import('~/pages/Essay/[id]/EssayCreate'))
+const Setting = lazy(() => import('~/pages/Setting'))
+const EssayDetail = lazy(() => import('~/pages/Essay/[id]/EssayDetail'))
 
 const USER_ROUTES = [
   {
@@ -102,10 +107,50 @@ const USER_ROUTES = [
         )
       },
       {
-        path: '/course',
+        path: RouteNames.LearningSpace,
         element: (
           <Suspense fallback={<AppLoading />}>
-            <Course />
+            <LearningSpace />
+          </Suspense>
+        )
+      },
+      {
+        path: RouteNames.Essay,
+        element: (
+          <Suspense fallback={<AppLoading />}>
+            <Essay />
+          </Suspense>
+        )
+      },
+      {
+        path: RouteNames.EssayCreate,
+        element: (
+          <Suspense fallback={<AppLoading />}>
+            <EssayCreate />
+          </Suspense>
+        )
+      },
+      {
+        path: RouteNames.EssayDetail,
+        element: (
+          <Suspense fallback={<AppLoading />}>
+            <EssayDetail />
+          </Suspense>
+        )
+      },
+      {
+        path: RouteNames.Quiz,
+        element: (
+          <Suspense fallback={<AppLoading />}>
+            <Quiz />
+          </Suspense>
+        )
+      },
+      {
+        path: RouteNames.Setting,
+        element: (
+          <Suspense fallback={<AppLoading />}>
+            <Setting />
           </Suspense>
         )
       },

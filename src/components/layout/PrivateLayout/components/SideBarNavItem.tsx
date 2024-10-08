@@ -49,7 +49,8 @@ const SideBarNavItem: FunctionComponent<Props> = ({
         flexDirection: mini ? 'column' : 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        py: mini ? 1 : 1,
+        mt: 1,
+        py: 1,
         px: mini ? 0.5 : 2,
         '&.Mui-selected': {
           backgroundColor: theme.palette.action.selected,

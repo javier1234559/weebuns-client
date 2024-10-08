@@ -2,6 +2,7 @@ import { ThemeOptions } from '@mui/material'
 
 import { BREAKPOINTS } from '~/theme/breakpoint'
 import { BUTTON_STYLES } from '~/theme/components/button'
+import { SELECT_STYLES } from '~/theme/components/select'
 import { TYPOGRAPHY } from '~/theme/typography'
 
 import { PALETTE_COLORS } from './colors'
@@ -23,7 +24,8 @@ export const DARK_THEME: ThemeOptions = {
   },
   breakpoints: BREAKPOINTS,
   components: {
-    ...BUTTON_STYLES
+    ...BUTTON_STYLES,
+    ...SELECT_STYLES
   }
 }
 

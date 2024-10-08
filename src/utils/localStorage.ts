@@ -68,3 +68,16 @@ export const getSideBarMini = () => {
 export const setSideBarMini = (value: boolean) => {
   localStorage.setItem('isSideBarMini', JSON.stringify(value))
 }
+
+// export const setSpace = (value: string) => {
+//   localStorage.setItem('space', value)
+// }
+
+// export const getSpace = () => {
+//   const savedState = localStorage.getItem('space')
+//   return savedState ? JSON.parse(savedState) : ''
+// }
+
+// export const changeSpace = (value: string) => {
+//   localStorage.setItem('space', value)
+// }

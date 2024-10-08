@@ -1,16 +1,18 @@
-import { useLocation, useOutlet } from 'react-router-dom'
-import { CSSTransition, SwitchTransition } from 'react-transition-group'
+import { useOutlet } from 'react-router-dom'
+// import { CSSTransition, SwitchTransition } from 'react-transition-group'
 
 function TransitionWrapper() {
-  const location = useLocation()
+  // const location = useLocation()
   const currentOutlet = useOutlet()
 
   return (
-    <SwitchTransition>
-      <CSSTransition key={location.pathname} classNames='fade' timeout={300}>
-        <div className='transition-wrapper'>{currentOutlet}</div>
-      </CSSTransition>
-    </SwitchTransition>
+    // <SwitchTransition>
+    //   <CSSTransition key={location.pathname} classNames='fade' timeout={100}>
+    //     <div className='transition-wrapper'>{currentOutlet}</div>
+    //   </CSSTransition>
+    // </SwitchTransition>
+
+    <>{currentOutlet}</>
   )
 }
 

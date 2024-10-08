@@ -3,7 +3,6 @@ import { Navigate } from 'react-router-dom'
 import { PublicLayout } from '~/components/layout'
 import { globalConfig } from '~/config'
 import Landing from '~/pages'
-import AuthView from '~/pages/Auth/Auth'
 import DevView from '~/pages/DevView'
 
 const PUBLIC_ROUTES = [
@@ -17,10 +16,6 @@ const PUBLIC_ROUTES = [
       {
         path: '/',
         element: <Landing />
-      },
-      {
-        path: '/auth',
-        element: <AuthView />
       }
     ]
   }
