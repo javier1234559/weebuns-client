@@ -9,6 +9,7 @@ import { Toaster } from 'react-hot-toast'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 
+import AppModal from '~/components/common/AppModal/AppModal.tsx'
 import { globalConfig } from '~/config.ts'
 import { persistor, store } from '~/store/store'
 
@@ -29,6 +30,7 @@ createRoot(document.getElementById('root')!).render(
             <GoogleOAuthProvider clientId={CLIENT_ID}>
               <App />
               <Toaster />
+              <AppModal />
             </GoogleOAuthProvider>
           </QueryClientProvider>
         </AppThemeProvider>

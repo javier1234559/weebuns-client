@@ -7,6 +7,7 @@ import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
 import { AppButton } from '~/components/common/AppButton'
+import { useLoadingToast } from '~/hooks/useLoadingToast'
 import { LoginDto } from '~/services/api-axios'
 import authApi from '~/services/auth'
 import { AuthResponse } from '~/types/auth'
@@ -41,6 +42,7 @@ function LoginForm({ onSubmit }: LoginFormProps) {
       rememberMe: localStorage.getItem('rememberMe') === 'true'
     }
   })
+  const { runWithLoading } = useLoadingToast()
 
   useEffect(() => {
     const rememberedEmail = localStorage.getItem('rememberedEmail')
@@ -62,9 +64,18 @@ function LoginForm({ onSubmit }: LoginFormProps) {
     }
 
     logOnDev(data)
-    const result = await authApi.login(data as LoginDto)
-    if (result) {
-      onSubmit(result)
+
+    try {
+      const result = await runWithLoading(() => authApi.login(data as LoginDto), {
+        loadingMessage: 'Logging in...',
+        successMessage: 'Successfully logged in',
+        errorMessage: 'Login failed. Please try again.'
+      })
+      if (result) {
+        onSubmit(result)
+      }
+    } catch (error) {
+      console.error('Login failed:', error)
     }
   }
 

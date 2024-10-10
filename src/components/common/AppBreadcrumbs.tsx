@@ -54,15 +54,7 @@ function AppBreadcrumb({ breadcrumb, isHiddenBack, className }: AppBreadcrumbPro
           ))}
         </StyledBreadcrumbs>
         {!isHiddenBack && (
-          <Button
-            variant='outlined'
-            startIcon={<ChevronLeft />}
-            onClick={handleGoBack}
-            sx={{
-              '& .MuiButton-startIcon': { mr: { xs: 0, lg: 1 } },
-              '& .MuiButton-endIcon': { ml: { xs: 0, lg: 1 } }
-            }}
-          >
+          <Button variant='black' size='small' startIcon={<ChevronLeft />} onClick={handleGoBack}>
             <Box component='span' sx={{ display: { xs: 'none', lg: 'inline' } }}>
               {'Back'}
             </Box>

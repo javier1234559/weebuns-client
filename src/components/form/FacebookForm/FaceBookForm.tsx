@@ -1,9 +1,9 @@
 import './FaceBookForm.scss'
 
 import FacebookLogin, { ReactFacebookFailureResponse, ReactFacebookLoginInfo } from 'react-facebook-login'
-import toast from 'react-hot-toast'
 
 import { globalConfig } from '~/config'
+import { useLoadingToast } from '~/hooks/useLoadingToast'
 import authApi from '~/services/auth'
 import { AuthResponse } from '~/types/auth'
 
@@ -13,18 +13,20 @@ interface FaceBookFormProps {
 
 function FaceBookForm({ onSubmit }: FaceBookFormProps) {
   const APP_ID = globalConfig.FACEBOOK_APP_ID
+  const { runWithLoading } = useLoadingToast()
 
   const handleFacebookCallback = async (userInfo: ReactFacebookLoginInfo | ReactFacebookFailureResponse) => {
     if ('accessToken' in userInfo) {
-      const result = await authApi.loginFacebook(userInfo.accessToken)
-
-      if (result) {
+      try {
+        const result = await runWithLoading(() => authApi.loginFacebook(userInfo.accessToken), {
+          loadingMessage: 'Logging in with Facebook...',
+          successMessage: 'Successfully logged in',
+          errorMessage: 'Failed to log in with Facebook'
+        })
         onSubmit(result)
+      } catch (error) {
+        console.error('Facebook login failed:', error)
       }
-    } else {
-      toast('Failed to retrieve access token from Facebook', {
-        icon: '🤕'
-      })
     }
   }
 

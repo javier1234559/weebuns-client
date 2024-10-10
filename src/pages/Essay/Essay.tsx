@@ -49,7 +49,7 @@ function CreateEssayButton() {
 function Essay() {
   const breadcrumb = [
     { title: 'Home', href: RouteNames.Essay },
-    { title: 'Essay', href: RouteNames.EssayCreate }
+    { title: 'Essay', href: '' }
   ]
 
   return (

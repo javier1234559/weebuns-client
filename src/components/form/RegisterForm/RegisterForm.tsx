@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
 import { AppButton } from '~/components/common/AppButton'
+import { useLoadingToast } from '~/hooks/useLoadingToast'
 import { RegisterDto } from '~/services/api-axios'
 import authApi from '~/services/auth'
 import { AuthResponse } from '~/types/auth'
@@ -37,13 +38,24 @@ function RegisterForm({ onSubmit }: RegisterFormProps) {
     resolver: yupResolver(schema)
   })
 
+  const { runWithLoading } = useLoadingToast()
+
   const handleFormSubmit = async (data: RegisterFormData) => {
     logOnDev(data)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { confirmPassword, ...registerData } = data
-    const result = await authApi.register(registerData)
-    if (result) {
-      onSubmit(result)
+
+    try {
+      const result = await runWithLoading(() => authApi.register(registerData), {
+        loadingMessage: 'Registering...',
+        successMessage: 'Successfully registered',
+        errorMessage: 'Registration failed. Please try again.'
+      })
+      if (result) {
+        onSubmit(result)
+      }
+    } catch (error) {
+      console.error('Registration failed:', error)
     }
   }
 

@@ -3,16 +3,23 @@ import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, R
 import storage from 'redux-persist/lib/storage'
 
 import AuthReducer from './authSlice'
+import ModalReducer from './modalSlice'
 import SpaceReducer from './spaceSlice'
 import ThemeReducer from './themeSlice'
 
 const persistConfig = {
   key: 'root',
-  storage
+  storage,
+  blacklist: ['modal']
 }
 
 // Combine reducer
-const rootReducer = combineReducers({ theme: ThemeReducer, auth: AuthReducer, space: SpaceReducer })
+const rootReducer = combineReducers({
+  theme: ThemeReducer,
+  auth: AuthReducer,
+  space: SpaceReducer,
+  modal: ModalReducer
+})
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)
 
