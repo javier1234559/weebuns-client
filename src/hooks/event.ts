@@ -15,7 +15,7 @@ export function useEventSwitchDarkMode() {
 
   const onSwitchDarkMode = useCallback(() => {
     dispatch(toggleTheme())
-  }, [])
+  }, [dispatch])
 
   // Toggle dark mode
   return {
