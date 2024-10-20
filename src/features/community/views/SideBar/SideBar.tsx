@@ -9,7 +9,7 @@ import { AppLink } from '~/components/common/AppLink'
 import AppTag from '~/components/common/AppTag'
 import { MOCK_FEEDS_PICKED } from '~/features/community/mocks/feed'
 import { RouteNames } from '~/router/route-name'
-import { replacePathId } from '~/utils/replace-text'
+import { replacePathId } from '~/utils/replace-path'
 
 function StaffPicks() {
   return (

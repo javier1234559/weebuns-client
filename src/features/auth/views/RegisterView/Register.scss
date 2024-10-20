@@ -1,6 +1,4 @@
-@use '../../../assets/css/responsive';
-
-.login-page {
+.register-page {
   margin-top: 3rem;
   display: flex;
   justify-content: center;
@@ -19,8 +17,9 @@
   }
   .banner {
     height: auto;
-    max-height: 600px;
-    flex: 1;
+    // max-height: 600px;
+    // flex: 1;
+    width: 50%;
   }
 
   .form-login {

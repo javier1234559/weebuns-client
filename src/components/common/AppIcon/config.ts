@@ -20,6 +20,8 @@ import { Moon, Sun } from 'lucide-react/'
 
 import Assignment from '~/components/common/AppIcon/icons/Assignment'
 import Chat from '~/components/common/AppIcon/icons/Chat'
+import Delete from '~/components/common/AppIcon/icons/Delete'
+import Edit from '~/components/common/AppIcon/icons/Edit'
 import Essay from '~/components/common/AppIcon/icons/Essay'
 import GoogleIcon from '~/components/common/AppIcon/icons/GoogleIcon'
 import LearningSpace from '~/components/common/AppIcon/icons/LearningSpace'
@@ -67,5 +69,7 @@ export const ICONS /* Note: Setting type disables property autocomplete :( was -
   quiz: Quiz,
   like: Like,
   chat: Chat,
-  plus: Plus
+  plus: Plus,
+  delete: Delete,
+  edit: Edit
 }

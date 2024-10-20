@@ -15,8 +15,8 @@ import { useIsAuthenticated } from '~/hooks/auth'
 import { useEventSwitchDarkMode } from '~/hooks/event'
 import { useIsMobile } from '~/hooks/layout'
 import { RouteNames } from '~/router/route-name'
+import { getSideBarMini } from '~/services/storage/sideBarMiniState'
 import { LinkToPage } from '~/types/common'
-import { getSideBarMini } from '~/utils/localStorage'
 
 import {
   MINI_SIDE_BAR_WIDTH,

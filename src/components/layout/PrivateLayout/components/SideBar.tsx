@@ -12,8 +12,8 @@ import { AppIconButton } from '~/components/common/AppIconButton'
 import { AppLink } from '~/components/common/AppLink'
 import { MINI_DRAWER_WIDTH, SIDE_BAR_WIDTH } from '~/components/layout/config'
 import { RouteNames } from '~/router/route-name'
+import { setSideBarMini } from '~/services/storage/sideBarMiniState'
 import { LinkToPage } from '~/types/common'
-import { setSideBarMini } from '~/utils/localStorage'
 
 import SideBarNavList from './SideBarNavList'
 

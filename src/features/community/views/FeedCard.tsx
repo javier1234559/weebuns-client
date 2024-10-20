@@ -8,7 +8,7 @@ import { memo } from 'react'
 
 import { AppIconButton } from '~/components/common/AppIconButton'
 import { IFeed } from '~/features/community/feed.type'
-import { convertToRelativeTime } from '~/utils/format-data'
+import { convertToRelativeTime } from '~/utils/format-date'
 
 interface EssayCardProps {
   item: IFeed

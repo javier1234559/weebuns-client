@@ -52,6 +52,7 @@ const StyledListSubheader = styled(ListSubheader)(({ theme }) => ({
 interface SelectProps {
   children: React.ReactNode
   value: string
+  name: string
   onChange: (event: SelectChangeEvent<string>, child: React.ReactNode) => void
   label?: string
   placeholder?: string
