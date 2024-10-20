@@ -196,7 +196,7 @@ function BlogBannerUploadWithCrop({ onChange }: ImageUploadProps) {
             max={3}
             step={0.1}
             aria-labelledby='Zoom'
-            onChange={(e, zoom) => setZoom(Number(zoom))}
+            onChange={(_, zoom) => setZoom(Number(zoom))}
           />
         </DialogContent>
         <DialogActions>

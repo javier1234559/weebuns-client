@@ -4,7 +4,7 @@ import Container from '@mui/material/Container'
 import Toolbar from '@mui/material/Toolbar'
 import { FunctionComponent, ReactNode } from 'react'
 
-import SpaceSelect from '~/components/feature/SpaceSelect'
+import SpaceSelect from '~/features/space/components/SpaceSelect'
 
 interface Props {
   endNode?: ReactNode

@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom'
 import AppButton from '~/components/common/AppButton'
 import AppLink from '~/components/common/AppLink'
 import AppView from '~/components/common/AppView'
+import authApi from '~/features/auth/services/authApi'
 import { useEventLogout } from '~/hooks/auth'
-import authApi from '~/services/auth'
 
-import NotImplementedView from '../NotImplementedView'
+import NotImplementedView from '../not-implement-view'
 
 function AuthView() {
   const navigate = useNavigate()

@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
-import { logout } from '~/store/authSlice'
+import { logout } from '~/features/auth/authSlice'
 import { RootState } from '~/store/store'
 import { getToken } from '~/utils/token'
 

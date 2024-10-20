@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom'
 import { PublicLayout } from '~/components/layout'
 import { globalConfig } from '~/config'
 import Landing from '~/pages'
-import DevView from '~/pages/DevView'
+import DevView from '~/pages/dev-view'
 
 const PUBLIC_ROUTES = [
   {

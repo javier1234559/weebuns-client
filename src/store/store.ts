@@ -2,9 +2,9 @@ import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, REHYDRATE } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 
-import AuthReducer from './authSlice'
+import AuthReducer from '../features/auth/authSlice'
+import SpaceReducer from '../features/space/spaceSlice'
 import ModalReducer from './modalSlice'
-import SpaceReducer from './spaceSlice'
 import ThemeReducer from './themeSlice'
 
 const persistConfig = {

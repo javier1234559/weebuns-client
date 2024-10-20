@@ -3,9 +3,9 @@ import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate, useLocation } from 'react-router-dom'
 
+import { logout } from '~/features/auth/authSlice'
 import { useIsAuthenticated } from '~/hooks/auth'
 import { RouteNames } from '~/router/route-name'
-import { logout } from '~/store/authSlice'
 import { RootState } from '~/store/store'
 
 interface PrivateRouteProps {
