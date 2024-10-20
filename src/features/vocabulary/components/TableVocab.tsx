@@ -1,6 +1,3 @@
-import VolumeUpIcon from '@mui/icons-material/VolumeUp'
-import Chip from '@mui/material/Chip'
-import IconButton from '@mui/material/IconButton'
 import Paper from '@mui/material/Paper'
 import Table from '@mui/material/Table'
 import TableBody from '@mui/material/TableBody'
@@ -9,13 +6,11 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 
-import { SAVED_VOCAB_LIST } from '~/features/vocabulary/mocks/SAVED_VOCAB_LIST'
-
 function TableVocab() {
-  const playAudio = (url: string) => {
-    // In a real application, you would implement audio playback here
-    console.log(`Playing audio: ${url}`)
-  }
+  // const playAudio = (url: string) => {
+  //   // In a real application, you would implement audio playback here
+  //   console.log(`Playing audio: ${url}`)
+  // }
 
   return (
     <TableContainer component={Paper}>

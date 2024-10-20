@@ -3,7 +3,6 @@ import Typography from '@mui/material/Typography'
 import { memo } from 'react'
 
 import AppButton from '~/components/common/AppButton'
-import CreateEssayForm from '~/features/essay/components/CreateEssayForm'
 
 interface EditEssayModalProps {
   itemId: string
@@ -32,7 +31,7 @@ function EditEssayModal({ itemId, onConfirm, onClose }: EditEssayModalProps) {
       </Box>
 
       {/* EditEssayFormView */}
-      <CreateEssayForm ref={null} />
+      {/* <CreateEssayForm control=null /> */}
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
         <AppButton sx={{ marginRight: 1 }} onClick={handleCancelAndSaveDraft}>
           Cancel

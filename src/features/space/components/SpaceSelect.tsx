@@ -51,7 +51,7 @@ function SpaceSelect() {
 
   return (
     <FormControl sx={{ minWidth: 200 }}>
-      <Select value={currentSpace?.id || ''} placeholder='Select language space' onChange={handleChange}>
+      <Select value={currentSpace?.id || ''} placeholder='Select language space' onChange={handleChange} name='space'>
         <SelectItem value=''>Reset</SelectItem>
         {spaces.map((space) => (
           <SelectItem key={space.id} value={space.id}>
