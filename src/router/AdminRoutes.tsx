@@ -6,11 +6,11 @@ import { globalConfig } from '~/config'
 import { RouteNames } from '~/router/route-name'
 
 // Lazy load components
-const Landing = lazy(() => import('~/pages'))
-const App = lazy(() => import('~/pages/app'))
-const DevView = lazy(() => import('~/pages/dev-view'))
-const NotFoundView = lazy(() => import('~/pages/not-found'))
-const NotImplementedView = lazy(() => import('~/pages/not-implement-view'))
+const Landing = lazy(() => import('~/fix/pages'))
+const App = lazy(() => import('~/fix/pages/app'))
+const DevView = lazy(() => import('~/fix/pages/dev-view'))
+const NotFoundView = lazy(() => import('~/fix/pages/not-found'))
+const NotImplementedView = lazy(() => import('~/fix/pages/not-implement-view'))
 
 const ADMIN_ROUTES = [
   {
