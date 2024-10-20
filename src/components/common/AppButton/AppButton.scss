@@ -1,0 +1,27 @@
+.app-button {
+  &.MuiButton-root {
+    border-radius: 8px;
+    text-transform: capitalize;
+    box-shadow:
+      rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
+      rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+      rgba(0, 0, 0, 0.3) 0px 30px 60px -30px !important;
+  }
+
+  &.MuiButton-outlined {
+    border-color: var(--button-bg-custom) !important;
+    color: var(--button-bg-custom) !important;
+  }
+
+  &.MuiButton-black {
+    color: var(--button-text-custom) !important;
+    background-color: var(--button-bg-custom) !important;
+  }
+}
+
+// Mui[ComponentName]-[variant]
+// Mui[ComponentName]-[state]
+// Mui[ComponentName]-[subcomponent]
+// Button: MuiButton-root, MuiButton-outlined, MuiButton-contained
+// TextField: MuiTextField-root, MuiInputBase-root, MuiOutlinedInput-root
+// AppBar: MuiAppBar-root, MuiAppBar-colorPrimary

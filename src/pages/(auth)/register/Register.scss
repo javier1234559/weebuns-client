@@ -1,0 +1,32 @@
+@use '../../../assets/css/responsive.scss';
+
+.register-page {
+  margin-top: 3rem;
+  display: flex;
+  justify-content: center;
+
+  & > div {
+    max-width: 900px;
+    border-radius: 10px;
+    height: auto;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    background-color: var(--login-bg-custom);
+    color: var(--login-text-custom);
+  }
+  .banner {
+    height: auto;
+    // max-height: 600px;
+    // flex: 1;
+    width: 50%;
+  }
+
+  .form-login {
+    flex: 1;
+    padding: 1rem;
+    margin-right: 1rem;
+  }
+}
