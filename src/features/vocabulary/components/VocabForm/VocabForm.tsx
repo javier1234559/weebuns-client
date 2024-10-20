@@ -1,141 +1,136 @@
-import DeleteIcon from '@mui/icons-material/Delete'
+import ImageIcon from '@mui/icons-material/Image'
+import { useTheme } from '@mui/material'
 import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Chip from '@mui/material/Chip'
-import FormControl from '@mui/material/FormControl'
-import IconButton from '@mui/material/IconButton'
-import InputLabel from '@mui/material/InputLabel'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction'
 import ListItemText from '@mui/material/ListItemText'
-import MenuItem from '@mui/material/MenuItem'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
-import TextField from '@mui/material/TextField'
-import React, { useState } from 'react'
+import Typography from '@mui/material/Typography'
+import React from 'react'
 
-interface VocabItem {
-  id: number
-  word: string
-  partOfSpeech: string
-  audio: string
-  example: string
-}
-
-const partOfSpeechOptions = [
-  { value: 'n', label: 'Noun' },
-  { value: 'v', label: 'Verb' },
-  { value: 'adj', label: 'Adjective' },
-  { value: 'adv', label: 'Adverb' },
-  { value: 'prep', label: 'Preposition' }
-]
+import AppButton from '~/components/common/AppButton'
+import AppIconButton from '~/components/common/AppIconButton'
+import AppInput from '~/components/common/AppInput'
+import { useVocabForm } from '~/features/vocabulary/hooks/useVocabForm'
 
 const VocabForm: React.FC = () => {
-  const [vocabItems, setVocabItems] = useState<VocabItem[]>([])
-  const [currentItem, setCurrentItem] = useState<VocabItem>({
-    id: 0,
-    word: '',
-    partOfSpeech: '',
-    audio: '',
-    example: ''
-  })
-
-  const handleInputChange = (
-    e:
-      | React.ChangeEvent<HTMLInputElement>
-      | React.ChangeEvent<{ name?: string; value: unknown }>
-      | SelectChangeEvent<string>
-  ) => {
-    const { name, value } = e.target
-    setCurrentItem((prev) => ({ ...prev, [name as string]: value }))
-  }
-
-  const handleSave = () => {
-    if (currentItem.id === 0) {
-      // Add new item
-      setVocabItems([...vocabItems, { ...currentItem, id: Date.now() }])
-    } else {
-      // Update existing item
-      setVocabItems(vocabItems.map((item) => (item.id === currentItem.id ? currentItem : item)))
-    }
-    handleCancel()
-  }
-
-  const handleCancel = () => {
-    setCurrentItem({ id: 0, word: '', partOfSpeech: '', audio: '', example: '' })
-  }
-
-  const handleDelete = (id: number) => {
-    setVocabItems(vocabItems.filter((item) => item.id !== id))
-  }
-
-  const handleEdit = (item: VocabItem) => {
-    setCurrentItem(item)
-  }
+  const theme = useTheme()
+  const {
+    currentItem,
+    vocabItems,
+    isImageLoading,
+    handleInputChange,
+    handleWordInputKeyDown,
+    handleWordInputBlur,
+    handleSave,
+    handleClear,
+    handleDelete,
+    handleEdit,
+    handleSaveAll
+  } = useVocabForm()
 
   return (
     <Box>
-      <Box sx={{ mb: 2 }}>
-        <TextField
-          fullWidth
-          label='Word'
-          name='word'
-          value={currentItem.word}
-          onChange={(e) => handleInputChange(e as SelectChangeEvent<string>)}
-          sx={{ mb: 2 }}
-        />
-        <FormControl fullWidth sx={{ mb: 2 }}>
-          <InputLabel>Part of Speech</InputLabel>
-          <Select
-            name='partOfSpeech'
-            value={currentItem.partOfSpeech}
+      <Typography variant='h6' gutterBottom>
+        Create new list of word
+      </Typography>
+      <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+        <Box sx={{ flex: 1 }}>
+          <AppInput
+            fullWidth
+            placeholder='Word'
+            name='word'
+            value={currentItem.word}
             onChange={handleInputChange}
-            label='Part of Speech'
+            onKeyDown={handleWordInputKeyDown}
+            onBlur={handleWordInputBlur}
+            sx={{ mb: 2 }}
+          />
+          <AppInput
+            fullWidth
+            placeholder='Phonetics'
+            name='phonetics'
+            value={currentItem.phonetics}
+            onChange={handleInputChange}
+            sx={{ mb: 2 }}
+          />
+          <AppInput
+            fullWidth
+            placeholder='Definition'
+            name='definition'
+            value={currentItem.definition}
+            onChange={handleInputChange}
+            rows={3}
+            sx={{ mb: 2 }}
+          />
+          <AppInput
+            fullWidth
+            placeholder='Example'
+            name='example'
+            value={currentItem.example}
+            onChange={handleInputChange}
+            rows={2}
+            sx={{ mb: 2 }}
+          />
+          <AppInput
+            fullWidth
+            placeholder='Source or References Links'
+            name='sourceLink'
+            value={currentItem.sourceLink}
+            onChange={handleInputChange}
+            sx={{ mb: 2 }}
+          />
+        </Box>
+        <Box sx={{ width: 100, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+          <Box
+            sx={{
+              width: 100,
+              height: 100,
+              border: `1px dashed ${theme.palette.divider}`,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: '10px',
+              overflow: 'hidden',
+              mb: 1
+            }}
           >
-            {partOfSpeechOptions.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <TextField
-          fullWidth
-          label='Audio URL'
-          name='audio'
-          value={currentItem.audio}
-          onChange={handleInputChange}
-          sx={{ mb: 2 }}
-        />
-        <TextField
-          fullWidth
-          label='Example'
-          name='example'
-          value={currentItem.example}
-          onChange={handleInputChange}
-          multiline
-          rows={2}
-          sx={{ mb: 2 }}
-        />
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button onClick={handleCancel} sx={{ mr: 1 }}>
-            Cancel
-          </Button>
-          <Button variant='contained' onClick={handleSave}>
+            {isImageLoading ? (
+              <Typography>Loading...</Typography>
+            ) : currentItem.picture ? (
+              <img
+                src={currentItem.picture}
+                alt={currentItem.word}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            ) : (
+              <ImageIcon sx={{ fontSize: 60, color: 'grey.500' }} />
+            )}
+          </Box>
+        </Box>
+      </Box>
+
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+        <AppButton variant='outlined' onClick={handleClear}>
+          Clear
+        </AppButton>
+        <Box>
+          <AppButton onClick={handleSave} sx={{ mr: 1 }}>
             Save
-          </Button>
+          </AppButton>
+          <AppButton variant='contained' color='primary' onClick={handleSaveAll}>
+            Save ALL
+          </AppButton>
         </Box>
       </Box>
 
       <List>
         {vocabItems.map((item) => (
-          <ListItem key={item.id} component='button' onClick={() => handleEdit(item)}>
-            <Chip label={item.partOfSpeech} size='small' sx={{ mr: 1, width: 40 }} />
+          <ListItem key={item.id}>
             <ListItemText primary={item.word} />
             <ListItemSecondaryAction>
-              <IconButton edge='end' aria-label='delete' onClick={() => handleDelete(item.id)}>
-                <DeleteIcon />
-              </IconButton>
+              <AppIconButton icon='edit' edge='end' aria-label='edit' onClick={() => handleEdit(item)} sx={{ mr: 1 }} />
+              <AppIconButton icon='delete' edge='end' aria-label='delete' onClick={() => handleDelete(item.id)} />
             </ListItemSecondaryAction>
           </ListItem>
         ))}
@@ -144,5 +139,4 @@ const VocabForm: React.FC = () => {
   )
 }
 
-VocabForm.displayName = 'VocabForm'
 export default VocabForm

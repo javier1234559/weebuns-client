@@ -20,6 +20,7 @@ export const globalConfig = {
   API_URL: import.meta.env.VITE_APP_API, // Vite public VITE_APP_API
 
   GIPHY_API_KEY: import.meta.env.VITE_GIPHY_API_KEY,
+  PEXELS_API_KEY: import.meta.env.VITE_PEXELS_API_KEY,
 
   // Additional environment-related information
   environment: getCurrentEnvironment(),

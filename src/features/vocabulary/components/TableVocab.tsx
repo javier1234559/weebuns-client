@@ -8,11 +8,10 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
-import React from 'react'
 
-import { mockVocabData } from '~/features/vocabulary/mocks/mockVocabData'
+import { SAVED_VOCAB_LIST } from '~/features/vocabulary/mocks/SAVED_VOCAB_LIST'
 
-const VocabTable: React.FC = () => {
+function TableVocab() {
   const playAudio = (url: string) => {
     // In a real application, you would implement audio playback here
     console.log(`Playing audio: ${url}`)
@@ -32,7 +31,7 @@ const VocabTable: React.FC = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {mockVocabData.map((row, index) => (
+          {/* {SAVED_VOCAB_LIST.map((row, index) => (
             <TableRow key={index}>
               <TableCell component='th' scope='row'>
                 {row.word}
@@ -51,11 +50,11 @@ const VocabTable: React.FC = () => {
               </TableCell>
               <TableCell>{row.createdDate}</TableCell>
             </TableRow>
-          ))}
+          ))} */}
         </TableBody>
       </Table>
     </TableContainer>
   )
 }
 
-export default VocabTable
+export default TableVocab

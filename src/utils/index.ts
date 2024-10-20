@@ -1,2 +1,2 @@
 export * from './environment'
-export * from './localStorage'
+export * from './local-storage'

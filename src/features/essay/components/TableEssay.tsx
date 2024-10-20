@@ -11,20 +11,9 @@ import Typography from '@mui/material/Typography'
 import ChangeStatusModal from '~/components/modal/ChangeStatusModal'
 import DeleteModal from '~/components/modal/DeleteModal'
 import { useModal } from '~/contexts/ModalContext'
+import MoreActionButton from '~/features/essay/components/MoreActionButton'
+import { ESSAY_LIST } from '~/features/essay/mocks/ESSAY_LIST'
 import EditEssayModal from '~/features/essay/modal/EditEssayModal'
-import MoreActionButton from '~/features/essay/view/MoreActionButton'
-
-interface Essay {
-  id: string
-  title: string
-  publishDate: string
-}
-
-const essays: Essay[] = [
-  { id: '1', title: 'Some tips for your first blog post', publishDate: 'Unpublished' },
-  { id: '2', title: 'Some tips for your first blog post', publishDate: 'Public' }
-  // Add more essays as needed
-]
 
 function TableEssay() {
   const theme = useTheme()
@@ -48,7 +37,7 @@ function TableEssay() {
         <TableHead>
           <TableRow
             sx={{
-              backgroundColor: `${theme.palette.primary.main}14`, // 14 is approximately 8% opacity in hex
+              backgroundColor: `${theme.palette.primary.main}14`,
               '& th': {
                 color: theme.palette.text.primary,
                 fontWeight: 'bold'
@@ -61,7 +50,7 @@ function TableEssay() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {essays.map((essay) => (
+          {ESSAY_LIST.map((essay) => (
             <TableRow key={essay.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
               <TableCell component='th' scope='row'>
                 <Typography variant='body1'>{essay.title}</Typography>

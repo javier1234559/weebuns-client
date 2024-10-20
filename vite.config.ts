@@ -10,7 +10,12 @@ export default defineConfig({
     port: 3001
   },
   css: {
-    devSourcemap: true
+    devSourcemap: true,
+    preprocessorOptions: {
+      scss: {
+        api: 'modern'
+      }
+    }
   },
   resolve: {
     alias: {

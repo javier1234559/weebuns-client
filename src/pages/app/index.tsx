@@ -1,7 +1,7 @@
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 
-import Feed from '~/features/community/views/Feed'
+import FeedView from '~/features/community/views/FeedView'
 import SearchCommunity from '~/features/community/views/Search'
 import Sidebar from '~/features/community/views/SideBar/SideBar'
 
@@ -10,7 +10,7 @@ function App() {
     <Container sx={{ pb: 8, pt: 4 }} maxWidth='lg'>
       <SearchCommunity />
       <Grid container spacing={4}>
-        <Feed />
+        <FeedView />
         <Grid item xs={12} md={4}>
           <Sidebar />
         </Grid>

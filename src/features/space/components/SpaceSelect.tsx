@@ -1,12 +1,11 @@
 import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
+import { SelectChangeEvent } from '@mui/material/Select'
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-import { MOCK_LEARNING_SPACE } from '~/features/space/mocks/space'
+import { Select, SelectItem } from '~/components/ui/select'
+import { MOCK_LEARNING_SPACE } from '~/features/space/mocks/MOCK_LEARNING_SPACE'
 import { Space } from '~/features/space/space.type'
 import { clearCurrentSpace, setCurrentSpace } from '~/features/space/spaceSlice' // Assuming you have these actions
 import { RootState } from '~/store/store'
@@ -52,20 +51,12 @@ function SpaceSelect() {
 
   return (
     <FormControl sx={{ minWidth: 200 }}>
-      <InputLabel id='space-select-label'>Learning Space</InputLabel>
-      <Select
-        labelId='space-select-label'
-        id='space-select'
-        value={currentSpace?.id || ''}
-        label='Learning Space'
-        onChange={handleChange}
-        size='small'
-      >
-        <MenuItem value=''>Reset</MenuItem>
+      <Select value={currentSpace?.id || ''} placeholder='Select language space' onChange={handleChange}>
+        <SelectItem value=''>Reset</SelectItem>
         {spaces.map((space) => (
-          <MenuItem key={space.id} value={space.id}>
+          <SelectItem key={space.id} value={space.id}>
             {space.name}
-          </MenuItem>
+          </SelectItem>
         ))}
       </Select>
     </FormControl>

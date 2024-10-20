@@ -6,7 +6,7 @@ import { globalConfig } from '~/config'
 import { RouteNames } from '~/router/route-name'
 import { RootState } from '~/store/store'
 import { LinkToPage } from '~/types/common'
-import { replacePathId } from '~/utils/replace-text'
+import { replacePathId } from '~/utils/replace-path'
 
 const TITLE_PRIVATE = 'Weebuns - English Learning'
 

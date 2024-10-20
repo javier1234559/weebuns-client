@@ -4,7 +4,7 @@ import { MOCK_FEEDS } from '~/features/community/mocks/feed'
 
 import EssayCard from './FeedCard'
 
-function Feed() {
+function FeedView() {
   return (
     <Grid item xs={12} md={8}>
       {MOCK_FEEDS.map((item) => (
@@ -14,4 +14,4 @@ function Feed() {
   )
 }
 
-export default Feed
+export default FeedView

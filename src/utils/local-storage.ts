@@ -59,25 +59,3 @@ export function localStorageDelete(name: string) {
     localStorage.clear()
   }
 }
-
-export const getSideBarMini = () => {
-  const savedState = localStorage.getItem('isSideBarMini')
-  return savedState ? JSON.parse(savedState) : true
-}
-
-export const setSideBarMini = (value: boolean) => {
-  localStorage.setItem('isSideBarMini', JSON.stringify(value))
-}
-
-// export const setSpace = (value: string) => {
-//   localStorage.setItem('space', value)
-// }
-
-// export const getSpace = () => {
-//   const savedState = localStorage.getItem('space')
-//   return savedState ? JSON.parse(savedState) : ''
-// }
-
-// export const changeSpace = (value: string) => {
-//   localStorage.setItem('space', value)
-// }
