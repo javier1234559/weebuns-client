@@ -1,8 +1,8 @@
 import { PrivateLayout } from '~/components/layout'
 import { globalConfig } from '~/config'
-import DevView from '~/pages/DevView'
-import NotFoundView from '~/pages/NotFoundView'
-import NotImplementedView from '~/pages/NotImplementedView'
+import DevView from '~/pages/dev-view'
+import NotFoundView from '~/pages/not-found'
+import NotImplementedView from '~/pages/not-implement-view'
 
 const PRIVATE_ROUTES = [
   {

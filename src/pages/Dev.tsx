@@ -7,13 +7,13 @@ import CardHeader from '@mui/material/CardHeader'
 import Container from '@mui/material/Container'
 import Divider from '@mui/material/Divider'
 import Grid from '@mui/material/Grid'
-import OutlinedInput from '@mui/material/OutlinedInput'
 import Snackbar from '@mui/material/Snackbar'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 
 import AppButton from '~/components/common/AppButton'
 import AppIconButton from '~/components/common/AppIconButton'
+import AppInput from '~/components/common/AppInput'
 import AppLink from '~/components/common/AppLink'
 import { globalConfig } from '~/config'
 
@@ -51,8 +51,20 @@ function DevView() {
         </Snackbar>
         <Button onClick={handleClick}>Open Snackbar</Button>
         <Typography variant='h3'>Box with border</Typography>
-        <OutlinedInput />
       </Box>
+
+      <Grid item xs={12} md={6}>
+        <Card>
+          <CardHeader title='Input' />
+          <CardContent sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
+            <AppInput variant='filled' />
+            <AppInput variant='standard' />
+            <AppInput variant='outlined' />
+            {/* <OutlinedInput /> */}
+          </CardContent>
+        </Card>
+      </Grid>
+
       <Grid item xs={12} md={6}>
         <Card>
           <CardHeader title='AppLink' />
@@ -82,11 +94,11 @@ function DevView() {
       <Grid item xs={12} md={6}>
         <Card>
           <CardHeader title='AppButton' />
-          <CardContent>
+          <CardContent sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
             <AppButton sx={{ ml: 0 }} variant='black'>
               Default
             </AppButton>
-            <AppButton variant='outlined'>Black</AppButton>
+            <AppButton variant='outlined'>Outlined</AppButton>
             <AppButton disabled>Disabled</AppButton>
             <AppButton color='primary'>Primary</AppButton>
             <AppButton color='secondary'>Secondary</AppButton>
@@ -135,7 +147,7 @@ function DevView() {
 
       <Grid item xs={12}>
         <Card>
-          <CardContent>
+          <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             <Typography variant='h1'>MUI Typo h1</Typography>
             <Typography variant='h2'>MUI Typography h2</Typography>
             <Typography variant='h3'>MUI Typography h3</Typography>

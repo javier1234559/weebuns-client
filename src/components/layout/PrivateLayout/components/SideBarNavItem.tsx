@@ -6,7 +6,7 @@ import { useTheme } from '@mui/material/styles'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
 import { FunctionComponent } from 'react'
-import { useLocation } from 'react-router'
+import { useLocation } from 'react-router-dom'
 
 import AppIcon from '~/components/common/AppIcon'
 import AppLink from '~/components/common/AppLink'

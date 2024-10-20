@@ -2,26 +2,25 @@ import { lazy, Suspense } from 'react'
 
 import AppLoading from '~/components/common/AppLoading'
 import { PrivateLayout, PublicLayout } from '~/components/layout'
-import Register from '~/pages/(Auth)/Register'
+import Register from '~/pages/(auth)/register'
 import AuthWrapper from '~/router/components/AuthRedirect'
 import PrivateRoute from '~/router/components/PrivateRoute'
 import { RouteNames } from '~/router/route-name'
 
 // Lazy load your components
 const Landing = lazy(() => import('~/pages'))
-const App = lazy(() => import('~/pages/App'))
-const AuthView = lazy(() => import('~/pages/(Auth)/Auth'))
-const Login = lazy(() => import('~/pages/(Auth)/Login/Login'))
-const DevView = lazy(() => import('~/pages/Dev'))
-const NotFoundView = lazy(() => import('~/pages/NotFoundView'))
-const Assignment = lazy(() => import('~/pages/Assignment'))
-const Vocabulary = lazy(() => import('~/pages/Vocabulary'))
-const LearningSpace = lazy(() => import('~/pages/LearningSpace'))
-const Quiz = lazy(() => import('~/pages/Quiz'))
-const Essay = lazy(() => import('~/pages/Essay'))
-const EssayCreate = lazy(() => import('~/pages/Essay/[id]/EssayCreate'))
-const Setting = lazy(() => import('~/pages/Setting'))
-const EssayDetail = lazy(() => import('~/pages/Essay/[id]/EssayDetail'))
+const App = lazy(() => import('~/pages/app'))
+const AuthView = lazy(() => import('~/pages/(auth)/Auth'))
+const Login = lazy(() => import('~/pages/(auth)/login'))
+const DevView = lazy(() => import('~/pages/dev-view'))
+const NotFoundView = lazy(() => import('~/pages/not-found'))
+const Vocabulary = lazy(() => import('~/pages/vocabulary'))
+const LearningSpace = lazy(() => import('~/pages/space'))
+const Quiz = lazy(() => import('~/pages/quiz'))
+const Essay = lazy(() => import('~/pages/essay'))
+const EssayCreate = lazy(() => import('~/pages/essay/[id]/essay-create'))
+const Setting = lazy(() => import('~/pages/setting'))
+const EssayDetail = lazy(() => import('~/pages/essay/[id]/essay-detail'))
 
 const USER_ROUTES = [
   {
@@ -95,14 +94,6 @@ const USER_ROUTES = [
         element: (
           <Suspense fallback={<AppLoading />}>
             <App />
-          </Suspense>
-        )
-      },
-      {
-        path: RouteNames.Assignment,
-        element: (
-          <Suspense fallback={<AppLoading />}>
-            <Assignment />
           </Suspense>
         )
       },

@@ -26,8 +26,6 @@ export enum RouteNames {
   QuizDetail = '/learning-space/:id/quiz/:subId',
   QuizCreate = '/learning-space/:id/quiz/create',
 
-  Assignment = '/assignment',
-
   Setting = '/setting',
 
   ForgotPassword = '/forgot-password',

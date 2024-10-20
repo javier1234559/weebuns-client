@@ -1,7 +1,7 @@
 import { TypographyOptions } from '@mui/material/styles/createTypography'
 
 export const TYPOGRAPHY: Partial<TypographyOptions> = {
-  fontFamily: 'Inter, sans-serif',
+  fontFamily: 'Poppins, Arial, sans-serif',
   h1: {
     fontSize: '4rem',
     lineHeight: 1.25,
@@ -30,17 +30,17 @@ export const TYPOGRAPHY: Partial<TypographyOptions> = {
   h6: {
     fontSize: '18px',
     lineHeight: 1.56,
-    fontWeight: 600
+    fontWeight: 400
   },
   subtitle1: {
     fontSize: '16px',
     lineHeight: 1.5,
-    fontWeight: 600
+    fontWeight: 400
   },
   subtitle2: {
     fontSize: '14px',
     lineHeight: 1.57,
-    fontWeight: 600
+    fontWeight: 400
   },
   body1: {
     fontSize: '16px',

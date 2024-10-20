@@ -7,10 +7,10 @@ import { RouteNames } from '~/router/route-name'
 
 // Lazy load components
 const Landing = lazy(() => import('~/pages'))
-const App = lazy(() => import('~/pages/App'))
-const DevView = lazy(() => import('~/pages/Dev'))
-const NotFoundView = lazy(() => import('~/pages/NotFoundView'))
-const NotImplementedView = lazy(() => import('~/pages/NotImplementedView'))
+const App = lazy(() => import('~/pages/app'))
+const DevView = lazy(() => import('~/pages/dev-view'))
+const NotFoundView = lazy(() => import('~/pages/not-found'))
+const NotImplementedView = lazy(() => import('~/pages/not-implement-view'))
 
 const ADMIN_ROUTES = [
   {
