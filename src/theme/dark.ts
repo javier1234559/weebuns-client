@@ -3,6 +3,7 @@ import { ThemeOptions } from '@mui/material'
 import { BREAKPOINTS } from '~/theme/breakpoint'
 import { BUTTON_STYLES } from '~/theme/components/button'
 import { SELECT_STYLES } from '~/theme/components/select'
+import { SHAPE } from '~/theme/radius'
 import { TYPOGRAPHY } from '~/theme/typography'
 
 import { PALETTE_COLORS } from './colors'
@@ -21,6 +22,9 @@ export const DARK_THEME: ThemeOptions = {
   },
   typography: {
     ...TYPOGRAPHY
+  },
+  shape: {
+    ...SHAPE
   },
   breakpoints: BREAKPOINTS,
   components: {

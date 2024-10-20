@@ -7,7 +7,8 @@ import React from 'react'
 // Styled components
 const StyledCard = styled(Paper)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
-  boxShadow: theme.shadows[1],
+  // borderRadius: '10px',
+  // boxShadow: theme.shadows[1],
   backgroundColor: theme.palette.background.paper
 }))
 

@@ -1,6 +1,8 @@
 html[data-theme='light'] {
-  --button-bg-custom: #141a21;
-  --button-text-custom: #ffffff;
+  // --button-bg-custom: #141a21;
+  // --button-text-custom: #ffffff;
+  --button-bg-custom: var(--mui-palette-primary-main);
+  --button-text-custom: var(--mui-palette-primary-contrastText);
 
   --bg-patterns-line-color1: #b1b2c2a1;
   --bg-patterns-line-color2: #b1b2c261;
@@ -11,8 +13,10 @@ html[data-theme='light'] {
 }
 
 html[data-theme='dark'] {
-  --button-bg-custom: #ffffff;
-  --button-text-custom: #141a21;
+  // --button-bg-custom: #ffffff;
+  // --button-text-custom: #141a21;
+  --button-bg-custom: var(--mui-palette-primary-main);
+  --button-text-custom: var(--mui-palette-primary-contrastText);
 
   --bg-patterns-line-color1: #545458a1;
   --bg-patterns-line-color2: #b1b2c261;

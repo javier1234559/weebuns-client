@@ -19,6 +19,8 @@ export const globalConfig = {
   APP_URL: import.meta.env.VITE_PUBLIC_URL, // Vite public URL
   API_URL: import.meta.env.VITE_APP_API, // Vite public VITE_APP_API
 
+  GIPHY_API_KEY: import.meta.env.VITE_GIPHY_API_KEY,
+
   // Additional environment-related information
   environment: getCurrentEnvironment(),
   version: getCurrentVersion()

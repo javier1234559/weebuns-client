@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom'
 import AppBreadcrumb from '~/components/common/AppBreadcrumbs'
 import AppButton from '~/components/common/AppButton'
 import TableEssay from '~/components/views/essay/TableEssay'
+import { ModalProvider } from '~/provider/ModalContext'
 import { RouteNames } from '~/router/route-name'
 import { RootState } from '~/store/store'
 import { replacePathId } from '~/utils/replace-text'
@@ -53,14 +54,16 @@ function Essay() {
   ]
 
   return (
-    <Container>
-      <AppBreadcrumb breadcrumb={breadcrumb} isHiddenBack />
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant='h4'>Essay</Typography>
-        <CreateEssayButton />
-      </Box>
-      <TableEssay />
-    </Container>
+    <ModalProvider>
+      <Container>
+        <AppBreadcrumb breadcrumb={breadcrumb} isHiddenBack />
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Typography variant='h4'>Essay</Typography>
+          <CreateEssayButton />
+        </Box>
+        <TableEssay />
+      </Container>
+    </ModalProvider>
   )
 }
 

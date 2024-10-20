@@ -1,24 +1,20 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CardHeader from '@mui/material/CardHeader'
 import Chip from '@mui/material/Chip'
-import FormControl from '@mui/material/FormControl'
-import FormHelperText from '@mui/material/FormHelperText'
 import Grid from '@mui/material/Grid'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
-import TextField from '@mui/material/TextField'
+import Typography from '@mui/material/Typography'
+import { X } from 'lucide-react'
 import React, { forwardRef, useImperativeHandle } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
+import AppInput from '~/components/common/AppInput'
+import ContentEditor from '~/components/feature/Editor/ContentEditor'
 import ImageUpload from '~/components/feature/ImageUpload'
-import RichTextEditor from '~/components/feature/RichTextEditor'
 import { VocabForm } from '~/components/form/VocabForm'
-import { CardTitle } from '~/components/ui/Card'
+import { Card, CardContent, CardTitle } from '~/components/ui/card'
+import { Select, SelectItem } from '~/components/ui/select'
+import { useEventSwitchDarkMode } from '~/hooks/event'
 
 const schema = yup.object().shape({
   title: yup.string().required('Title is required'),
@@ -42,6 +38,7 @@ export interface CreateEssayFormRef {
 }
 
 const CreateEssayForm = forwardRef<CreateEssayFormRef, object>((_, ref) => {
+  const { isDarkMode } = useEventSwitchDarkMode()
   const { control, handleSubmit, getValues } = useForm<CreateEssayFormData>({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -77,110 +74,106 @@ const CreateEssayForm = forwardRef<CreateEssayFormRef, object>((_, ref) => {
     <Grid container spacing={3}>
       <Grid item xs={12} md={8}>
         <Card>
-          <CardContent>
-            <Controller
-              name='title'
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <TextField
-                  {...field}
-                  label='Title'
-                  fullWidth
-                  error={!!error}
-                  helperText={error?.message}
-                  sx={{ marginBottom: 2 }}
-                />
-              )}
-            />
-
-            <Controller
-              name='content'
-              control={control}
-              render={({ field }) => (
-                <RichTextEditor
-                  value={field.value}
-                  onChange={field.onChange}
-                  // error={!!error}
-                  // helperText={error?.message}
-                />
-              )}
-            />
-          </CardContent>
-        </Card>
-      </Grid>
-
-      <Grid item xs={12} md={4}>
-        <Card sx={{ marginBottom: 3 }}>
-          <CardHeader title={<CardTitle>Featured Image</CardTitle>} />
-          <CardContent>
+          <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <CardTitle>Write a new post</CardTitle>
             <Controller
               name='featuredImage'
               control={control}
               render={({ field }) => <ImageUpload value={field.value} onChange={(file) => field.onChange(file)} />}
             />
-          </CardContent>
-        </Card>
-
-        <Card sx={{ marginBottom: 3 }}>
-          <CardHeader title={<CardTitle>Essay Details</CardTitle>} />
-          <CardContent>
+            <Box display='flex' gap={2}>
+              <Box flexGrow={1} flexShrink={1} flexBasis='auto'>
+                <Controller
+                  name='title'
+                  control={control}
+                  render={({ field, fieldState: { error } }) => (
+                    <AppInput
+                      {...field}
+                      fullWidth
+                      error={!!error}
+                      placeholder='Write a title'
+                      helperText={error?.message}
+                      variant='outlined'
+                    />
+                  )}
+                />
+              </Box>
+              <Box flexGrow={0} flexShrink={0} flexBasis='auto'>
+                <Controller
+                  name='language'
+                  control={control}
+                  render={({ field }) => (
+                    <Select {...field} placeholder='Language'>
+                      <SelectItem value='en'>English</SelectItem>
+                      <SelectItem value='es'>Spanish</SelectItem>
+                    </Select>
+                  )}
+                />
+              </Box>
+            </Box>
             <Controller
-              name='language'
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <FormControl fullWidth error={!!error} sx={{ marginBottom: 2 }}>
-                  <InputLabel>Language</InputLabel>
-                  <Select {...field} label='Language'>
-                    <MenuItem value='en'>English</MenuItem>
-                    <MenuItem value='es'>Spanish</MenuItem>
-                    {/* Add more languages as needed */}
-                  </Select>
-                  {error && <FormHelperText>{error.message}</FormHelperText>}
-                </FormControl>
-              )}
-            />
-
-            <Controller
-              name='hashtags'
+              name='content'
               control={control}
               render={({ field }) => (
-                <Box>
-                  <InputLabel>Hashtags</InputLabel>
-                  {field.value.map((tag, index) => (
-                    <Chip
-                      key={index}
-                      label={tag}
-                      onDelete={() => {
-                        const newTags = [...field.value]
-                        newTags.splice(index, 1)
-                        field.onChange(newTags)
-                      }}
-                      sx={{ margin: 0.5 }}
-                    />
-                  ))}
-                  <TextField
-                    fullWidth
-                    placeholder='Add a hashtag'
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault()
-                        const input = e.target as HTMLInputElement
-                        if (input.value) {
-                          field.onChange([...field.value, input.value])
-                          input.value = ''
-                        }
-                      }
-                    }}
-                  />
-                </Box>
+                <ContentEditor isDark={isDarkMode} content={field.value} onChangeContent={field.onChange} />
               )}
             />
+
+            <Box my={2}>
+              <Controller
+                name='hashtags'
+                control={control}
+                render={({ field }) => (
+                  <Box>
+                    <Typography variant='h6' mb={1}>
+                      Hashtags
+                    </Typography>
+                    {field.value.map((tag, index) => (
+                      <Chip
+                        key={index}
+                        label={tag}
+                        variant='outlined'
+                        deleteIcon={<X size={14} />}
+                        onDelete={() => {
+                          const newTags = [...field.value]
+                          newTags.splice(index, 1)
+                          field.onChange(newTags)
+                        }}
+                        sx={{ margin: 0.5 }}
+                      />
+                    ))}
+                    <AppInput
+                      fullWidth
+                      sx={{ marginTop: 2 }}
+                      placeholder='Add a hashtag'
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          const input = e.target as HTMLInputElement
+                          if (input.value) {
+                            field.onChange([...field.value, input.value])
+                            input.value = ''
+                          }
+                        }
+                      }}
+                    />
+                  </Box>
+                )}
+              />
+            </Box>
           </CardContent>
         </Card>
-
+      </Grid>
+      <Grid item xs={12} md={4}>
         <Card>
-          <CardHeader title={<CardTitle>Vocabulary</CardTitle>} />
           <CardContent>
+            <CardTitle
+              sx={{
+                marginBottom: 1
+              }}
+            >
+              Write a new post
+            </CardTitle>
             <VocabForm />
           </CardContent>
         </Card>

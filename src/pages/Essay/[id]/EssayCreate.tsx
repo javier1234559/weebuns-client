@@ -73,7 +73,25 @@ function EssayCreate() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Typography variant='h4'>Essay</Typography>
       </Box>
-      <CreateEssayForm ref={formRef} />
+
+      {/*
+      <CreateEssayView
+       leftNav={
+          <CreateEssayForm ref={formRef} />
+      }
+      rightContent={
+        <VocabularyForm ref={formVocabularyRef} />
+      }
+      >
+
+      isShowReview && <PreviewEssayView
+       leftNav={
+          <PreviewEssay ref={formRef} />
+      }
+      rightContent={
+        <EssayVocabularyHistory ref={formVocabularyRef} />
+      } /> */}
+
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
         <AppButton sx={{ marginRight: 1 }} onClick={handleOnPreview}>
           Preview

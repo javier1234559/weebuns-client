@@ -1,5 +1,3 @@
-import MoreVertIcon from '@mui/icons-material/MoreVert'
-import IconButton from '@mui/material/IconButton'
 import Paper from '@mui/material/Paper'
 import { useTheme } from '@mui/material/styles'
 import Table from '@mui/material/Table'
@@ -9,19 +7,12 @@ import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
-import toast from 'react-hot-toast'
 
-interface ActionButtonProps {
-  onClick: () => void
-}
-
-function ActionButton({ onClick }: ActionButtonProps) {
-  return (
-    <IconButton onClick={onClick} size='small'>
-      <MoreVertIcon />
-    </IconButton>
-  )
-}
+import ChangeStatusModal from '~/components/modal/ChangeStatusModal'
+import DeleteModal from '~/components/modal/DeleteModal'
+import EditEssayModal from '~/components/modal/EditEssayModal'
+import MoreActionButton from '~/components/views/essay/MoreActionButton'
+import { useModal } from '~/provider/ModalContext'
 
 interface Essay {
   id: string
@@ -37,10 +28,18 @@ const essays: Essay[] = [
 
 function TableEssay() {
   const theme = useTheme()
+  const { openModal } = useModal()
 
-  const handleActionClick = (essayId: string) => {
-    // Handle action click
-    toast.success(`Action clicked for essay ${essayId}`)
+  const handleDelete = (essayId: string) => {
+    openModal(DeleteModal, { essayId })
+  }
+
+  const handleChangeStatus = (essayId: string) => {
+    openModal(ChangeStatusModal, { essayId })
+  }
+
+  const handleEdit = (essayId: string) => {
+    openModal(EditEssayModal, { essayId })
   }
 
   return (
@@ -73,7 +72,11 @@ function TableEssay() {
                 </Typography>
               </TableCell>
               <TableCell align='right'>
-                <ActionButton onClick={() => handleActionClick(essay.id)} />
+                <MoreActionButton
+                  onEdit={() => handleEdit(essay.id)}
+                  onDelete={() => handleDelete(essay.id)}
+                  onChangeStatus={() => handleChangeStatus(essay.id)}
+                />
               </TableCell>
             </TableRow>
           ))}
