@@ -1,6 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import Box from '@mui/material/Box'
-import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
@@ -9,12 +8,11 @@ import * as yup from 'yup'
 
 import AppButton from '~/components/common/AppButton'
 import CreateEssayForm, { CreateEssayFormData } from '~/features/essay/components/CreateEssayForm/CreateEssayForm'
-import { setEssayData, setIsPreview } from '~/features/essay/essaySlice'
+import { setEssayData, setIsHiddenVocabTab, setIsPreview } from '~/features/essay/essaySlice'
 import EssayPreview from '~/features/essay/view/EssayPreview'
 import VocabTabView from '~/features/vocabulary/views/VocabTabView'
 import { RootState } from '~/store/store'
 
-// Define the schema here or import it from the CreateEssayForm component
 const schema = yup.object().shape({
   title: yup.string().required('Title is required'),
   content: yup.string().required('Content is required'),
@@ -25,14 +23,14 @@ const schema = yup.object().shape({
 
 function EssayCreateView() {
   const dispatch = useDispatch()
-  const { essayData, isPreview } = useSelector((state: RootState) => state.essay)
+  const { essayData, isPreview, isHiddenVocabTab } = useSelector((state: RootState) => state.essay)
 
   const { control, handleSubmit, getValues } = useForm({
     resolver: yupResolver(schema),
     defaultValues: essayData || {
       title: '',
       content: '',
-      featuredImage: null,
+      // featuredImage: null,
       // thumbnail:
       // 'https://cdn.hashnode.com/res/hashnode/image/upload/v1728477561388/91deeac6-ca93-48ca-a3e9-2e3df452a031.jpeg?w=1600&h=840&fit=crop&crop=entropy&auto=compress,format&format=webp',
       // createdAt: '',
@@ -42,9 +40,13 @@ function EssayCreateView() {
   })
 
   const togglePreview = () => {
-    const currentData = getValues()
-    dispatch(setEssayData(currentData))
+    const formData = getValues()
+    dispatch(setEssayData(formData))
     dispatch(setIsPreview(!isPreview))
+  }
+
+  const toggleHiddenVocabTab = () => {
+    dispatch(setIsHiddenVocabTab(!isHiddenVocabTab))
   }
 
   const saveAsDraft = () => {
@@ -71,23 +73,36 @@ function EssayCreateView() {
     <>
       {!isPreview && (
         <Grid container spacing={3}>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={isHiddenVocabTab ? 12 : 8}>
             <CreateEssayForm control={control} />
           </Grid>
-          <Grid item xs={12} md={4}>
-            <VocabTabView />
-          </Grid>
+          {!isHiddenVocabTab && (
+            <Grid item xs={12} md={4}>
+              <VocabTabView />
+            </Grid>
+          )}
         </Grid>
       )}
 
       {isPreview && essayData && (
-        <Container sx={{ padding: '0px !important' }}>
-          <EssayPreview data={essayData as any} />
-        </Container>
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={isHiddenVocabTab ? 12 : 8}>
+            <EssayPreview data={essayData as any} />
+          </Grid>
+          {!isHiddenVocabTab && (
+            <Grid item xs={12} md={4}>
+              <VocabTabView />
+            </Grid>
+          )}
+        </Grid>
       )}
+
       <Box sx={{ display: 'flex', justifyContent: 'flex-end', marginTop: 2 }}>
         <AppButton sx={{ marginRight: 1 }} onClick={togglePreview}>
           {isPreview ? 'Edit' : 'Preview'}
+        </AppButton>
+        <AppButton sx={{ marginRight: 1 }} onClick={toggleHiddenVocabTab}>
+          {isHiddenVocabTab ? 'Hidden Vocab Tabs ' : 'Show Vocab Tabs'}
         </AppButton>
         <AppButton sx={{ marginRight: 1 }} onClick={saveAsDraft}>
           Save as Draft

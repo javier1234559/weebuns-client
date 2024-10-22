@@ -49,7 +49,9 @@ function AppTag({ tag }: AppTagProps) {
       }}
       style={{
         backgroundColor: isActive ? 'var(--mui-palette-primary-main)' : 'transparent',
-        color: isActive ? 'white' : 'var(--mui-palette-primary-main)'
+        color: isActive ? 'white' : 'var(--mui-palette-primary-main)',
+        borderRadius: '20px',
+        fontSize: '0.8rem'
       }}
     >
       {tag}

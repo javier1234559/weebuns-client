@@ -5,12 +5,12 @@ export const TYPOGRAPHY: Partial<TypographyOptions> = {
   h1: {
     fontSize: '4rem',
     lineHeight: 1.25,
-    fontWeight: 800
+    fontWeight: 700
   },
   h2: {
     fontSize: '3rem',
     lineHeight: 1.33,
-    fontWeight: 800
+    fontWeight: 700
   },
   h3: {
     fontSize: '2rem',

@@ -5,11 +5,13 @@ import { CreateEssayFormData } from '~/features/essay/components/CreateEssayForm
 interface EssayState {
   essayData: CreateEssayFormData | null
   isPreview: boolean
+  isHiddenVocabTab: boolean
 }
 
 const initialState: EssayState = {
   essayData: null,
-  isPreview: false
+  isPreview: false,
+  isHiddenVocabTab: false
 }
 
 const essaySlice = createSlice({
@@ -21,9 +23,12 @@ const essaySlice = createSlice({
     },
     setIsPreview: (state, action: PayloadAction<boolean>) => {
       state.isPreview = action.payload
+    },
+    setIsHiddenVocabTab: (state, action: PayloadAction<boolean>) => {
+      state.isHiddenVocabTab = action.payload
     }
   }
 })
 
-export const { setEssayData, setIsPreview } = essaySlice.actions
+export const { setEssayData, setIsPreview, setIsHiddenVocabTab } = essaySlice.actions
 export default essaySlice.reducer

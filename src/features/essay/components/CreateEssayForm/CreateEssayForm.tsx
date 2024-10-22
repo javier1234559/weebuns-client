@@ -5,6 +5,7 @@ import { X } from 'lucide-react'
 import React from 'react'
 import { Control, Controller } from 'react-hook-form'
 
+import { AppButton } from '~/components/common/AppButton'
 import AppInput from '~/components/common/AppInput'
 import ContentEditor from '~/components/feature/Editor/ContentEditor'
 import ImageUpload from '~/components/feature/ImageUpload'
@@ -26,16 +27,13 @@ interface CreateEssayFormProps {
 
 const CreateEssayForm: React.FC<CreateEssayFormProps> = ({ control }) => {
   const { isDarkMode } = useEventSwitchDarkMode()
+  const [isShowUpload, setIsShowUpload] = React.useState(false)
 
   return (
     <Card>
       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
         <CardTitle>Write a new post</CardTitle>
-        <Controller
-          name='featuredImage'
-          control={control}
-          render={({ field }) => <ImageUpload value={field.value} onChange={(file) => field.onChange(file)} />}
-        />
+
         <Box display='flex' gap={2}>
           <Box flexGrow={1} flexShrink={1} flexBasis='auto'>
             <Controller
@@ -53,6 +51,7 @@ const CreateEssayForm: React.FC<CreateEssayFormProps> = ({ control }) => {
               )}
             />
           </Box>
+
           <Box flexGrow={0} flexShrink={0} flexBasis='auto'>
             <Controller
               name='language'
@@ -66,6 +65,19 @@ const CreateEssayForm: React.FC<CreateEssayFormProps> = ({ control }) => {
             />
           </Box>
         </Box>
+
+        <Box flexGrow={1} flexShrink={1} flexBasis='auto'>
+          <AppButton onClick={(_e) => setIsShowUpload((pre) => !pre)}>
+            {isShowUpload ? 'Hide Cover' : 'Add Cover'}
+          </AppButton>
+        </Box>
+        {isShowUpload && (
+          <Controller
+            name='featuredImage'
+            control={control}
+            render={({ field }) => <ImageUpload value={field.value} onChange={(file) => field.onChange(file)} />}
+          />
+        )}
         <Controller
           name='content'
           control={control}
