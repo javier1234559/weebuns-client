@@ -1,11 +1,11 @@
-import { CreateEssayDto, UpdateEssayDto } from '~/services/api/api-axios'
+import { CreateVocabularyDto, UpdateVocabularyDto } from '~/services/api/api-axios'
 import api from '~/services/api/axiosInstance'
 import { handleApiError } from '~/utils/handle-api-error'
 
-const essayApi = {
-  create(form: CreateEssayDto) {
+const vocabularyApi = {
+  create(form: CreateVocabularyDto) {
     return api
-      .essayControllerCreate(form)
+      .vocabularyControllerCreate(form)
       .then((res) => res.data)
       .catch((err) => {
         handleApiError(err)
@@ -13,9 +13,9 @@ const essayApi = {
       })
   },
 
-  getAll(query?: { page?: number; perPage?: number; search?: string }) {
+  getAll(query?: { page?: number; perPage?: number; search?: string; spaceId?: string }) {
     return api
-      .essayControllerFindAll(query)
+      .vocabularyControllerFindAll(query)
       .then((res) => res.data)
       .catch((err) => {
         handleApiError(err)
@@ -25,7 +25,7 @@ const essayApi = {
 
   getById(id: string) {
     return api
-      .essayControllerFindOne(id)
+      .vocabularyControllerFindOne(id)
       .then((res) => res.data)
       .catch((err) => {
         handleApiError(err)
@@ -33,9 +33,9 @@ const essayApi = {
       })
   },
 
-  update(id: string, form: UpdateEssayDto) {
+  update(id: string, form: UpdateVocabularyDto) {
     return api
-      .essayControllerUpdate(id, form)
+      .vocabularyControllerUpdate(id, form)
       .then((res) => res.data)
       .catch((err) => {
         handleApiError(err)
@@ -45,35 +45,45 @@ const essayApi = {
 
   delete(id: string) {
     return api
-      .essayControllerDelete(id)
+      .vocabularyControllerDelete(id)
       .then(() => void 0)
-      .catch((err) => {
-        handleApiError(err)
-        throw err.response.data
-      })
-  },
-
-  getBySpaceId(spaceId: string) {
-    return api
-      .essayControllerFindOne(spaceId)
-      .then((res) => res.data)
       .catch((err) => {
         handleApiError(err)
         throw err.response.data
       })
   }
 
+  // getBySpaceId(
+  //   spaceId: string,
+  //   query?: {
+  //     page?: number
+  //     perPage?: number
+  //     search?: string
+  //   }
+  // ) {
+  //   return api
+  //     .vocabularyControllerGetBySpaceId(spaceId, query)
+  //     .then((res) => res.data)
+  //     .catch((err) => {
+  //       handleApiError(err)
+  //       throw err.response.data
+  //     })
+  // }
+
+  // Additional methods that might be useful (commented out for now)
+
+  // // Get vocabularies by user ID
   // getByUserId(
   //   userId: string,
   //   params?: {
   //     status?: string
   //     search?: string
   //     page?: number
-  //     limit?: number
+  //     perPage?: number
   //   }
   // ) {
   //   return api
-  //     .essayControllerFindByUserId(userId, params)
+  //     .vocabularyControllerFindByUserId(userId, params)
   //     .then((res) => res.data)
   //     .catch((err) => {
   //       handleApiError(err)
@@ -81,9 +91,10 @@ const essayApi = {
   //     })
   // },
 
+  // // Update vocabulary status
   // updateStatus(id: string, status: string) {
   //   return api
-  //     .essayControllerUpdateStatus(id, { status })
+  //     .vocabularyControllerUpdateStatus(id, { status })
   //     .then((res) => res.data)
   //     .catch((err) => {
   //       handleApiError(err)
@@ -91,9 +102,10 @@ const essayApi = {
   //     })
   // },
 
-  // addHashtags(id: string, hashtagIds: string[]) {
+  // // Add tags to vocabulary
+  // addTags(id: string, tagIds: string[]) {
   //   return api
-  //     .essayControllerAddHashtags(id, { hashtagIds })
+  //     .vocabularyControllerAddTags(id, { tagIds })
   //     .then((res) => res.data)
   //     .catch((err) => {
   //       handleApiError(err)
@@ -101,9 +113,10 @@ const essayApi = {
   //     })
   // },
 
-  // removeHashtags(id: string, hashtagIds: string[]) {
+  // // Remove tags from vocabulary
+  // removeTags(id: string, tagIds: string[]) {
   //   return api
-  //     .essayControllerRemoveHashtags(id, { hashtagIds })
+  //     .vocabularyControllerRemoveTags(id, { tagIds })
   //     .then((res) => res.data)
   //     .catch((err) => {
   //       handleApiError(err)
@@ -112,4 +125,4 @@ const essayApi = {
   // }
 }
 
-export default essayApi
+export default vocabularyApi
