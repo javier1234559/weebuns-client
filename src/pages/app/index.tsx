@@ -1,9 +1,9 @@
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 
+import SearchCommunity from '~/features/community/components/Search'
+import Sidebar from '~/features/community/components/SideBar/SideBar'
 import FeedView from '~/features/community/views/FeedView'
-import SearchCommunity from '~/features/community/views/Search'
-import Sidebar from '~/features/community/views/SideBar/SideBar'
 
 function App() {
   return (

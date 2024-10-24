@@ -2,7 +2,7 @@ import Grid from '@mui/material/Grid'
 
 import { MOCK_FEEDS } from '~/features/community/mocks/feed'
 
-import EssayCard from './FeedCard'
+import EssayCard from '../components/FeedCard'
 
 function FeedView() {
   return (
