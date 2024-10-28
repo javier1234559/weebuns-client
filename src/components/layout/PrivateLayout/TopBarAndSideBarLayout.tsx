@@ -1,4 +1,4 @@
-import { StackProps } from '@mui/material'
+import { StackProps, useTheme } from '@mui/material'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import { FunctionComponent, useMemo, useState } from 'react'
@@ -70,6 +70,7 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({
     () => ({
       minHeight: '100vh', // Full screen height
       paddingTop: onMobile ? TOP_BAR_MOBILE_HEIGHT : TOP_BAR_DESKTOP_HEIGHT,
+      backgroundColor: 'var(--mui-palette-background-paper)',
       paddingLeft:
         sidebarProps.variant === 'persistent' && sidebarProps.open && sidebarProps?.anchor?.includes('left')
           ? mini

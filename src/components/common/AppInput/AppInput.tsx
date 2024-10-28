@@ -85,7 +85,7 @@ export type InputProps = Omit<TextFieldProps, 'variant'> & {
   variant?: 'outlined' | 'filled' | 'standard'
 }
 
-const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
+const AppInput = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const { type = 'text', variant = 'outlined', ...rest } = props
 
   const TextFieldComponent =
@@ -94,6 +94,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   return <TextFieldComponent className='AppInput' type={type} variant={variant} inputRef={ref} {...rest} />
 })
 
-Input.displayName = 'Input'
+AppInput.displayName = 'AppInput'
 
-export default Input
+export default AppInput

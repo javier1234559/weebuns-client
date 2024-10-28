@@ -1,5 +1,6 @@
 import { CreateEssayDto, UpdateEssayDto } from '~/services/api/api-axios'
 import api from '~/services/api/axiosInstance'
+import { PaginationParams } from '~/types/extend-api'
 import { handleApiError } from '~/utils/handle-api-error'
 
 const essayApi = {
@@ -13,7 +14,7 @@ const essayApi = {
       })
   },
 
-  getAll(query?: { page?: number; perPage?: number; search?: string }) {
+  getAll(query?: PaginationParams) {
     return api
       .essayControllerFindAll(query)
       .then((res) => res.data)

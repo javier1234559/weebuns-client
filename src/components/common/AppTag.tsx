@@ -1,26 +1,80 @@
 import { styled } from '@mui/material/styles'
 import { Link, useSearchParams } from 'react-router-dom'
 
-const ChipLink = styled(Link)(({ theme }) => ({
-  display: 'inline-block',
-  margin: theme.spacing(0.5),
-  padding: theme.spacing(0.5, 1),
-  borderRadius: theme.shape.borderRadius,
-  border: `1px solid ${theme.palette.primary.main}`,
-  color: theme.palette.primary.main,
-  textDecoration: 'none',
-  fontSize: '0.875rem',
-  '&:hover': {
-    backgroundColor: theme.palette.primary.main,
-    color: theme.palette.primary.contrastText
+const ChipLink = styled(Link, {
+  shouldForwardProp: (prop) => prop !== 'variant' && prop !== 'isActive'
+})<{ variant: TagVariant; isActive: boolean }>(({ theme, variant, isActive }) => {
+  const baseStyles = {
+    display: 'inline-block',
+    margin: theme.spacing(0.5),
+    padding: theme.spacing(0.5, 1.5),
+    borderRadius: '20px',
+    textDecoration: 'none',
+    fontSize: '0.8rem',
+    transition: theme.transitions.create(['background-color', 'color', 'border-color'], {
+      duration: theme.transitions.duration.short
+    })
   }
-}))
 
-interface AppTagProps {
+  const variants = {
+    outlined: {
+      border: `1px solid ${theme.palette.primary.main}`,
+      color: isActive ? theme.palette.primary.contrastText : theme.palette.primary.main,
+      backgroundColor: isActive ? theme.palette.primary.main : 'transparent',
+      '&:hover': {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText
+      }
+    },
+    filled: {
+      border: '1px solid transparent',
+      color: isActive ? theme.palette.primary.contrastText : theme.palette.text.primary,
+      backgroundColor: isActive ? theme.palette.primary.main : theme.palette.primary.light,
+      '&:hover': {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText
+      }
+    },
+    paper: {
+      border: `1px solid ${theme.palette.background.paper}`,
+      color: isActive ? theme.palette.primary.contrastText : theme.palette.text.primary,
+      backgroundColor: isActive ? theme.palette.primary.dark : theme.palette.action.hover,
+      boxShadow: isActive ? 'none' : theme.shadows[1],
+      opacity: isActive ? 1 : 0.8,
+      '&:hover': {
+        borderColor: theme.palette.background.paper,
+        backgroundColor: isActive ? theme.palette.primary.main : theme.palette.background.paper,
+        opacity: 1
+      }
+    },
+    soft: {
+      border: 'none',
+      color: isActive ? theme.palette.primary.contrastText : theme.palette.primary.main,
+      backgroundColor: isActive ? theme.palette.primary.main : theme.palette.primary.light,
+      opacity: isActive ? 1 : 0.8,
+      '&:hover': {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
+        opacity: 1
+      }
+    }
+  }
+
+  return {
+    ...baseStyles,
+    ...variants[variant]
+  }
+})
+
+type TagVariant = 'outlined' | 'filled' | 'paper' | 'soft'
+
+interface IAppTagProps {
   tag: string
+  variant: TagVariant
+  className?: string
 }
 
-function AppTag({ tag }: AppTagProps) {
+function AppTag({ tag, variant = 'outlined', className }: IAppTagProps) {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const toggleTag = () => {
@@ -38,7 +92,7 @@ function AppTag({ tag }: AppTagProps) {
     setSearchParams(searchParams)
   }
 
-  const isActive = searchParams.get('tags')?.split(',').includes(tag.toLowerCase())
+  const isActive = searchParams.get('tags')?.split(',').includes(tag.toLowerCase()) || false
 
   return (
     <ChipLink
@@ -47,12 +101,9 @@ function AppTag({ tag }: AppTagProps) {
         e.preventDefault()
         toggleTag()
       }}
-      style={{
-        backgroundColor: isActive ? 'var(--mui-palette-primary-main)' : 'transparent',
-        color: isActive ? 'white' : 'var(--mui-palette-primary-main)',
-        borderRadius: '20px',
-        fontSize: '0.8rem'
-      }}
+      variant={variant}
+      isActive={isActive}
+      className={className}
     >
       {tag}
     </ChipLink>

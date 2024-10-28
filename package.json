@@ -11,9 +11,10 @@
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix --config .eslintrc.cjs",
     "prettier": "prettier --check \"src/**/(*.tsx|*.ts|*.css|*.scss)\"",
     "prettier:fix": "prettier --write \"src/**/(*.tsx|*.ts|*.css|*.scss)\"",
-    "gen:types": "swagger-typescript-api-es"
+    "gen:types": "swagger-typescript-api-es && graphql-codegen --config codegen.ts"
   },
   "dependencies": {
+    "@apollo/client": "^3.11.8",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@fontsource/roboto": "^5.1.0",
@@ -28,6 +29,7 @@
     "brainless-token-manager": "^1.3.3",
     "dayjs": "^1.11.13",
     "dompurify": "^3.1.7",
+    "graphql": "^16.9.0",
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "lucide-react": "^0.447.0",
@@ -48,6 +50,10 @@
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.3",
+    "@graphql-codegen/typescript": "^4.1.0",
+    "@graphql-codegen/typescript-operations": "^4.3.0",
+    "@graphql-codegen/typescript-react-apollo": "^4.3.2",
     "@types/dompurify": "^3.0.5",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^22.7.0",

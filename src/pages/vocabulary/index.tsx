@@ -9,7 +9,7 @@ import { RouteNames } from '~/router/route-name'
 
 function Vocabulary() {
   const breadcrumb = [
-    { title: 'Home', href: RouteNames.Vocabulary },
+    { title: 'Home', href: RouteNames.Dashboard },
     { title: 'Vocabulary', href: '' }
   ]
 

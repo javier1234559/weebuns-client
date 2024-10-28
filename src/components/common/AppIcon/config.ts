@@ -29,6 +29,7 @@ import Like from '~/components/common/AppIcon/icons/Like'
 import Logo from '~/components/common/AppIcon/icons/Logo'
 import Plus from '~/components/common/AppIcon/icons/Plus'
 import Quiz from '~/components/common/AppIcon/icons/Quiz'
+import SearchCorrect from '~/components/common/AppIcon/icons/SearchCorrect'
 import Vocabulary from '~/components/common/AppIcon/icons/Vocabulary'
 
 export type IconName = keyof typeof ICONS
@@ -71,5 +72,6 @@ export const ICONS /* Note: Setting type disables property autocomplete :( was -
   chat: Chat,
   plus: Plus,
   delete: Delete,
-  edit: Edit
+  edit: Edit,
+  searchcorrect: SearchCorrect
 }

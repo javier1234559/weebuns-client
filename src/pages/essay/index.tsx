@@ -9,7 +9,7 @@ import { RouteNames } from '~/router/route-name'
 
 function Essay() {
   const breadcrumb = [
-    { title: 'Home', href: RouteNames.Essay },
+    { title: 'Home', href: RouteNames.Dashboard },
     { title: 'Essay', href: '' }
   ]
 
@@ -20,7 +20,7 @@ function Essay() {
         <Typography variant='h4'>Essay</Typography>
         <CreateEssayButton />
       </Box>
-      `<EssayListView />`
+      <EssayListView />
     </Container>
   )
 }

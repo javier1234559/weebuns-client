@@ -4,12 +4,15 @@ import Typography from '@mui/material/Typography'
 import AppButton from '~/components/common/AppButton'
 
 interface DeleteModalProps {
-  itemName: string
+  itemName?: string
+  id: string
   onConfirm: () => void
   onClose: () => void
 }
 
 function DeleteModal({ itemName, onConfirm, onClose }: DeleteModalProps) {
+  console.log('DeleteModal', itemName)
+
   const handleConfirm = () => {
     if (onConfirm) {
       onConfirm()
