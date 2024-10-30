@@ -51,18 +51,54 @@ export type CorrectionReply = {
   updated_at: Scalars['DateTime']['output'];
 };
 
+export type CorrectionResponseAllDto = {
+  __typename?: 'CorrectionResponseAllDto';
+  data: Array<CorrectionResponseOneDto>;
+  pagination: PaginationOutputDto;
+};
+
+export type CorrectionResponseOneDto = {
+  __typename?: 'CorrectionResponseOneDto';
+  created_at: Scalars['DateTime']['output'];
+  created_by: Scalars['String']['output'];
+  creator: User;
+  essay_id: Scalars['String']['output'];
+  id: Scalars['ID']['output'];
+  overall_comment?: Maybe<Scalars['String']['output']>;
+  rating?: Maybe<Scalars['Float']['output']>;
+  sentences?: Maybe<Array<CorrectionSentence>>;
+  updated_at: Scalars['DateTime']['output'];
+};
+
 export type CorrectionSentence = {
   __typename?: 'CorrectionSentence';
-  corrected_text?: Maybe<Scalars['String']['output']>;
+  corrected_text: Scalars['String']['output'];
   correction?: Maybe<Correction>;
   created_at: Scalars['DateTime']['output'];
-  explanation?: Maybe<Scalars['String']['output']>;
+  explanation: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   id_correction: Scalars['String']['output'];
+  index: Scalars['Float']['output'];
   is_correct: Scalars['Boolean']['output'];
   original_text: Scalars['String']['output'];
-  rating?: Maybe<Scalars['Float']['output']>;
+  rating: Scalars['Float']['output'];
   updated_at: Scalars['DateTime']['output'];
+};
+
+export type CreateCorrectionDto = {
+  essay_id: Scalars['String']['input'];
+  overall_comment?: InputMaybe<Scalars['String']['input']>;
+  rating?: InputMaybe<Scalars['Float']['input']>;
+  sentences: Array<CreateCorrectionSentenceDto>;
+};
+
+export type CreateCorrectionSentenceDto = {
+  corrected_text: Scalars['String']['input'];
+  explanation: Scalars['String']['input'];
+  index: Scalars['Float']['input'];
+  is_correct: Scalars['Boolean']['input'];
+  original_text: Scalars['String']['input'];
+  rating: Scalars['Float']['input'];
 };
 
 export type CreateUserDto = {
@@ -137,7 +173,14 @@ export type Follower = {
   id_following: Scalars['String']['output'];
 };
 
-export type GetUserSpacesInput = {
+export type GetCorrectionsByEssayDto = {
+  essayId: Scalars['String']['input'];
+  page?: Scalars['Int']['input'];
+  perPage?: Scalars['Int']['input'];
+  search?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type GetUserSpacesDto = {
   page?: InputMaybe<Scalars['Float']['input']>;
   perPage?: InputMaybe<Scalars['Float']['input']>;
   search?: InputMaybe<Scalars['String']['input']>;
@@ -156,9 +199,16 @@ export type Hashtag = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  createCorrectionEssay: CorrectionResponseOneDto;
   createUser: User;
   removeUser: User;
+  updateCorrectionEssay: CorrectionResponseOneDto;
   updateUser: User;
+};
+
+
+export type MutationCreateCorrectionEssayArgs = {
+  input: CreateCorrectionDto;
 };
 
 
@@ -169,6 +219,11 @@ export type MutationCreateUserArgs = {
 
 export type MutationRemoveUserArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type MutationUpdateCorrectionEssayArgs = {
+  input: UpdateCorrectionDto;
 };
 
 
@@ -189,14 +244,26 @@ export type PaginationOutputDto = {
 
 export type Query = {
   __typename?: 'Query';
+  getCorrectionIfExist?: Maybe<CorrectionResponseOneDto>;
+  getCorrectionsByEssay: CorrectionResponseAllDto;
   getUserSpaces: SpacesResponse;
   user: User;
   users: UsersResponse;
 };
 
 
+export type QueryGetCorrectionIfExistArgs = {
+  essayId: Scalars['String']['input'];
+};
+
+
+export type QueryGetCorrectionsByEssayArgs = {
+  input: GetCorrectionsByEssayDto;
+};
+
+
 export type QueryGetUserSpacesArgs = {
-  input: GetUserSpacesInput;
+  input: GetUserSpacesDto;
 };
 
 
@@ -231,6 +298,22 @@ export type SpacesResponse = {
   __typename?: 'SpacesResponse';
   data: Array<Space>;
   pagination: PaginationOutputDto;
+};
+
+export type UpdateCorrectionDto = {
+  id: Scalars['String']['input'];
+  overall_comment?: InputMaybe<Scalars['String']['input']>;
+  rating?: InputMaybe<Scalars['Float']['input']>;
+  sentences: Array<UpdateCorrectionSentenceDto>;
+};
+
+export type UpdateCorrectionSentenceDto = {
+  corrected_text: Scalars['String']['input'];
+  explanation: Scalars['String']['input'];
+  index: Scalars['Float']['input'];
+  is_correct: Scalars['Boolean']['input'];
+  original_text: Scalars['String']['input'];
+  rating: Scalars['Float']['input'];
 };
 
 export type UpdateUserDto = {
@@ -283,23 +366,312 @@ export type UsersResponse = {
   pagination: PaginationOutputDto;
 };
 
+export type CreateCorrectionEssayMutationVariables = Exact<{
+  input: CreateCorrectionDto;
+}>;
+
+
+export type CreateCorrectionEssayMutation = { __typename?: 'Mutation', createCorrectionEssay: { __typename?: 'CorrectionResponseOneDto', id: string, essay_id: string, created_by: string, created_at: any, overall_comment?: string | null, rating?: number | null, updated_at: any, sentences?: Array<{ __typename?: 'CorrectionSentence', id: string, id_correction: string, original_text: string, corrected_text: string, explanation: string, is_correct: boolean, rating: number, updated_at: any, created_at: any }> | null, creator: { __typename?: 'User', id: string, username?: string | null, email: string, role: UserRole, auth_provider: AuthProvider, auth_provider_id?: string | null, first_name?: string | null, last_name?: string | null, profile_picture?: string | null, is_email_verified: boolean, last_login?: any | null, created_at: any, updated_at: any } } };
+
+export type UpdateCorrectionEssayMutationVariables = Exact<{
+  input: UpdateCorrectionDto;
+}>;
+
+
+export type UpdateCorrectionEssayMutation = { __typename?: 'Mutation', updateCorrectionEssay: { __typename?: 'CorrectionResponseOneDto', id: string, essay_id: string, created_by: string, overall_comment?: string | null, rating?: number | null, created_at: any, updated_at: any, creator: { __typename?: 'User', id: string, username?: string | null, email: string, role: UserRole, auth_provider: AuthProvider, auth_provider_id?: string | null, first_name?: string | null, last_name?: string | null, profile_picture?: string | null, is_email_verified: boolean, last_login?: any | null, created_at: any, updated_at: any }, sentences?: Array<{ __typename?: 'CorrectionSentence', id: string, id_correction: string, index: number, original_text: string, corrected_text: string, explanation: string, is_correct: boolean, rating: number, created_at: any, updated_at: any }> | null } };
+
+export type GetCorrectionsByEssayQueryVariables = Exact<{
+  input: GetCorrectionsByEssayDto;
+}>;
+
+
+export type GetCorrectionsByEssayQuery = { __typename?: 'Query', getCorrectionsByEssay: { __typename?: 'CorrectionResponseAllDto', data: Array<{ __typename?: 'CorrectionResponseOneDto', id: string, essay_id: string, created_by: string, overall_comment?: string | null, rating?: number | null, created_at: any, updated_at: any, creator: { __typename?: 'User', id: string, username?: string | null, email: string, password_hash?: string | null, role: UserRole, auth_provider: AuthProvider, auth_provider_id?: string | null, first_name?: string | null, last_name?: string | null, profile_picture?: string | null, is_email_verified: boolean, last_login?: any | null, created_at: any, updated_at: any }, sentences?: Array<{ __typename?: 'CorrectionSentence', id: string, id_correction: string, index: number, original_text: string, corrected_text: string, explanation: string, is_correct: boolean, rating: number, created_at: any, updated_at: any }> | null }>, pagination: { __typename?: 'PaginationOutputDto', totalItems: number, currentPage: number, totalPages: number, itemsPerPage: number, hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type GetCorrectionIfExistQueryVariables = Exact<{
+  essayId: Scalars['String']['input'];
+}>;
+
+
+export type GetCorrectionIfExistQuery = { __typename?: 'Query', getCorrectionIfExist?: { __typename?: 'CorrectionResponseOneDto', essay_id: string, created_by: string, overall_comment?: string | null, rating?: number | null, created_at: any, updated_at: any, id: string } | null };
+
 export type GetSpacesByUserSelectQueryVariables = Exact<{
-  input: GetUserSpacesInput;
+  input: GetUserSpacesDto;
 }>;
 
 
 export type GetSpacesByUserSelectQuery = { __typename?: 'Query', getUserSpaces: { __typename?: 'SpacesResponse', data: Array<{ __typename?: 'Space', id: string, name: string, description?: string | null }> } };
 
 export type GetSpacesByUserQueryVariables = Exact<{
-  input: GetUserSpacesInput;
+  input: GetUserSpacesDto;
 }>;
 
 
 export type GetSpacesByUserQuery = { __typename?: 'Query', getUserSpaces: { __typename?: 'SpacesResponse', data: Array<{ __typename?: 'Space', id: string, name: string, description?: string | null, created_at: any, updated_at: any, _count?: { __typename?: 'SpaceCount', essays: number, quizzes: number, vocabularies: number } | null }>, pagination: { __typename?: 'PaginationOutputDto', totalItems: number, itemsPerPage: number, totalPages: number, currentPage: number, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 
+export const CreateCorrectionEssayDocument = gql`
+    mutation CreateCorrectionEssay($input: CreateCorrectionDto!) {
+  createCorrectionEssay(input: $input) {
+    id
+    essay_id
+    created_by
+    created_at
+    overall_comment
+    rating
+    updated_at
+    sentences {
+      id
+      id_correction
+      original_text
+      corrected_text
+      explanation
+      is_correct
+      rating
+      updated_at
+      created_at
+    }
+    creator {
+      id
+      username
+      email
+      role
+      auth_provider
+      auth_provider_id
+      first_name
+      last_name
+      profile_picture
+      is_email_verified
+      last_login
+      created_at
+      updated_at
+    }
+  }
+}
+    `;
+export type CreateCorrectionEssayMutationFn = Apollo.MutationFunction<CreateCorrectionEssayMutation, CreateCorrectionEssayMutationVariables>;
+
+/**
+ * __useCreateCorrectionEssayMutation__
+ *
+ * To run a mutation, you first call `useCreateCorrectionEssayMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCorrectionEssayMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCorrectionEssayMutation, { data, loading, error }] = useCreateCorrectionEssayMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateCorrectionEssayMutation(baseOptions?: Apollo.MutationHookOptions<CreateCorrectionEssayMutation, CreateCorrectionEssayMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateCorrectionEssayMutation, CreateCorrectionEssayMutationVariables>(CreateCorrectionEssayDocument, options);
+      }
+export type CreateCorrectionEssayMutationHookResult = ReturnType<typeof useCreateCorrectionEssayMutation>;
+export type CreateCorrectionEssayMutationResult = Apollo.MutationResult<CreateCorrectionEssayMutation>;
+export type CreateCorrectionEssayMutationOptions = Apollo.BaseMutationOptions<CreateCorrectionEssayMutation, CreateCorrectionEssayMutationVariables>;
+export const UpdateCorrectionEssayDocument = gql`
+    mutation UpdateCorrectionEssay($input: UpdateCorrectionDto!) {
+  updateCorrectionEssay(input: $input) {
+    id
+    essay_id
+    created_by
+    overall_comment
+    rating
+    created_at
+    updated_at
+    creator {
+      id
+      username
+      email
+      role
+      auth_provider
+      auth_provider_id
+      first_name
+      last_name
+      profile_picture
+      is_email_verified
+      last_login
+      created_at
+      updated_at
+    }
+    sentences {
+      id
+      id_correction
+      index
+      original_text
+      corrected_text
+      explanation
+      is_correct
+      rating
+      created_at
+      updated_at
+    }
+  }
+}
+    `;
+export type UpdateCorrectionEssayMutationFn = Apollo.MutationFunction<UpdateCorrectionEssayMutation, UpdateCorrectionEssayMutationVariables>;
+
+/**
+ * __useUpdateCorrectionEssayMutation__
+ *
+ * To run a mutation, you first call `useUpdateCorrectionEssayMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateCorrectionEssayMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateCorrectionEssayMutation, { data, loading, error }] = useUpdateCorrectionEssayMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateCorrectionEssayMutation(baseOptions?: Apollo.MutationHookOptions<UpdateCorrectionEssayMutation, UpdateCorrectionEssayMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateCorrectionEssayMutation, UpdateCorrectionEssayMutationVariables>(UpdateCorrectionEssayDocument, options);
+      }
+export type UpdateCorrectionEssayMutationHookResult = ReturnType<typeof useUpdateCorrectionEssayMutation>;
+export type UpdateCorrectionEssayMutationResult = Apollo.MutationResult<UpdateCorrectionEssayMutation>;
+export type UpdateCorrectionEssayMutationOptions = Apollo.BaseMutationOptions<UpdateCorrectionEssayMutation, UpdateCorrectionEssayMutationVariables>;
+export const GetCorrectionsByEssayDocument = gql`
+    query GetCorrectionsByEssay($input: GetCorrectionsByEssayDto!) {
+  getCorrectionsByEssay(input: $input) {
+    data {
+      id
+      essay_id
+      created_by
+      overall_comment
+      rating
+      created_at
+      updated_at
+      creator {
+        id
+        username
+        email
+        password_hash
+        role
+        auth_provider
+        auth_provider_id
+        first_name
+        last_name
+        profile_picture
+        is_email_verified
+        last_login
+        created_at
+        updated_at
+      }
+      sentences {
+        id
+        id_correction
+        index
+        original_text
+        corrected_text
+        explanation
+        is_correct
+        rating
+        created_at
+        updated_at
+      }
+    }
+    pagination {
+      totalItems
+      currentPage
+      totalPages
+      itemsPerPage
+      hasNextPage
+      hasPreviousPage
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetCorrectionsByEssayQuery__
+ *
+ * To run a query within a React component, call `useGetCorrectionsByEssayQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCorrectionsByEssayQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCorrectionsByEssayQuery({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useGetCorrectionsByEssayQuery(baseOptions: Apollo.QueryHookOptions<GetCorrectionsByEssayQuery, GetCorrectionsByEssayQueryVariables> & ({ variables: GetCorrectionsByEssayQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCorrectionsByEssayQuery, GetCorrectionsByEssayQueryVariables>(GetCorrectionsByEssayDocument, options);
+      }
+export function useGetCorrectionsByEssayLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCorrectionsByEssayQuery, GetCorrectionsByEssayQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCorrectionsByEssayQuery, GetCorrectionsByEssayQueryVariables>(GetCorrectionsByEssayDocument, options);
+        }
+export function useGetCorrectionsByEssaySuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCorrectionsByEssayQuery, GetCorrectionsByEssayQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCorrectionsByEssayQuery, GetCorrectionsByEssayQueryVariables>(GetCorrectionsByEssayDocument, options);
+        }
+export type GetCorrectionsByEssayQueryHookResult = ReturnType<typeof useGetCorrectionsByEssayQuery>;
+export type GetCorrectionsByEssayLazyQueryHookResult = ReturnType<typeof useGetCorrectionsByEssayLazyQuery>;
+export type GetCorrectionsByEssaySuspenseQueryHookResult = ReturnType<typeof useGetCorrectionsByEssaySuspenseQuery>;
+export type GetCorrectionsByEssayQueryResult = Apollo.QueryResult<GetCorrectionsByEssayQuery, GetCorrectionsByEssayQueryVariables>;
+export const GetCorrectionIfExistDocument = gql`
+    query GetCorrectionIfExist($essayId: String!) {
+  getCorrectionIfExist(essayId: $essayId) {
+    essay_id
+    created_by
+    overall_comment
+    rating
+    created_at
+    updated_at
+    id
+  }
+}
+    `;
+
+/**
+ * __useGetCorrectionIfExistQuery__
+ *
+ * To run a query within a React component, call `useGetCorrectionIfExistQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetCorrectionIfExistQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetCorrectionIfExistQuery({
+ *   variables: {
+ *      essayId: // value for 'essayId'
+ *   },
+ * });
+ */
+export function useGetCorrectionIfExistQuery(baseOptions: Apollo.QueryHookOptions<GetCorrectionIfExistQuery, GetCorrectionIfExistQueryVariables> & ({ variables: GetCorrectionIfExistQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetCorrectionIfExistQuery, GetCorrectionIfExistQueryVariables>(GetCorrectionIfExistDocument, options);
+      }
+export function useGetCorrectionIfExistLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetCorrectionIfExistQuery, GetCorrectionIfExistQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetCorrectionIfExistQuery, GetCorrectionIfExistQueryVariables>(GetCorrectionIfExistDocument, options);
+        }
+export function useGetCorrectionIfExistSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<GetCorrectionIfExistQuery, GetCorrectionIfExistQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<GetCorrectionIfExistQuery, GetCorrectionIfExistQueryVariables>(GetCorrectionIfExistDocument, options);
+        }
+export type GetCorrectionIfExistQueryHookResult = ReturnType<typeof useGetCorrectionIfExistQuery>;
+export type GetCorrectionIfExistLazyQueryHookResult = ReturnType<typeof useGetCorrectionIfExistLazyQuery>;
+export type GetCorrectionIfExistSuspenseQueryHookResult = ReturnType<typeof useGetCorrectionIfExistSuspenseQuery>;
+export type GetCorrectionIfExistQueryResult = Apollo.QueryResult<GetCorrectionIfExistQuery, GetCorrectionIfExistQueryVariables>;
 export const GetSpacesByUserSelectDocument = gql`
-    query GetSpacesByUserSelect($input: GetUserSpacesInput!) {
+    query GetSpacesByUserSelect($input: GetUserSpacesDto!) {
   getUserSpaces(input: $input) {
     data {
       id
@@ -343,7 +715,7 @@ export type GetSpacesByUserSelectLazyQueryHookResult = ReturnType<typeof useGetS
 export type GetSpacesByUserSelectSuspenseQueryHookResult = ReturnType<typeof useGetSpacesByUserSelectSuspenseQuery>;
 export type GetSpacesByUserSelectQueryResult = Apollo.QueryResult<GetSpacesByUserSelectQuery, GetSpacesByUserSelectQueryVariables>;
 export const GetSpacesByUserDocument = gql`
-    query GetSpacesByUser($input: GetUserSpacesInput!) {
+    query GetSpacesByUser($input: GetUserSpacesDto!) {
   getUserSpaces(input: $input) {
     data {
       id

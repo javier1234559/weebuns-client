@@ -33,6 +33,7 @@ function UpdateSpaceModal({ idSpace, onClose }: UpdateSpaceModalProps) {
   } = useForm<UpdateSpaceFormData>({
     resolver: yupResolver(updateSpaceSchema)
   })
+  const mutate = useUpdateSpace()
 
   const { data, isLoading } = useSpacesById(idSpace, {
     enabled: !!idSpace
@@ -49,20 +50,9 @@ function UpdateSpaceModal({ idSpace, onClose }: UpdateSpaceModalProps) {
     }
   }, [data, reset])
 
-  const updateSpace = useUpdateSpace({
-    onSuccess: () => {
-      toast.success('Space updated successfully')
-      onClose()
-    },
-    onError: (error) => {
-      toast.error('Failed to update space')
-      console.error(error)
-    }
-  })
-
   const onSubmit = async (data: UpdateSpaceFormData) => {
     try {
-      await updateSpace.mutateAsync({ id: idSpace, data })
+      await mutate.mutateAsync({ id: idSpace, data })
       toast.success('Space updated successfully')
       onClose()
     } catch (error) {

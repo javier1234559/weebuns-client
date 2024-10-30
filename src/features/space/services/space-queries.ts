@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client'
 
 export const GET_SPACES_BY_USER_SELECT = gql`
-  query GetSpacesByUserSelect($input: GetUserSpacesInput!) {
+  query GetSpacesByUserSelect($input: GetUserSpacesDto!) {
     getUserSpaces(input: $input) {
       data {
         id
@@ -13,7 +13,7 @@ export const GET_SPACES_BY_USER_SELECT = gql`
 `
 
 export const GET_SPACES_BY_USER = gql`
-  query GetSpacesByUser($input: GetUserSpacesInput!) {
+  query GetSpacesByUser($input: GetUserSpacesDto!) {
     getUserSpaces(input: $input) {
       data {
         id

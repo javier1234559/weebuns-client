@@ -61,29 +61,31 @@ export interface Space {
 }
 
 export interface CorrectionSentence {
-  /** @example "123e4567-e89b-12d3-a456-426614174000" */
+  /** @example "uuid" */
   id: string
-  /** @example "123e4567-e89b-12d3-a456-426614174001" */
+  /** @example "uuid" */
   id_correction: string
-  /** @example "The original text with potential errors." */
+  /** @example 0 */
+  index: number
+  /** @example "Original text" */
   original_text: string
-  /** @example "The corrected text with fixes." */
-  corrected_text: string | null
-  /** @example "Explanation of the corrections made." */
-  explanation: string | null
-  /**
-   * Indicates if the original text is correct
-   * @example true
-   */
+  /** @example "Corrected text" */
+  corrected_text: string
+  /** @example "Explanation of corrections" */
+  explanation: string
+  /** @example false */
   is_correct: boolean
+  /** @example 4 */
+  rating: number
   /**
-   * Rating score for the correction
-   * @example 4.5
+   * @format date-time
+   * @example "2024-01-01T00:00:00Z"
    */
-  rating: number | null
-  /** @format date-time */
   created_at: string
-  /** @format date-time */
+  /**
+   * @format date-time
+   * @example "2024-01-01T00:00:00Z"
+   */
   updated_at: string
   correction: Correction | null
 }
@@ -452,25 +454,18 @@ export enum EssayStatus {
 
 export interface CreateEssayDto {
   /**
-   * The title of the essay
    * @minLength 1
    * @maxLength 255
    * @example "My Journey Learning English"
    */
   title: string
-  /**
-   * A brief summary of the essay content
-   * @example "A personal story about my experience learning English as a second language"
-   */
   summary?: string | null
   /**
-   * The main content of the essay
    * @minLength 1
    * @example "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..."
    */
   content: string
   /**
-   * URL of the essay cover image
    * @pattern ^https?://
    * @example "https://example.com/images/cover-123.jpg"
    */
@@ -481,28 +476,22 @@ export interface CreateEssayDto {
    */
   status: EssayStatus
   /**
-   * The language code of the essay
    * @minLength 2
    * @maxLength 5
    * @example "en"
    */
   language: string
   /**
-   * ID of the space where the essay belongs
    * @format uuid
    * @example "123e4567-e89b-12d3-a456-426614174000"
    */
   spaceId: string
   /**
-   * ID of the user creating the essay
    * @format uuid
    * @example "123e4567-e89b-12d3-a456-426614174000"
    */
   created_by: string
-  /**
-   * Array of hashtag IDs to associate with the essay
-   * @example ["123e4567-e89b-12d3-a456-426614174000","123e4567-e89b-12d3-a456-426614174001"]
-   */
+  /** @example ["123e4567-e89b-12d3-a456-426614174000","123e4567-e89b-12d3-a456-426614174001"] */
   hashtag_ids?: any[][]
 }
 
@@ -1375,7 +1364,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags spaces
      * @name SpaceControllerFindAll
-     * @summary Get all spaces with pagination and filters
      * @request GET:/api/spaces
      */
     spaceControllerFindAll: (
@@ -1388,7 +1376,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {}
     ) =>
-      this.request<SpacesResponse, void>({
+      this.request<SpacesResponse, any>({
         path: `/api/spaces`,
         method: 'GET',
         query: query,
@@ -1401,11 +1389,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags spaces
      * @name SpaceControllerCreate
-     * @summary Create new space
      * @request POST:/api/spaces
      */
     spaceControllerCreate: (data: CreateSpaceDto, params: RequestParams = {}) =>
-      this.request<CreateSpaceResponseDto, void>({
+      this.request<CreateSpaceResponseDto, any>({
         path: `/api/spaces`,
         method: 'POST',
         body: data,
@@ -1419,11 +1406,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags spaces
      * @name SpaceControllerFindOne
-     * @summary Get space by ID
      * @request GET:/api/spaces/{id}
      */
     spaceControllerFindOne: (id: string, params: RequestParams = {}) =>
-      this.request<FindOneSpaceResponseDto, void>({
+      this.request<FindOneSpaceResponseDto, any>({
         path: `/api/spaces/${id}`,
         method: 'GET',
         format: 'json',
@@ -1435,11 +1421,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags spaces
      * @name SpaceControllerUpdate
-     * @summary Update space by ID
      * @request PATCH:/api/spaces/{id}
      */
-    spaceControllerUpdate: (id: string, data?: UpdateSpaceDto, params: RequestParams = {}) =>
-      this.request<UpdateSpaceResponseDto, void>({
+    spaceControllerUpdate: (id: string, data: UpdateSpaceDto, params: RequestParams = {}) =>
+      this.request<UpdateSpaceResponseDto, any>({
         path: `/api/spaces/${id}`,
         method: 'PATCH',
         body: data,
@@ -1453,11 +1438,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags spaces
      * @name SpaceControllerDelete
-     * @summary Delete space by ID
      * @request DELETE:/api/spaces/{id}
      */
     spaceControllerDelete: (id: string, params: RequestParams = {}) =>
-      this.request<DeleteSpaceResponseDto, void>({
+      this.request<DeleteSpaceResponseDto, any>({
         path: `/api/spaces/${id}`,
         method: 'DELETE',
         format: 'json',
@@ -1465,11 +1449,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Retrieves all essays with pagination and filtering options
+     * No description
      *
      * @tags essays
      * @name EssayControllerFindAll
-     * @summary Get all essays
      * @request GET:/api/essays
      */
     essayControllerFindAll: (
@@ -1482,7 +1465,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {}
     ) =>
-      this.request<EssaysResponse, void>({
+      this.request<EssaysResponse, any>({
         path: `/api/essays`,
         method: 'GET',
         query: query,
@@ -1491,15 +1474,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Creates a new essay with the provided content and metadata
+     * No description
      *
      * @tags essays
      * @name EssayControllerCreate
-     * @summary Create a new essay
      * @request POST:/api/essays
      */
     essayControllerCreate: (data: CreateEssayDto, params: RequestParams = {}) =>
-      this.request<CreateEssayResponseDto, void>({
+      this.request<CreateEssayResponseDto, any>({
         path: `/api/essays`,
         method: 'POST',
         body: data,
@@ -1509,15 +1491,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Retrieves detailed information about a specific essay
+     * No description
      *
      * @tags essays
      * @name EssayControllerFindOne
-     * @summary Get essay by ID
      * @request GET:/api/essays/{id}
      */
     essayControllerFindOne: (id: string, params: RequestParams = {}) =>
-      this.request<FindOneEssayResponseDto, void>({
+      this.request<FindOneEssayResponseDto, any>({
         path: `/api/essays/${id}`,
         method: 'GET',
         format: 'json',
@@ -1525,15 +1506,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Updates an existing essay with new content or metadata
+     * No description
      *
      * @tags essays
      * @name EssayControllerUpdate
-     * @summary Update essay by ID
      * @request PATCH:/api/essays/{id}
      */
     essayControllerUpdate: (id: string, data: UpdateEssayDto, params: RequestParams = {}) =>
-      this.request<UpdateEssayResponseDto, void>({
+      this.request<UpdateEssayResponseDto, any>({
         path: `/api/essays/${id}`,
         method: 'PATCH',
         body: data,
@@ -1543,15 +1523,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Permanently removes an essay and its associated content
+     * No description
      *
      * @tags essays
      * @name EssayControllerDelete
-     * @summary Delete essay by ID
      * @request DELETE:/api/essays/{id}
      */
     essayControllerDelete: (id: string, params: RequestParams = {}) =>
-      this.request<DeleteEssayResponseDto, void>({
+      this.request<DeleteEssayResponseDto, any>({
         path: `/api/essays/${id}`,
         method: 'DELETE',
         format: 'json',

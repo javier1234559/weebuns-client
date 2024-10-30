@@ -1,44 +1,88 @@
-import 'reactjs-tiptap-editor/style.css'
-
 import Box from '@mui/material/Box'
-import { Controller } from 'react-hook-form'
+import Divider from '@mui/material/Divider'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
+import { memo, useCallback, useMemo, useState } from 'react'
 
+import AppButton from '~/components/common/AppButton'
 import { AppInput } from '~/components/common/AppInput'
-import { CardContent, CardTitle } from '~/components/ui/card'
+import CorrectionSentenceForm from '~/features/essay/components/CorrectionSentenceForm'
+import { CONTENT_MOCK } from '~/features/essay/mocks/ESSAY_CONTENT'
 import { FindOneEssayResponseDto } from '~/services/api/api-axios'
+import { CreateCorrectionDto } from '~/services/graphql/graphql'
+import { textUtils } from '~/utils/text-utils'
 
 interface EssayDetailCorrectProps {
   data: FindOneEssayResponseDto
+  onSubmit: (data: CreateCorrectionDto) => void
 }
 
-function EssayDetailCorrect({ data }: EssayDetailCorrectProps) {
-  const { essay } = data
+export type CorrectionSentenceFormData = CreateCorrectionDto['sentences'][0]
+
+const EssayDetailCorrect = ({ data, onSubmit }: EssayDetailCorrectProps) => {
+  const sentences = useMemo(() => textUtils.splitIntoSentences(CONTENT_MOCK), [])
+  console.log('sentences')
+  const [overallComment, setOverallComment] = useState('')
+  const [corrections, setCorrections] = useState<CorrectionSentenceFormData[]>([])
+
+  const handleSubmitItem = useCallback((data: CorrectionSentenceFormData) => {
+    setCorrections((prev) => {
+      const newCorrections = [...prev]
+      newCorrections[data.index] = data
+      return newCorrections
+    })
+  }, [])
+
+  const handleDeleteItem = useCallback((index: number) => {
+    setCorrections((prev) => {
+      const newCorrections = [...prev]
+      delete newCorrections[index]
+      return newCorrections
+    })
+  }, [])
+
+  const handleSaveAll = () => {
+    const items = corrections.filter(Boolean)
+    const overall_comment = overallComment
+    console.log('items', items)
+    console.log('overall_comment', overall_comment)
+  }
 
   return (
-    <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-      <CardTitle>Help this user to correct for this essay</CardTitle>
+    <Box>
+      <Typography variant='h5' gutterBottom>
+        Essay Correction
+      </Typography>
 
-      <Box display='flex' gap={2}>
-        <Box flexGrow={1} flexShrink={1} flexBasis='auto'>
-          <Controller
-            name='title'
-            // control={control}
-            render={({ field, fieldState: { error } }) => (
-              <AppInput
-                {...field}
-                fullWidth
-                error={!!error}
-                placeholder='Write a title'
-                helperText={error?.message}
-                variant='outlined'
-              />
-            )}
+      <Stack spacing={3}>
+        {sentences.map((sentence, index) => (
+          <CorrectionSentenceForm
+            key={`${sentence}-${index}`}
+            index={index}
+            originalText={sentence}
+            onSubmitItem={handleSubmitItem}
+            onDeleteItem={handleDeleteItem}
+          />
+        ))}
+
+        <Box py={2}>
+          <Divider />
+          <Typography variant='h6' sx={{ my: 2, fontWeight: 500 }}>
+            Overall Feedback
+          </Typography>
+          <AppInput
+            placeholder='Write your overall feedback here...'
+            fullWidth
+            onChange={(e) => setOverallComment(e.target.value)}
           />
         </Box>
-      </Box>
-    </CardContent>
+
+        <Stack direction='row' spacing={2} justifyContent='flex-end'>
+          <AppButton onClick={handleSaveAll}>Save All</AppButton>
+        </Stack>
+      </Stack>
+    </Box>
   )
 }
 
-EssayDetailCorrect.displayName = 'EssayDetailCorrect'
-export default EssayDetailCorrect
+export default memo(EssayDetailCorrect)

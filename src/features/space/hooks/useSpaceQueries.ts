@@ -30,8 +30,8 @@ export const useSpacesByUser = (params: PaginationParams, userId?: string | null
         search: params.search
       }
     },
-    skip: !userId,
-    fetchPolicy: 'cache-and-network'
+    skip: !userId
+    // fetchPolicy: 'cache-and-network'
   })
 }
 
@@ -51,8 +51,8 @@ export const useSpacesByUserSelect = (userId?: string | null) => {
         userId: userId || ''
       }
     },
-    skip: !userId,
-    fetchPolicy: 'cache-and-network'
+    skip: !userId
+    // fetchPolicy: 'cache-and-network'
   })
 }
 
@@ -74,7 +74,7 @@ export const useCreateSpace = () => {
   })
 }
 
-export const useUpdateSpace = (p0: { onSuccess: () => void; onError: (error: any) => void }) => {
+export const useUpdateSpace = () => {
   const queryClient = useQueryClient()
   const apolloClient = useApolloClient() //Get Apollo client if you need to refetch GraphQL
 

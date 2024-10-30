@@ -115,4 +115,5 @@ function EssayCreateView() {
   )
 }
 
+EssayCreateView.displayName = 'EssayCreateView'
 export default EssayCreateView
