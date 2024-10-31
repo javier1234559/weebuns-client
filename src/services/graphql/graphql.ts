@@ -61,7 +61,7 @@ export type CorrectionResponseOneDto = {
   __typename?: 'CorrectionResponseOneDto';
   created_at: Scalars['DateTime']['output'];
   created_by: Scalars['String']['output'];
-  creator: User;
+  creator?: Maybe<User>;
   essay_id: Scalars['String']['output'];
   id: Scalars['ID']['output'];
   overall_comment?: Maybe<Scalars['String']['output']>;
@@ -371,28 +371,28 @@ export type CreateCorrectionEssayMutationVariables = Exact<{
 }>;
 
 
-export type CreateCorrectionEssayMutation = { __typename?: 'Mutation', createCorrectionEssay: { __typename?: 'CorrectionResponseOneDto', id: string, essay_id: string, created_by: string, created_at: any, overall_comment?: string | null, rating?: number | null, updated_at: any, sentences?: Array<{ __typename?: 'CorrectionSentence', id: string, id_correction: string, original_text: string, corrected_text: string, explanation: string, is_correct: boolean, rating: number, updated_at: any, created_at: any }> | null, creator: { __typename?: 'User', id: string, username?: string | null, email: string, role: UserRole, auth_provider: AuthProvider, auth_provider_id?: string | null, first_name?: string | null, last_name?: string | null, profile_picture?: string | null, is_email_verified: boolean, last_login?: any | null, created_at: any, updated_at: any } } };
+export type CreateCorrectionEssayMutation = { __typename?: 'Mutation', createCorrectionEssay: { __typename?: 'CorrectionResponseOneDto', id: string, essay_id: string, created_by: string, created_at: any, overall_comment?: string | null, rating?: number | null, updated_at: any, sentences?: Array<{ __typename?: 'CorrectionSentence', id: string, id_correction: string, original_text: string, corrected_text: string, explanation: string, is_correct: boolean, rating: number, updated_at: any, created_at: any }> | null, creator?: { __typename?: 'User', id: string, username?: string | null, email: string, role: UserRole, auth_provider: AuthProvider, auth_provider_id?: string | null, first_name?: string | null, last_name?: string | null, profile_picture?: string | null, is_email_verified: boolean, last_login?: any | null, created_at: any, updated_at: any } | null } };
 
 export type UpdateCorrectionEssayMutationVariables = Exact<{
   input: UpdateCorrectionDto;
 }>;
 
 
-export type UpdateCorrectionEssayMutation = { __typename?: 'Mutation', updateCorrectionEssay: { __typename?: 'CorrectionResponseOneDto', id: string, essay_id: string, created_by: string, overall_comment?: string | null, rating?: number | null, created_at: any, updated_at: any, creator: { __typename?: 'User', id: string, username?: string | null, email: string, role: UserRole, auth_provider: AuthProvider, auth_provider_id?: string | null, first_name?: string | null, last_name?: string | null, profile_picture?: string | null, is_email_verified: boolean, last_login?: any | null, created_at: any, updated_at: any }, sentences?: Array<{ __typename?: 'CorrectionSentence', id: string, id_correction: string, index: number, original_text: string, corrected_text: string, explanation: string, is_correct: boolean, rating: number, created_at: any, updated_at: any }> | null } };
+export type UpdateCorrectionEssayMutation = { __typename?: 'Mutation', updateCorrectionEssay: { __typename?: 'CorrectionResponseOneDto', id: string, essay_id: string, created_by: string, overall_comment?: string | null, rating?: number | null, created_at: any, updated_at: any, creator?: { __typename?: 'User', id: string, username?: string | null, email: string, role: UserRole, auth_provider: AuthProvider, auth_provider_id?: string | null, first_name?: string | null, last_name?: string | null, profile_picture?: string | null, is_email_verified: boolean, last_login?: any | null, created_at: any, updated_at: any } | null, sentences?: Array<{ __typename?: 'CorrectionSentence', id: string, id_correction: string, index: number, original_text: string, corrected_text: string, explanation: string, is_correct: boolean, rating: number, created_at: any, updated_at: any }> | null } };
 
 export type GetCorrectionsByEssayQueryVariables = Exact<{
   input: GetCorrectionsByEssayDto;
 }>;
 
 
-export type GetCorrectionsByEssayQuery = { __typename?: 'Query', getCorrectionsByEssay: { __typename?: 'CorrectionResponseAllDto', data: Array<{ __typename?: 'CorrectionResponseOneDto', id: string, essay_id: string, created_by: string, overall_comment?: string | null, rating?: number | null, created_at: any, updated_at: any, creator: { __typename?: 'User', id: string, username?: string | null, email: string, password_hash?: string | null, role: UserRole, auth_provider: AuthProvider, auth_provider_id?: string | null, first_name?: string | null, last_name?: string | null, profile_picture?: string | null, is_email_verified: boolean, last_login?: any | null, created_at: any, updated_at: any }, sentences?: Array<{ __typename?: 'CorrectionSentence', id: string, id_correction: string, index: number, original_text: string, corrected_text: string, explanation: string, is_correct: boolean, rating: number, created_at: any, updated_at: any }> | null }>, pagination: { __typename?: 'PaginationOutputDto', totalItems: number, currentPage: number, totalPages: number, itemsPerPage: number, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type GetCorrectionsByEssayQuery = { __typename?: 'Query', getCorrectionsByEssay: { __typename?: 'CorrectionResponseAllDto', data: Array<{ __typename?: 'CorrectionResponseOneDto', id: string, essay_id: string, created_by: string, overall_comment?: string | null, rating?: number | null, created_at: any, updated_at: any, creator?: { __typename?: 'User', id: string, username?: string | null, email: string, password_hash?: string | null, role: UserRole, auth_provider: AuthProvider, auth_provider_id?: string | null, first_name?: string | null, last_name?: string | null, profile_picture?: string | null, is_email_verified: boolean, last_login?: any | null, created_at: any, updated_at: any } | null, sentences?: Array<{ __typename?: 'CorrectionSentence', id: string, id_correction: string, index: number, original_text: string, corrected_text: string, explanation: string, is_correct: boolean, rating: number, created_at: any, updated_at: any }> | null }>, pagination: { __typename?: 'PaginationOutputDto', totalItems: number, currentPage: number, totalPages: number, itemsPerPage: number, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type GetCorrectionIfExistQueryVariables = Exact<{
   essayId: Scalars['String']['input'];
 }>;
 
 
-export type GetCorrectionIfExistQuery = { __typename?: 'Query', getCorrectionIfExist?: { __typename?: 'CorrectionResponseOneDto', essay_id: string, created_by: string, overall_comment?: string | null, rating?: number | null, created_at: any, updated_at: any, id: string } | null };
+export type GetCorrectionIfExistQuery = { __typename?: 'Query', getCorrectionIfExist?: { __typename?: 'CorrectionResponseOneDto', essay_id: string, created_by: string, overall_comment?: string | null, rating?: number | null, created_at: any, updated_at: any, id: string, sentences?: Array<{ __typename?: 'CorrectionSentence', id: string, id_correction: string, index: number, original_text: string, corrected_text: string, explanation: string, is_correct: boolean, rating: number, created_at: any, updated_at: any }> | null } | null };
 
 export type GetSpacesByUserSelectQueryVariables = Exact<{
   input: GetUserSpacesDto;
@@ -634,6 +634,18 @@ export const GetCorrectionIfExistDocument = gql`
     created_at
     updated_at
     id
+    sentences {
+      id
+      id_correction
+      index
+      original_text
+      corrected_text
+      explanation
+      is_correct
+      rating
+      created_at
+      updated_at
+    }
   }
 }
     `;

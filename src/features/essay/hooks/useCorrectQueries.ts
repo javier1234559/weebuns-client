@@ -1,4 +1,9 @@
-import { useGetCorrectionIfExistQuery, useGetCorrectionsByEssayQuery } from '~/services/graphql/graphql'
+import {
+  useCreateCorrectionEssayMutation,
+  useGetCorrectionIfExistQuery,
+  useGetCorrectionsByEssayQuery,
+  useUpdateCorrectionEssayMutation
+} from '~/services/graphql/graphql'
 import { PaginationParams } from '~/types/extend-api'
 
 export const useListCorrectedByEssay = (params: PaginationParams, essayId: string) => {
@@ -21,5 +26,25 @@ export const useGetExistingCorrectedByEssay = (essayId: string) => {
       essayId: essayId || ''
     },
     skip: !essayId
+  })
+}
+
+export const useCreateCorrectByEssay = () => {
+  return useCreateCorrectionEssayMutation({
+    refetchQueries: ['GetCorrectionsByEssay', 'GetCorrectionIfExist']
+  })
+}
+
+export const useUpdateCorrectionEssay = () => {
+  return useUpdateCorrectionEssayMutation({
+    refetchQueries: ['GetCorrectionsByEssay', 'GetCorrectionIfExist'],
+    onCompleted: (data) => {
+      // Handle success if needed
+      console.log('Updated correction:', data)
+    },
+    onError: (error) => {
+      // Handle error if needed
+      console.error('Error updating correction:', error)
+    }
   })
 }

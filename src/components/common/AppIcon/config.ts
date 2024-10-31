@@ -20,6 +20,7 @@ import { Moon, Sun } from 'lucide-react/'
 
 import Assignment from '~/components/common/AppIcon/icons/Assignment'
 import Chat from '~/components/common/AppIcon/icons/Chat'
+import Check from '~/components/common/AppIcon/icons/Check'
 import Delete from '~/components/common/AppIcon/icons/Delete'
 import Edit from '~/components/common/AppIcon/icons/Edit'
 import Essay from '~/components/common/AppIcon/icons/Essay'
@@ -29,7 +30,10 @@ import Like from '~/components/common/AppIcon/icons/Like'
 import Logo from '~/components/common/AppIcon/icons/Logo'
 import Plus from '~/components/common/AppIcon/icons/Plus'
 import Quiz from '~/components/common/AppIcon/icons/Quiz'
+import Remove from '~/components/common/AppIcon/icons/Remove'
+import Save from '~/components/common/AppIcon/icons/Save'
 import SearchCorrect from '~/components/common/AppIcon/icons/SearchCorrect'
+import Switch from '~/components/common/AppIcon/icons/Switch'
 import Vocabulary from '~/components/common/AppIcon/icons/Vocabulary'
 
 export type IconName = keyof typeof ICONS
@@ -73,5 +77,9 @@ export const ICONS /* Note: Setting type disables property autocomplete :( was -
   plus: Plus,
   delete: Delete,
   edit: Edit,
-  searchcorrect: SearchCorrect
+  searchcorrect: SearchCorrect,
+  switch: Switch,
+  check: Check,
+  remove: Remove,
+  save: Save
 }

@@ -10,12 +10,14 @@ import { useParams } from 'react-router-dom'
 import AppButton from '~/components/common/AppButton'
 import AppError from '~/components/common/AppError'
 import AppLoading from '~/components/common/AppLoading'
+import ScrollToTopButton from '~/components/feature/ScrollToTopButton'
+import { ModalProvider } from '~/contexts/ModalContext'
 import { useGetExistingCorrectedByEssay } from '~/features/essay/hooks/useCorrectQueries'
 import { useEssay } from '~/features/essay/hooks/useEssayQueries'
 import EssayCorrectionHistory from '~/features/essay/view/EssayCorrectionHistory'
 import EssayDetailContent from '~/features/essay/view/EssayDetailContent'
-import EssayDetailCorrect from '~/features/essay/view/EssayDetailCorrect'
-import { CreateCorrectionDto } from '~/services/graphql/graphql'
+import EssayDetailCreateCorrect from '~/features/essay/view/EssayDetailCreateCorrect'
+import EssayDetailUpdateCorrect from '~/features/essay/view/EssayDetailUpdateCorrect'
 
 const CorrectionModes = {
   VIEW: 'VIEW',
@@ -27,10 +29,9 @@ type CorrectionMode = (typeof CorrectionModes)[keyof typeof CorrectionModes]
 function EssayDetailView() {
   const { id } = useParams()
   const [correctionMode, setCorrectionMode] = useState<CorrectionMode>(CorrectionModes.VIEW)
-
   const { data, isLoading, isError, error } = useEssay(id as string)
-  const { data: correctionData } = useGetExistingCorrectedByEssay(data?.essay.id ?? '')
 
+  const { data: correctionData } = useGetExistingCorrectedByEssay(data?.essay.id ?? '')
   const existingCorrection = correctionData?.getCorrectionIfExist
 
   const handleToggleCorrection = () => {
@@ -42,8 +43,7 @@ function EssayDetailView() {
     }
   }
 
-  const handleCreateCorrection = (data: CreateCorrectionDto) => {
-    console.log(data)
+  const handleCreateCorrection = async () => {
     setCorrectionMode(CorrectionModes.VIEW)
   }
 
@@ -56,40 +56,60 @@ function EssayDetailView() {
       case CorrectionModes.VIEW:
         return <EssayDetailContent data={data} />
       case CorrectionModes.CREATE:
-        return <EssayDetailCorrect onSubmit={handleCreateCorrection} data={data} />
+        return (
+          <EssayDetailCreateCorrect onSubmit={handleCreateCorrection} onExit={handleToggleCorrection} data={data} />
+        )
       case CorrectionModes.UPDATE:
-        return <h1>update</h1>
+        return existingCorrection ? (
+          <EssayDetailUpdateCorrect
+            data={existingCorrection}
+            onSubmit={handleCreateCorrection}
+            onExit={handleToggleCorrection}
+            essayData={data}
+          />
+        ) : null
       default:
         return <EssayDetailContent data={data} />
     }
   }
 
   return (
-    <Grid container spacing={3}>
-      <Grid item xs={12} md={12}>
-        <Card sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', overflow: 'hidden', p: 2 }}>
-          <Container>
-            {renderContent()}
-            <Box mr='auto'>
-              <AppButton
-                variant='black'
-                sx={{ display: 'flex', gap: 1, alignItems: 'center' }}
-                onClick={handleToggleCorrection}
-              >
-                <UserRoundPen size={14} />
-                {existingCorrection ? 'Update Correction' : 'Correct this essay'}
-              </AppButton>
+    <ModalProvider>
+      <Grid container spacing={3}>
+        <Grid item xs={12} md={12}>
+          <Card sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', overflow: 'hidden', p: 2 }}>
+            <Container>
+              {renderContent()}
+              {CorrectionModes.VIEW === correctionMode && (
+                <Box mr='auto'>
+                  <AppButton
+                    variant='black'
+                    sx={{ display: 'flex', gap: 1, alignItems: 'center' }}
+                    onClick={handleToggleCorrection}
+                  >
+                    <UserRoundPen size={14} />
+                    {existingCorrection ? 'Update Correction' : 'Correct this essay'}
+                  </AppButton>
+                </Box>
+              )}
+            </Container>
+          </Card>
+          {CorrectionModes.VIEW === correctionMode && (
+            <Box mt={4}>
+              <Typography variant='h5' component='h2' mb={2}>
+                Correction History
+              </Typography>
+              <EssayCorrectionHistory idEssay={data.essay.id} />
             </Box>
-          </Container>
-        </Card>
-        <Box mt={4}>
-          <Typography variant='h5' component='h2' mb={2}>
-            Correction History
-          </Typography>
-          <EssayCorrectionHistory idEssay={data.essay.id} />
-        </Box>
+          )}
+        </Grid>
       </Grid>
-    </Grid>
+      <ScrollToTopButton
+        threshold={300}
+        color='primary' // Will only accept valid MUI colors
+        size='medium' // Will only accept "small" | "medium" | "large"
+      />
+    </ModalProvider>
   )
 }
 EssayDetailView.displayName = 'EssayDetailView'

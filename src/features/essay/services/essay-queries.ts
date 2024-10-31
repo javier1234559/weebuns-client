@@ -143,6 +143,18 @@ export const CHECK_CORRECTION_EXIST_QUERY = gql`
       created_at
       updated_at
       id
+      sentences {
+        id
+        id_correction
+        index
+        original_text
+        corrected_text
+        explanation
+        is_correct
+        rating
+        created_at
+        updated_at
+      }
     }
   }
 `

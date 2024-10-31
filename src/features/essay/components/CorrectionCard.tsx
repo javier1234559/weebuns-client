@@ -40,7 +40,7 @@ function CorrectionCard({ item }: CorrectionCardProps) {
           </Box>
           <Box ml='auto'>
             <AppButton variant='outlined' onClick={() => setIsShowExplain(!isShowExplain)}>
-              Show all Explanation{' '}
+              Show all Explanation
             </AppButton>
           </Box>
         </Box>
@@ -51,8 +51,7 @@ function CorrectionCard({ item }: CorrectionCardProps) {
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            gap: 2,
-            mb: 4
+            gap: 2
           }}
         >
           {item.sentences?.map((sentence) => (
