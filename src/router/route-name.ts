@@ -12,19 +12,19 @@ export enum RouteNames {
   LearningSpace = '/learning-space',
   LearningSpaceDetail = '/learning-space/:id',
 
-  Vocabulary = '/learning-space/:id/vocabulary',
-  VocabularyDetail = '/learning-space/:id/vocabulary/:subId',
+  Vocabulary = '/vocabulary',
+  VocabularyDetail = '/vocabulary/:id',
 
-  Feed = '/feed',
-  FeedDetail = '/feed/:id',
+  // Feed = '/feed',
+  // FeedDetail = '/feed/:id',
 
-  Essay = '/learning-space/:id/essay',
-  EssayCreate = '/learning-space/:id/essay/create',
-  EssayDetail = '/learning-space/:id/essay/:subId',
+  Essay = '/essay',
+  EssayCreate = '/essay/create',
+  EssayDetail = '/essay/:id',
 
-  Quiz = '/learning-space/:id/quiz',
-  QuizDetail = '/learning-space/:id/quiz/:subId',
-  QuizCreate = '/learning-space/:id/quiz/create',
+  Quiz = '/quiz',
+  QuizDetail = '/quiz/:id',
+  QuizCreate = '/quiz/create',
 
   Setting = '/setting',
 

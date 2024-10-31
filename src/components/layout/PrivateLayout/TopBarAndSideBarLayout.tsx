@@ -2,7 +2,7 @@ import { StackProps } from '@mui/material'
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import { FunctionComponent, useMemo, useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { matchPath, Outlet, useLocation } from 'react-router-dom'
 
 import AppIconButton from '~/components/common/AppIconButton'
 import { AppLink } from '~/components/common/AppLink'
@@ -46,6 +46,13 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({
   const isAuthenticated = useIsAuthenticated()
   const { onSwitchDarkMode, isDarkMode } = useEventSwitchDarkMode()
   const [mini, setMini] = useState(getSideBarMini())
+  const location = useLocation()
+
+  let backgroundColor = 'var(--mui-palette-background-paper)'
+  const checkPath = matchPath({ path: RouteNames.EssayDetail }, location.pathname)
+  if (checkPath) {
+    backgroundColor = 'var(--mui-palette-background-default)'
+  }
 
   const sidebarProps = useMemo((): Partial<SideBarProps> => {
     const anchor = onMobile ? SIDE_BAR_MOBILE_ANCHOR : SIDE_BAR_DESKTOP_ANCHOR
@@ -70,6 +77,7 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({
     () => ({
       minHeight: '100vh', // Full screen height
       paddingTop: onMobile ? TOP_BAR_MOBILE_HEIGHT : TOP_BAR_DESKTOP_HEIGHT,
+      backgroundColor: backgroundColor,
       paddingLeft:
         sidebarProps.variant === 'persistent' && sidebarProps.open && sidebarProps?.anchor?.includes('left')
           ? mini
@@ -84,7 +92,7 @@ const TopBarAndSideBarLayout: FunctionComponent<Props> = ({
           : undefined,
       transition: 'padding 0.3s'
     }),
-    [onMobile, sidebarProps, mini]
+    [onMobile, backgroundColor, sidebarProps.variant, sidebarProps.open, sidebarProps?.anchor, mini]
   )
 
   const onSideBarOpen = () => {

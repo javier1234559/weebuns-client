@@ -7,7 +7,7 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import React, { useState } from 'react'
+import React, { memo, useState } from 'react'
 
 interface MoreActionButtonProps {
   onEdit: () => void
@@ -77,4 +77,4 @@ function MoreActionButton({ onEdit, onDelete, onChangeStatus }: MoreActionButton
   )
 }
 
-export default MoreActionButton
+export default memo(MoreActionButton)

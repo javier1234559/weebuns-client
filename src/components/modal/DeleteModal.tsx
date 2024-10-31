@@ -4,7 +4,8 @@ import Typography from '@mui/material/Typography'
 import AppButton from '~/components/common/AppButton'
 
 interface DeleteModalProps {
-  itemName: string
+  itemName?: string
+  id: string
   onConfirm: () => void
   onClose: () => void
 }

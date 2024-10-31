@@ -1,6 +1,5 @@
 import Edit from '@mui/icons-material/Edit'
 import MoreVert from '@mui/icons-material/MoreVert'
-import Person from '@mui/icons-material/Person'
 import Share from '@mui/icons-material/Share'
 import { useTheme } from '@mui/material'
 import Box from '@mui/material/Box'
@@ -12,37 +11,30 @@ import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
-import { CaseUpper, CircleHelp, LogOut, PenLine } from 'lucide-react'
+import { CircleHelp, LogOut, PenLine, WholeWord } from 'lucide-react'
 import React, { memo, useState } from 'react'
+import toast from 'react-hot-toast'
 
 import { AppLink } from '~/components/common/AppLink'
+import DeleteModal from '~/components/modal/DeleteModal'
+import { useModal } from '~/contexts/ModalContext'
+import { useDeleteSpace } from '~/features/space/hooks/useSpaceQueries'
+import UpdateSpaceModal from '~/features/space/modal/UpdateSpaceModal'
+import { GetSpacesByUserQuery } from '~/services/graphql/graphql'
+import { convertToRelativeTime } from '~/utils/format-date'
+
+type Space = GetSpacesByUserQuery['getUserSpaces']['data'][0]
 
 interface LearningSpaceCardProps {
-  id: string | number
-  name: string
-  thumbnail: string
-  summary: string
-  followerNumber: number
-  essay: number
-  quiz: number
-  vocabulary: number
-  createAt: string
+  data: Space
 }
 
-function LearningSpaceCard({
-  id,
-  thumbnail,
-  name,
-  summary,
-  essay,
-  quiz,
-  vocabulary,
-  followerNumber,
-  createAt
-}: LearningSpaceCardProps) {
+function LearningSpaceCard({ data }: LearningSpaceCardProps) {
   const theme = useTheme()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
+  const { openModal } = useModal()
+  const mutate = useDeleteSpace()
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget)
@@ -50,6 +42,26 @@ function LearningSpaceCard({
 
   const handleClose = () => {
     setAnchorEl(null)
+  }
+
+  const updateSpacePopUp = () => {
+    openModal(UpdateSpaceModal, { idSpace: data.id })
+  }
+
+  const handleDeleteSpace = async () => {
+    const toastId = toast.loading('Deleting space...')
+    try {
+      await mutate.mutateAsync(data.id)
+      toast.success('Space deleted', { id: toastId })
+    } catch (error) {
+      toast.error('Failed to delete space', { id: toastId })
+      console.error(error)
+    }
+  }
+
+  const handleDeleteConfirm = () => {
+    openModal(DeleteModal, { itemName: data.name, onConfirm: handleDeleteSpace })
+    handleClose()
   }
 
   return (
@@ -64,7 +76,7 @@ function LearningSpaceCard({
     >
       {/* Header */}
       <Box sx={{ position: 'relative' }}>
-        <CardMedia component='img' height='140' image={thumbnail} alt={name} />
+        <CardMedia component='img' height='140' image='/images/minimalist/cover-2.webp' alt={data.name} />
         <IconButton
           onClick={handleClick}
           sx={{
@@ -89,11 +101,11 @@ function LearningSpaceCard({
             horizontal: 'right'
           }}
         >
-          <MenuItem onClick={handleClose}>
+          <MenuItem onClick={updateSpacePopUp}>
             <Edit fontSize='small' sx={{ mr: 1 }} /> Edit
           </MenuItem>
-          <MenuItem onClick={handleClose}>
-            <LogOut fontSize='small' style={{ marginRight: '8px' }} /> Leave
+          <MenuItem onClick={handleDeleteConfirm}>
+            <LogOut fontSize='small' style={{ marginRight: '8px' }} /> Delete
           </MenuItem>
           <MenuItem onClick={handleClose}>
             <Share fontSize='small' sx={{ mr: 1 }} /> Share
@@ -109,39 +121,30 @@ function LearningSpaceCard({
           '&:last-child': { pb: 2 }
         }}
       >
-        <AppLink to={`/learning-space?spaceId=${id}`}>
+        <AppLink to={`/learning-space?spaceId=${data.id}`}>
           <Typography gutterBottom variant='h6' component='div' sx={{ fontWeight: 'bold' }}>
-            {name}
+            {data.name}
           </Typography>
         </AppLink>
         <Typography variant='body2' color='text.body'>
-          {summary}
+          {data.description}
         </Typography>
       </CardContent>
 
       {/* Footer */}
       <Box sx={{ p: 2, pt: 0 }}>
         <Typography variant='body2' color='text.secondary' sx={{ mb: 1 }}>
-          {createAt}
+          {convertToRelativeTime(data.created_at)}
         </Typography>
-        <Divider sx={{ my: 1, bgcolor: 'grey.700' }} />
+        <Divider sx={{ my: 1, bgcolor: 'grey.200' }} />
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Typography
             variant='body2'
             color='text.secondary'
             sx={{ color: 'grey.400', display: 'flex', alignItems: 'center' }}
           >
-            <Person sx={{ mr: 1, fontSize: 20, color: 'grey.400' }} />
-            {followerNumber}
-          </Typography>
-
-          <Typography
-            variant='body2'
-            color='text.secondary'
-            sx={{ color: 'grey.400', display: 'flex', alignItems: 'center' }}
-          >
             <CircleHelp style={{ marginRight: 'calc(1* var(--mui-spacing))', fontSize: 20, color: 'grey.400' }} />
-            {quiz}
+            {data._count?.quizzes ?? 0}
           </Typography>
 
           <Typography
@@ -150,7 +153,7 @@ function LearningSpaceCard({
             sx={{ color: 'grey.400', display: 'flex', alignItems: 'center' }}
           >
             <PenLine style={{ marginRight: 'calc(1* var(--mui-spacing))', fontSize: 20, color: 'grey.400' }} />
-            {essay}
+            {data._count?.essays ?? 0}
           </Typography>
 
           <Typography
@@ -158,8 +161,8 @@ function LearningSpaceCard({
             color='text.secondary'
             sx={{ color: 'grey.400', display: 'flex', alignItems: 'center' }}
           >
-            <CaseUpper style={{ marginRight: 'calc(1* var(--mui-spacing))', fontSize: 20, color: 'grey.400' }} />
-            {vocabulary}
+            <WholeWord style={{ marginRight: 'calc(1* var(--mui-spacing))', fontSize: 20, color: 'grey.400' }} />
+            {data._count?.vocabularies ?? 0}
           </Typography>
         </Box>
       </Box>

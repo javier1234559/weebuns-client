@@ -10,13 +10,13 @@ import { useState } from 'react'
 import { AppButton } from '~/components/common/AppButton'
 
 interface ChangeStatusModalProps {
-  essayId: string
+  idItem: string
   currentStatus: string
   onConfirm: (newStatus: string) => void
   onClose: () => void
 }
 
-function ChangeStatusModal({ essayId, currentStatus, onConfirm, onClose }: ChangeStatusModalProps) {
+function ChangeStatusModal({ idItem, currentStatus, onConfirm, onClose }: ChangeStatusModalProps) {
   const [status, setStatus] = useState(currentStatus)
 
   const handleStatusChange = (event: SelectChangeEvent) => {
@@ -31,10 +31,10 @@ function ChangeStatusModal({ essayId, currentStatus, onConfirm, onClose }: Chang
   return (
     <Box sx={{ width: 300 }}>
       <Typography variant='h6' component='h2' id='modal-title' gutterBottom>
-        Change Essay Status
+        Change Status
       </Typography>
       <Typography id='modal-description' sx={{ mt: 2, mb: 2 }}>
-        Select the new status for essay: {essayId}
+        Select the new status for change: {idItem}
       </Typography>
       <FormControl fullWidth sx={{ mt: 2, mb: 2 }}>
         <InputLabel id='status-select-label'>Status</InputLabel>

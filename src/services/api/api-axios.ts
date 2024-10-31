@@ -36,52 +36,83 @@ export interface Follower {
   following: User | null
 }
 
-export interface EssayHashtag {
-  /**
-   * Unique identifier for the essay-hashtag association
-   * @format uuid
-   * @example "123e4567-e89b-12d3-a456-426614174000"
-   */
+export interface Space {
+  /** @example 1 */
   id: string
-  /**
-   * Name of the hashtag
-   * @minLength 1
-   * @maxLength 50
-   * @example "technology"
-   */
+  /** @example "English Learning Space" */
   name: string
+  /** @example "A space for learning English" */
+  description: string | null
+  /** @example 1 */
+  created_by: string
+  /** @format date-time */
+  created_at: string
+  /** @format date-time */
+  updated_at: string
+  /** @example {"essays":0,"quizzes":0,"vocabularies":0} */
+  _count: {
+    /** @example 0 */
+    essays?: number
+    /** @example 0 */
+    quizzes?: number
+    /** @example 0 */
+    vocabularies?: number
+  }
+}
+
+export interface CorrectionSentence {
+  /** @example "uuid" */
+  id: string
+  /** @example "uuid" */
+  id_correction: string
+  /** @example 0 */
+  index: number
+  /** @example "Original text" */
+  original_text: string
+  /** @example "Corrected text" */
+  corrected_text: string
+  /** @example "Explanation of corrections" */
+  explanation: string
+  /** @example false */
+  is_correct: boolean
+  /** @example 4 */
+  rating: number
   /**
-   * ID of the associated essay
-   * @format uuid
-   * @example "123e4567-e89b-12d3-a456-426614174000"
-   */
-  essay_id: string
-  /**
-   * ID of the associated hashtag
-   * @format uuid
-   * @example "123e4567-e89b-12d3-a456-426614174000"
-   */
-  hashtag_id: string
-  /**
-   * Number of times this hashtag has been used in essays
-   * @min 0
-   * @example 42
-   */
-  usage_count: number
-  /**
-   * Timestamp when the association was created
    * @format date-time
-   * @example "2024-01-01T00:00:00.000Z"
+   * @example "2024-01-01T00:00:00Z"
    */
   created_at: string
   /**
-   * Timestamp when the association was last updated
    * @format date-time
-   * @example "2024-01-01T00:00:00.000Z"
+   * @example "2024-01-01T00:00:00Z"
    */
   updated_at: string
-  /** The associated essay details. Only populated when explicitly requested. */
-  essay?: Essay | null
+  correction: Correction | null
+}
+
+export interface CorrectionReply {
+  /** @example 1 */
+  id: string
+  /**
+   * ID of the related correction
+   * @example 1
+   */
+  correction_id: string
+  /**
+   * Reply comment to the correction
+   * @example "Great improvement on your grammar!"
+   */
+  comment: string
+  /**
+   * User ID who created the reply
+   * @example 1
+   */
+  created_by: string
+  /** @format date-time */
+  created_at: string
+  /** @format date-time */
+  updated_at: string
+  creator: User | null
 }
 
 export interface Correction {
@@ -115,6 +146,69 @@ export interface Correction {
   updated_at: string
   essay: Essay | null
   creator: User | null
+  sentences: CorrectionSentence[] | null
+  replies: CorrectionReply[] | null
+}
+
+export interface Hashtag {
+  /** @example 1 */
+  id: string
+  /**
+   * Name of the hashtag without # symbol
+   * @example "grammar"
+   */
+  name: string
+  /**
+   * Number of times this hashtag has been used
+   * @min 0
+   * @example 42
+   */
+  usage_count: number
+  /**
+   * When the hashtag was created
+   * @format date-time
+   * @example "2024-01-01T00:00:00Z"
+   */
+  created_at: string
+  /**
+   * When the hashtag was last updated
+   * @format date-time
+   * @example "2024-01-01T00:00:00Z"
+   */
+  updated_at: string
+  /** Essays associated with this hashtag */
+  essays: EssayHashtag[] | null
+}
+
+export interface EssayHashtag {
+  /**
+   * Unique identifier for the essay-hashtag association
+   * @format uuid
+   * @example "123e4567-e89b-12d3-a456-426614174000"
+   */
+  id: string
+  /**
+   * ID of the associated essay
+   * @format uuid
+   * @example "123e4567-e89b-12d3-a456-426614174000"
+   */
+  essay_id: string
+  /**
+   * ID of the associated hashtag
+   * @format uuid
+   * @example "123e4567-e89b-12d3-a456-426614174000"
+   */
+  hashtag_id: string
+  /**
+   * Timestamp when the association was created
+   * @format date-time
+   * @example "2024-01-01T00:00:00.000Z"
+   */
+  created_at: string
+  /** The associated essay details. Only populated when explicitly requested. */
+  essay?: Essay | null
+  /** The associated hashtag details. Only populated when explicitly requested. */
+  hashtag?: Hashtag | null
 }
 
 export interface Essay {
@@ -128,6 +222,8 @@ export interface Essay {
   summary: string | null
   /** @example "Essay content..." */
   content: string
+  /** @example 0 */
+  upvote_count: number
   /** @example "https://example.com/cover.jpg" */
   cover_url: string | null
   /** @example "draft" */
@@ -142,30 +238,9 @@ export interface Essay {
   updated_at: string
   space: Space | null
   author: User | null
-  hashtags: EssayHashtag[] | null
   corrections: Correction[] | null
-}
-
-export interface Space {
-  /** @example 1 */
-  id: string
-  /** @example "English Learning Space" */
-  name: string
-  /** @example "A space for learning English" */
-  description: string | null
-  /** @example 5 */
-  essay_number: number | null
-  /** @example 10 */
-  quiz_number: number | null
-  /** @example 20 */
-  vocab_number: number | null
-  /** @example 1 */
-  created_by: string
-  /** @format date-time */
-  created_at: string
-  /** @format date-time */
-  updated_at: string
-  essays: Essay[] | null
+  /** Associated hashtags for this essay */
+  hashtags: EssayHashtag[] | null
 }
 
 export interface User {
@@ -202,9 +277,42 @@ export interface User {
   essays: Essay[] | null
 }
 
+export interface PaginationOutputDto {
+  /**
+   * Total number of items
+   * @example 100
+   */
+  totalItems: number
+  /**
+   * Current page number
+   * @example 1
+   */
+  currentPage: number
+  /**
+   * Total number of pages
+   * @example 10
+   */
+  totalPages: number
+  /**
+   * Number of items per page
+   * @example 10
+   */
+  itemsPerPage: number
+  /**
+   * Indicates if there is a next page
+   * @example true
+   */
+  hasNextPage: boolean
+  /**
+   * Indicates if there is a previous page
+   * @example false
+   */
+  hasPreviousPage: boolean
+}
+
 export interface UsersResponse {
   users: User[]
-  pagination: object
+  pagination: PaginationOutputDto
 }
 
 export interface UserResponse {
@@ -223,7 +331,7 @@ export interface CreateUserDto {
 }
 
 export interface CreateUserResponse {
-  user: object
+  user: User
 }
 
 export interface UpdateUserDto {
@@ -238,11 +346,11 @@ export interface UpdateUserDto {
 }
 
 export interface UpdateUserResponse {
-  user: object
+  user: User
 }
 
 export interface DeleteUserResponse {
-  user: object
+  user: User
 }
 
 export interface RegisterDto {
@@ -285,10 +393,8 @@ export interface LogoutResponse {
   message: string
 }
 
-export type PaginationOutputDto = object
-
 export interface SpacesResponse {
-  data: string[]
+  data: Space[]
   pagination: PaginationOutputDto
 }
 
@@ -299,9 +405,6 @@ export interface FindOneSpaceResponseDto {
 export interface CreateSpaceDto {
   name: string
   description: string
-  essay_number: number
-  quiz_number: number
-  vocab_number: number
   created_by: string
 }
 
@@ -315,11 +418,8 @@ export interface CreateSpaceResponseDto {
 }
 
 export interface UpdateSpaceDto {
-  name: string
-  description: string
-  essay_number: number
-  quiz_number: number
-  vocab_number: number
+  name?: string
+  description?: string
 }
 
 export interface UpdateSpaceResponseDto {
@@ -336,7 +436,7 @@ export interface DeleteSpaceResponseDto {
 }
 
 export interface EssaysResponse {
-  data: string[]
+  data: Essay[]
   pagination: PaginationOutputDto
 }
 
@@ -344,16 +444,151 @@ export interface FindOneEssayResponseDto {
   essay: Essay
 }
 
+/** The visibility status of the essay */
+export enum EssayStatus {
+  Draft = 'draft',
+  Public = 'public',
+  Private = 'private',
+  Deleted = 'deleted'
+}
+
 export interface CreateEssayDto {
-  status: 'draft' | 'public' | 'private' | 'deleted'
+  /**
+   * @minLength 1
+   * @maxLength 255
+   * @example "My Journey Learning English"
+   */
+  title: string
+  summary?: string | null
+  /**
+   * @minLength 1
+   * @example "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..."
+   */
+  content: string
+  /**
+   * @pattern ^https?://
+   * @example "https://example.com/images/cover-123.jpg"
+   */
+  cover_url?: string | null
+  /**
+   * The visibility status of the essay
+   * @example "public"
+   */
+  status: EssayStatus
+  /**
+   * @minLength 2
+   * @maxLength 5
+   * @example "en"
+   */
+  language: string
+  /**
+   * @format uuid
+   * @example "123e4567-e89b-12d3-a456-426614174000"
+   */
+  spaceId: string
+  /**
+   * @format uuid
+   * @example "123e4567-e89b-12d3-a456-426614174000"
+   */
+  created_by: string
+  /** @example ["123e4567-e89b-12d3-a456-426614174000","123e4567-e89b-12d3-a456-426614174001"] */
+  hashtag_ids?: any[][]
 }
 
 export interface CreateEssayResponseDto {
-  essay: Essay
+  /**
+   * The title of the essay
+   * @minLength 1
+   * @maxLength 255
+   * @example "Updated: My Journey Learning English"
+   */
+  title?: string
+  /**
+   * A brief summary of the essay content
+   * @example "Updated summary of my language learning experience"
+   */
+  summary?: string | null
+  /**
+   * The main content of the essay
+   * @minLength 1
+   * @example "Updated content: Lorem ipsum dolor sit amet..."
+   */
+  content?: string
+  /**
+   * Number of upvotes for the essay
+   * @min 0
+   * @example 42
+   */
+  upvote_count?: number
+  /**
+   * URL of the essay cover image
+   * @pattern ^https?://
+   * @example "https://example.com/images/updated-cover-123.jpg"
+   */
+  cover_url?: string | null
+  /**
+   * The visibility status of the essay
+   * @example "public"
+   */
+  status?: EssayStatus
+  /**
+   * The language code of the essay
+   * @minLength 2
+   * @maxLength 5
+   * @example "en"
+   */
+  language?: string
+  /** Author */
+  author?: User
+  /** Array of hashtag to associate with the essay */
+  hashtags?: any[][]
 }
 
 export interface UpdateEssayDto {
-  status: 'draft' | 'public' | 'private' | 'deleted'
+  /**
+   * The title of the essay
+   * @minLength 1
+   * @maxLength 255
+   * @example "Updated: My Journey Learning English"
+   */
+  title?: string
+  /**
+   * A brief summary of the essay content
+   * @example "Updated summary of my language learning experience"
+   */
+  summary?: string | null
+  /**
+   * The main content of the essay
+   * @minLength 1
+   * @example "Updated content: Lorem ipsum dolor sit amet..."
+   */
+  content?: string
+  /**
+   * Number of upvotes for the essay
+   * @min 0
+   * @example 42
+   */
+  upvote_count?: number
+  /**
+   * URL of the essay cover image
+   * @pattern ^https?://
+   * @example "https://example.com/images/updated-cover-123.jpg"
+   */
+  cover_url?: string | null
+  /**
+   * The visibility status of the essay
+   * @example "public"
+   */
+  status?: EssayStatus
+  /**
+   * The language code of the essay
+   * @minLength 2
+   * @maxLength 5
+   * @example "en"
+   */
+  language?: string
+  /** Array of hashtag IDs to associate with the essay */
+  hashtag_ids?: any[][]
 }
 
 export interface UpdateEssayResponseDto {
@@ -394,12 +629,108 @@ export interface CreateVocabularyResponseDto {
   flash_cards?: FlashCard[]
 }
 
-export interface VocabulariesResponse {
-  data: string[]
-  pagination: PaginationOutputDto
+export interface FindAllVocabularyDto {
+  /** @default 1 */
+  page?: number
+  /** @default 10 */
+  perPage?: number
+  search?: string
 }
 
-export type Vocabulary = object
+export interface Vocabulary {
+  /**
+   * Unique identifier of the vocabulary entry
+   * @example "123e4567-e89b-12d3-a456-426614174000"
+   */
+  id: string
+  /**
+   * URL of the associated image
+   * @example "https://example.com/images/word.jpg"
+   */
+  image_url: string | null
+  /**
+   * The vocabulary word
+   * @example "ephemeral"
+   */
+  word: string
+  /**
+   * Part of speech of the word
+   * @example "adjective"
+   */
+  part_of_speech: string
+  /**
+   * Definition of the word
+   * @example "Lasting for a very short time"
+   */
+  definition: string
+  /**
+   * Pronunciation guide for the word
+   * @example "ih-fem-er-uhl"
+   */
+  pronunciation: string
+  /**
+   * Example usage of the word
+   * @example "The ephemeral nature of fashion trends makes it hard to stay current."
+   */
+  example: string
+  /**
+   * Reference link for additional information
+   * @example "https://dictionary.com/ephemeral"
+   */
+  reference_link: string | null
+  /**
+   * ID of the linked essay
+   * @example "123"
+   */
+  id_essay_link: string
+  /**
+   * ID of the space this vocabulary belongs to
+   * @example "456"
+   */
+  id_space: string
+  /**
+   * Current mastery level of the word
+   * @example "intermediate"
+   */
+  mastery_level: string
+  /**
+   * Indicates if the word needs review
+   * @example true
+   */
+  is_need_review: boolean
+  /**
+   * Next scheduled review date
+   * @example "2024-10-25"
+   */
+  next_review_date: string
+  /**
+   * Spaced repetition ease factor
+   * @example 2.5
+   */
+  ease_factor: number
+  /**
+   * Days interval for next review
+   * @example 7
+   */
+  interval: number
+  /**
+   * ID of the user who created this entry
+   * @example "789"
+   */
+  created_by: string
+  /**
+   * Creation timestamp
+   * @format date-time
+   * @example "2024-10-24T12:00:00Z"
+   */
+  created_at: string
+  /**
+   * Last update timestamp
+   * @format date-time
+   * @example "2024-10-24T12:00:00Z"
+   */
+  updated_at: string
+}
 
 export interface FindOneVocabularyResponseDto {
   vocabulary: Vocabulary
@@ -408,29 +739,241 @@ export interface FindOneVocabularyResponseDto {
 export type UpdateVocabularyDto = object
 
 export interface UpdateVocabularyResponseDto {
+  /**
+   * Unique identifier of the vocabulary entry
+   * @example "123e4567-e89b-12d3-a456-426614174000"
+   */
   id: string
-  image_url?: string
+  /**
+   * URL of the associated image
+   * @example "https://example.com/images/vocabulary/word.jpg"
+   */
+  image_url?: string | null
+  /**
+   * The vocabulary word
+   * @example "ephemeral"
+   */
   word: string
-  part_of_speech?: string
-  definition?: string
-  pronunciation?: string
-  example?: string
-  reference_link?: string
-  id_essay_link?: string
-  id_space?: string
-  mastery_level?: string
-  is_need_review?: boolean
-  next_review_date?: string
-  ease_factor?: number
-  interval?: number
+  /**
+   * Part of speech (e.g., noun, verb, adjective)
+   * @example "adjective"
+   */
+  part_of_speech?: string | null
+  /**
+   * Definition of the word
+   * @example "Lasting for a very short time"
+   */
+  definition?: string | null
+  /**
+   * Phonetic pronunciation of the word
+   * @example "ih-fem-er-uhl"
+   */
+  pronunciation?: string | null
+  /**
+   * Example sentence using the word
+   * @example "The ephemeral nature of fashion trends makes it hard to stay current."
+   */
+  example?: string | null
+  /**
+   * External reference link for the word
+   * @example "https://dictionary.com/word/ephemeral"
+   */
+  reference_link?: string | null
+  /**
+   * ID of the related essay
+   * @example "789abc-def-456"
+   */
+  id_essay_link?: string | null
+  /**
+   * ID of the space this vocabulary belongs to
+   * @example "123xyz-789"
+   */
+  id_space?: string | null
+  /**
+   * Current mastery level (e.g., beginner, intermediate, advanced)
+   * @example "intermediate"
+   */
+  mastery_level?: string | null
+  /**
+   * Indicates if the word needs to be reviewed
+   * @example true
+   */
+  is_need_review?: boolean | null
+  /**
+   * Next scheduled review date
+   * @example "2024-10-25T00:00:00Z"
+   */
+  next_review_date?: string | null
+  /**
+   * Spaced repetition ease factor (typically between 1.3 and 2.5)
+   * @example 2.5
+   */
+  ease_factor?: number | null
+  /**
+   * Days until next review
+   * @example 7
+   */
+  interval?: number | null
+  /**
+   * ID of the user who created this vocabulary entry
+   * @example "456def-789"
+   */
+  created_by: string
+  /**
+   * Timestamp when the vocabulary was created
+   * @format date-time
+   * @example "2024-10-24T12:00:00Z"
+   */
+  created_at: string
+  /**
+   * Timestamp of the last update
+   * @format date-time
+   * @example "2024-10-24T14:30:00Z"
+   */
+  updated_at: string
+}
+
+export interface DeleteVocabularyResponseDto {
+  message: string
+}
+
+export interface CreateQuizDto {
+  title: string
+  id_space: string
+  created_by: string
+}
+
+export type QuizQuestion = object
+
+export interface CreateQuizResponseDto {
+  id: string
+  id_space: string
+  title: string
   created_by: string
   /** @format date-time */
   created_at: string
   /** @format date-time */
   updated_at: string
+  space?: Space
+  creator?: User
+  questions?: QuizQuestion[]
 }
 
-export interface DeleteVocabularyResponseDto {
+export interface QuizResponse {
+  data: string[]
+  pagination: PaginationOutputDto
+}
+
+export type Quiz = object
+
+export interface FindOneQuizResponseDto {
+  quiz: Quiz
+}
+
+export interface UpdateQuizDto {
+  title?: string
+}
+
+export interface UpdateQuizResponseDto {
+  /**
+   * Quiz ID
+   * @example 1
+   */
+  id: string
+  /**
+   * Space ID that quiz belongs to
+   * @example 1
+   */
+  id_space: string
+  /**
+   * Quiz title
+   * @example "JavaScript Fundamentals Quiz"
+   */
+  title: string
+  /**
+   * ID of user who created the quiz
+   * @example 1
+   */
+  created_by: string
+  /**
+   * Creation timestamp
+   * @format date-time
+   * @example "2024-10-25T10:30:00Z"
+   */
+  created_at: string
+  /**
+   * Last update timestamp
+   * @format date-time
+   * @example "2024-10-25T10:30:00Z"
+   */
+  updated_at: string
+  /** Space details that quiz belongs to */
+  space?: Space
+  /** Creator details */
+  creator?: User
+  questions: QuizQuestion[][]
+}
+
+export interface DeleteQuizResponseDto {
+  message: string
+}
+
+export interface CreateQuizQuestionDto {
+  question_text: string
+  correct_answer: string
+  user_answer?: string
+  is_correct: boolean
+  id_vocabulary?: string
+}
+
+export interface CreateQuizQuestionResponseDto {
+  id: string
+  quiz_id: string
+  question_text: string
+  correct_answer: string
+  user_answer?: string
+  is_correct: boolean
+  id_vocabulary?: string
+  /** @format date-time */
+  created_at: string
+  /** @format date-time */
+  updated_at: string
+  quiz?: Quiz
+}
+
+export interface QuizQuestionResponse {
+  data: string[]
+  pagination: PaginationOutputDto
+}
+
+export interface FindOneQuizQuestionResponseDto {
+  quizQuestion: QuizQuestion
+}
+
+export interface UpdateQuizQuestionDto {
+  question_text?: string
+  correct_answer?: string
+  user_answer?: string
+  is_correct?: boolean
+  id_vocabulary?: string
+}
+
+export interface UpdateQuizQuestionResponseDto {
+  id: string
+  quiz_id: string
+  question_text: string
+  correct_answer: string
+  user_answer?: string
+  is_correct: boolean
+  id_vocabulary?: string
+  /** @format date-time */
+  created_at: string
+  /** @format date-time */
+  updated_at: string
+  quiz?: Quiz
+}
+
+export interface DeleteQuizQuestionResponseDto {
   message: string
 }
 
@@ -603,7 +1146,9 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     userControllerFindAll: (
       query?: {
+        /** @default 1 */
         page?: number
+        /** @default 10 */
         perPage?: number
         search?: string
       },
@@ -819,18 +1364,19 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags spaces
      * @name SpaceControllerFindAll
-     * @summary Get all spaces with pagination and filters
      * @request GET:/api/spaces
      */
     spaceControllerFindAll: (
       query?: {
+        /** @default 1 */
         page?: number
+        /** @default 10 */
         perPage?: number
         search?: string
       },
       params: RequestParams = {}
     ) =>
-      this.request<SpacesResponse, void>({
+      this.request<SpacesResponse, any>({
         path: `/api/spaces`,
         method: 'GET',
         query: query,
@@ -843,11 +1389,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags spaces
      * @name SpaceControllerCreate
-     * @summary Create new space
      * @request POST:/api/spaces
      */
     spaceControllerCreate: (data: CreateSpaceDto, params: RequestParams = {}) =>
-      this.request<CreateSpaceResponseDto, void>({
+      this.request<CreateSpaceResponseDto, any>({
         path: `/api/spaces`,
         method: 'POST',
         body: data,
@@ -861,11 +1406,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags spaces
      * @name SpaceControllerFindOne
-     * @summary Get space by ID
      * @request GET:/api/spaces/{id}
      */
     spaceControllerFindOne: (id: string, params: RequestParams = {}) =>
-      this.request<FindOneSpaceResponseDto, void>({
+      this.request<FindOneSpaceResponseDto, any>({
         path: `/api/spaces/${id}`,
         method: 'GET',
         format: 'json',
@@ -877,11 +1421,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags spaces
      * @name SpaceControllerUpdate
-     * @summary Update space by ID
      * @request PATCH:/api/spaces/{id}
      */
     spaceControllerUpdate: (id: string, data: UpdateSpaceDto, params: RequestParams = {}) =>
-      this.request<UpdateSpaceResponseDto, void>({
+      this.request<UpdateSpaceResponseDto, any>({
         path: `/api/spaces/${id}`,
         method: 'PATCH',
         body: data,
@@ -895,11 +1438,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags spaces
      * @name SpaceControllerDelete
-     * @summary Delete space by ID
      * @request DELETE:/api/spaces/{id}
      */
     spaceControllerDelete: (id: string, params: RequestParams = {}) =>
-      this.request<DeleteSpaceResponseDto, void>({
+      this.request<DeleteSpaceResponseDto, any>({
         path: `/api/spaces/${id}`,
         method: 'DELETE',
         format: 'json',
@@ -907,22 +1449,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Retrieves all essays with pagination and filtering options
+     * No description
      *
      * @tags essays
      * @name EssayControllerFindAll
-     * @summary Get all essays
      * @request GET:/api/essays
      */
     essayControllerFindAll: (
       query?: {
+        /** @default 1 */
         page?: number
+        /** @default 10 */
         perPage?: number
         search?: string
       },
       params: RequestParams = {}
     ) =>
-      this.request<EssaysResponse, void>({
+      this.request<EssaysResponse, any>({
         path: `/api/essays`,
         method: 'GET',
         query: query,
@@ -931,15 +1474,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Creates a new essay with the provided content and metadata
+     * No description
      *
      * @tags essays
      * @name EssayControllerCreate
-     * @summary Create a new essay
      * @request POST:/api/essays
      */
     essayControllerCreate: (data: CreateEssayDto, params: RequestParams = {}) =>
-      this.request<CreateEssayResponseDto, void>({
+      this.request<CreateEssayResponseDto, any>({
         path: `/api/essays`,
         method: 'POST',
         body: data,
@@ -949,15 +1491,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Retrieves detailed information about a specific essay
+     * No description
      *
      * @tags essays
      * @name EssayControllerFindOne
-     * @summary Get essay by ID
      * @request GET:/api/essays/{id}
      */
     essayControllerFindOne: (id: string, params: RequestParams = {}) =>
-      this.request<FindOneEssayResponseDto, void>({
+      this.request<FindOneEssayResponseDto, any>({
         path: `/api/essays/${id}`,
         method: 'GET',
         format: 'json',
@@ -965,15 +1506,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Updates an existing essay with new content or metadata
+     * No description
      *
      * @tags essays
      * @name EssayControllerUpdate
-     * @summary Update essay by ID
      * @request PATCH:/api/essays/{id}
      */
     essayControllerUpdate: (id: string, data: UpdateEssayDto, params: RequestParams = {}) =>
-      this.request<UpdateEssayResponseDto, void>({
+      this.request<UpdateEssayResponseDto, any>({
         path: `/api/essays/${id}`,
         method: 'PATCH',
         body: data,
@@ -983,15 +1523,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Permanently removes an essay and its associated content
+     * No description
      *
      * @tags essays
      * @name EssayControllerDelete
-     * @summary Delete essay by ID
      * @request DELETE:/api/essays/{id}
      */
     essayControllerDelete: (id: string, params: RequestParams = {}) =>
-      this.request<DeleteEssayResponseDto, void>({
+      this.request<DeleteEssayResponseDto, any>({
         path: `/api/essays/${id}`,
         method: 'DELETE',
         format: 'json',
@@ -1026,13 +1565,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     vocabularyControllerFindAll: (
       query?: {
+        /** @default 1 */
         page?: number
+        /** @default 10 */
         perPage?: number
         search?: string
       },
       params: RequestParams = {}
     ) =>
-      this.request<VocabulariesResponse, void>({
+      this.request<FindAllVocabularyDto, void>({
         path: `/api/vocabularies`,
         method: 'GET',
         query: query,
@@ -1085,6 +1626,195 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     vocabularyControllerDelete: (id: string, params: RequestParams = {}) =>
       this.request<DeleteVocabularyResponseDto, void>({
         path: `/api/vocabularies/${id}`,
+        method: 'DELETE',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags quizs
+     * @name QuizControllerCreate
+     * @summary Create a new quiz
+     * @request POST:/api/quizs
+     */
+    quizControllerCreate: (data: CreateQuizDto, params: RequestParams = {}) =>
+      this.request<CreateQuizResponseDto, void>({
+        path: `/api/quizs`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags quizs
+     * @name QuizControllerFindAll
+     * @summary Get all vocabularies
+     * @request GET:/api/quizs
+     */
+    quizControllerFindAll: (
+      query?: {
+        /** @default 1 */
+        page?: number
+        /** @default 10 */
+        perPage?: number
+        search?: string
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<QuizResponse, any>({
+        path: `/api/quizs`,
+        method: 'GET',
+        query: query,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags quizs
+     * @name QuizControllerFindOne
+     * @summary Get a Quiz by ID
+     * @request GET:/api/quizs/{id}
+     */
+    quizControllerFindOne: (id: string, params: RequestParams = {}) =>
+      this.request<FindOneQuizResponseDto, void>({
+        path: `/api/quizs/${id}`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags quizs
+     * @name QuizControllerUpdate
+     * @summary Update a quiz by ID
+     * @request PATCH:/api/quizs/{id}
+     */
+    quizControllerUpdate: (id: string, data: UpdateQuizDto, params: RequestParams = {}) =>
+      this.request<UpdateQuizResponseDto, void>({
+        path: `/api/quizs/${id}`,
+        method: 'PATCH',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags quizs
+     * @name QuizControllerDelete
+     * @summary Delete a Quiz by ID
+     * @request DELETE:/api/quizs/{id}
+     */
+    quizControllerDelete: (id: string, params: RequestParams = {}) =>
+      this.request<DeleteQuizResponseDto, void>({
+        path: `/api/quizs/${id}`,
+        method: 'DELETE',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags quizs
+     * @name QuizQuestionControllerCreateQuestion
+     * @summary Create a new quiz question
+     * @request POST:/api/quizs/{quizId}/questions
+     */
+    quizQuestionControllerCreateQuestion: (quizId: string, data: CreateQuizQuestionDto, params: RequestParams = {}) =>
+      this.request<CreateQuizQuestionResponseDto, void>({
+        path: `/api/quizs/${quizId}/questions`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags quizs
+     * @name QuizQuestionControllerFindAll
+     * @summary Find all quiz questions
+     * @request GET:/api/quizs/{quizId}/questions
+     */
+    quizQuestionControllerFindAll: (
+      quizId: string,
+      query?: {
+        /** @default 1 */
+        page?: number
+        /** @default 10 */
+        perPage?: number
+        search?: string
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<QuizQuestionResponse, any>({
+        path: `/api/quizs/${quizId}/questions`,
+        method: 'GET',
+        query: query,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags quizs
+     * @name QuizQuestionControllerFindOne
+     * @summary Find one quiz question
+     * @request GET:/api/quizs/{quizId}/questions/{id}
+     */
+    quizQuestionControllerFindOne: (quizId: string, id: string, params: RequestParams = {}) =>
+      this.request<FindOneQuizQuestionResponseDto, void>({
+        path: `/api/quizs/${quizId}/questions/${id}`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags quizs
+     * @name QuizQuestionControllerUpdate
+     * @summary Update a quiz question
+     * @request PATCH:/api/quizs/questions/{id}
+     */
+    quizQuestionControllerUpdate: (id: string, data: UpdateQuizQuestionDto, params: RequestParams = {}) =>
+      this.request<UpdateQuizQuestionResponseDto, void>({
+        path: `/api/quizs/questions/${id}`,
+        method: 'PATCH',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags quizs
+     * @name QuizQuestionControllerDelete
+     * @summary Delete a quiz question
+     * @request DELETE:/api/quizs/questions/{id}
+     */
+    quizQuestionControllerDelete: (id: string, params: RequestParams = {}) =>
+      this.request<DeleteQuizQuestionResponseDto, void>({
+        path: `/api/quizs/questions/${id}`,
         method: 'DELETE',
         format: 'json',
         ...params

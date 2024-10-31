@@ -1,27 +1,35 @@
 import { alpha, IconButtonProps } from '@mui/material'
 import IconButton from '@mui/material/IconButton'
+import { styled } from '@mui/material/styles'
 import Tooltip from '@mui/material/Tooltip'
-import { FunctionComponent, useMemo } from 'react'
+import { ElementType, FunctionComponent, useMemo } from 'react'
 
 import AppIcon from '~/components/common/AppIcon'
 import { AppLink } from '~/components/common/AppLink'
 
 import { AppIconButtonProps, MUI_ICON_BUTTON_COLORS } from './utils'
 
-/**
- * Renders MUI IconButton with SVG image by given Icon name
- * @param {string} [color] - color of background and hover effect. Non MUI values is also accepted.
- * @param {boolean} [disabled] - the IconButton is not active when true, also the Tooltip is not rendered.
- * @param {string} [href] - external link URI
- * @param {string} [icon] - name of Icon to render inside the IconButton
- * @param {object} [iconProps] - additional props to pass into the AppIcon component
- * @param {boolean} [openInNewTab] - link will be opened in new tab when true
- * @param {string} [size] - size of the button: 'small', 'medium' or 'large'
- * @param {Array<func| object| bool> | func | object} [sx] - additional CSS styles to apply to the button
- * @param {string} [title] - when set, the IconButton is rendered inside Tooltip with this text
- * @param {string} [to] - internal link URI
- * @param {object} [tooltipProps] - additional props to pass into the Tooltip component
- */
+const StyledIconButton = styled(IconButton, {
+  shouldForwardProp: (prop) => prop !== 'customColor'
+})<{ customColor?: string; component?: ElementType }>(({ customColor }) => ({
+  '&.MuiIconButton-root': {
+    ...(customColor && {
+      color: customColor,
+      '&:hover': {
+        backgroundColor: alpha(customColor, 0.04)
+      }
+    })
+  },
+  '&&': {
+    height: 'fit-content'
+  }
+}))
+
+interface StyledIconButtonProps extends IconButtonProps {
+  customColor?: string
+  component?: ElementType
+}
+
 const AppIconButton: FunctionComponent<AppIconButtonProps> = ({
   color = 'default',
   component,
@@ -40,31 +48,22 @@ const AppIconButton: FunctionComponent<AppIconButtonProps> = ({
 
   const iconButtonToRender = useMemo(() => {
     const colorToRender = isMuiColor ? (color as IconButtonProps['color']) : 'default'
-    const sxToRender = {
-      ...sx,
-      ...(!isMuiColor && {
-        color,
-        ':hover': {
-          backgroundColor: alpha(color, 0.04)
-        }
-      })
-    }
+
     return (
-      <IconButton
-        component={componentToRender}
+      <StyledIconButton
+        {...(restOfProps as StyledIconButtonProps)}
+        component={componentToRender as ElementType}
         color={colorToRender}
+        customColor={!isMuiColor ? color : undefined}
         disabled={disabled}
-        sx={sxToRender}
-        {...restOfProps}
+        sx={sx}
       >
         <AppIcon icon={icon} {...iconProps} />
         {children}
-      </IconButton>
+      </StyledIconButton>
     )
   }, [color, componentToRender, children, disabled, icon, isMuiColor, sx, iconProps, restOfProps])
 
-  // When title is set, wrap the IconButton with Tooltip.
-  // Note: when IconButton is disabled the Tooltip is not working, so we don't need it
   return title && !disabled ? (
     <Tooltip title={title} {...tooltipProps}>
       {iconButtonToRender}

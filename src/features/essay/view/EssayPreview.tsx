@@ -38,7 +38,7 @@ function EssayPreview({ data }: EssayPreviewProps) {
       <Container>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', mb: 1 }}>
           {data.hashtags.map((tag, index) => (
-            <AppTag key={index} tag={tag} />
+            <AppTag key={index} tag={tag} variant={'filled'} />
           ))}
         </Box>
         <Typography variant='h2' gutterBottom fontWeight={600}>

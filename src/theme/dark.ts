@@ -16,8 +16,8 @@ export const DARK_THEME: ThemeOptions = {
     mode: 'dark',
     ...PALETTE_COLORS,
     background: {
-      paper: '#000', // Gray 800 - Background of "Paper" based component
-      default: '#000'
+      paper: '#313338', // Gray 800 - Background of "Paper" based component
+      default: '#313338'
     }
   },
   typography: {

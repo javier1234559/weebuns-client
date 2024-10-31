@@ -4,7 +4,7 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Typography from '@mui/material/Typography'
 
-import AppIconButton from '~/components/common/AppIconButton'
+import AppButton from '~/components/common/AppButton'
 import { AppLink } from '~/components/common/AppLink'
 import AppTag from '~/components/common/AppTag'
 import { MOCK_FEEDS_PICKED } from '~/features/community/mocks/feed'
@@ -27,7 +27,7 @@ function StaffPicks() {
               </Typography>
             </Box>
             <AppLink
-              href={`${replacePathId(RouteNames.Feed, item.id)}`}
+              href={`${replacePathId(RouteNames.Essay, item.id)}`}
               sx={{ textDecoration: 'none !important', color: 'inherit' }}
             >
               <Typography variant='subtitle1' fontWeight='bold' sx={{ mb: 0.5 }}>
@@ -49,7 +49,10 @@ function StaffPicks() {
             </AppLink>
           </Box>
         ))}
-        <AppLink href={RouteNames.Feed} sx={{ display: 'block', mt: 2, color: 'primary.main', textDecoration: 'none' }}>
+        <AppLink
+          href={RouteNames.Essay}
+          sx={{ display: 'block', mt: 2, color: 'primary.main', textDecoration: 'none' }}
+        >
           <Typography variant='body2'>See the full list</Typography>
         </AppLink>
       </CardContent>
@@ -68,7 +71,7 @@ function RecommendedTopics() {
         </Typography>
         <Box sx={{ display: 'flex', flexWrap: 'wrap' }}>
           {topics.map((topic) => (
-            <AppTag key={topic} tag={topic} />
+            <AppTag key={topic} tag={topic} variant={'filled'} />
           ))}
         </Box>
       </CardContent>
@@ -109,9 +112,9 @@ function ActiveWriters() {
                 </Typography>
               </Box>
             </Box>
-            <AppIconButton icon='plus'>
+            <AppButton>
               <Typography variant='caption'>Follow</Typography>
-            </AppIconButton>
+            </AppButton>
           </Box>
         ))}
       </CardContent>
