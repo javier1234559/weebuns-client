@@ -54,19 +54,3 @@ export const PALETTE_COLORS: Partial<PaletteOptions> = {
   info: COLOR_INFO,
   success: COLOR_SUCCESS
 }
-
-const COLOR_PRIMARY_DARK: SimplePaletteColorOptions = {
-  main: '#22C55D',
-  light: '#16A34A',
-  dark: '#16A34A',
-  contrastText: '#F0FDF4'
-}
-
-export const PALETTE_COLORS_DARK: Partial<PaletteOptions> = {
-  primary: COLOR_PRIMARY,
-  secondary: COLOR_SECONDARY,
-  // error: COLOR_ERROR,
-  warning: COLOR_WARNING,
-  info: COLOR_INFO,
-  success: COLOR_SUCCESS
-}

@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { ESSAY_KEY_FACTORY } from '~/features/essay/services/essay-key-factory'
 import essayApi from '~/features/essay/services/essayApi'

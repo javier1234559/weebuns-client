@@ -1,9 +1,9 @@
 import { useApolloClient } from '@apollo/client'
-import { useMutation, useQuery, useQueryClient, UseQueryOptions } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import { SPACE_KEY_FACTORY } from '~/features/space/services/space-key-factory'
 import spaceApi from '~/features/space/services/spaceApi'
-import { CreateSpaceDto, Space, UpdateSpaceDto } from '~/services/api/api-axios'
+import { CreateSpaceDto, UpdateSpaceDto } from '~/services/api/api-axios'
 import {
   GetSpacesByUserDocument,
   GetSpacesByUserSelectDocument,

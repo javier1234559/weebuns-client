@@ -14,6 +14,7 @@ import { useModal } from '~/contexts/ModalContext'
 import MoreActionButton from '~/features/essay/components/MoreActionButton'
 import { ESSAY_LIST } from '~/features/essay/mocks/ESSAY_LIST'
 import EditEssayModal from '~/features/essay/modal/EditEssayModal'
+import { convertToRelativeTime } from '~/utils/format-date'
 
 function TableEssay() {
   const theme = useTheme()
@@ -57,7 +58,7 @@ function TableEssay() {
               </TableCell>
               <TableCell align='right'>
                 <Typography variant='body2' color='text.secondary'>
-                  {essay.publishDate}
+                  {convertToRelativeTime(essay.created_at)}
                 </Typography>
               </TableCell>
               <TableCell align='right'>

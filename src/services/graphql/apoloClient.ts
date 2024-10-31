@@ -22,25 +22,25 @@ const authLink = setContext(async (_, { headers }) => {
 })
 
 // Error handling link
-const errorLink = onError(({ networkError, graphQLErrors, operation, forward }) => {
+const errorLink = onError(({ networkError }) => {
   if (networkError) {
     console.log(`[Network error]: ${networkError}`)
   }
 
-  if (graphQLErrors) {
-    for (const err of graphQLErrors) {
-      // Pass through if the error is not an authentication error
-      // if ((err as any).extensions?.response?.message !== 'Unauthorized') {
-      //   forward(operation)
-      //   continue
-      // }
-      // switch (err.extensions?.code) {
-      //   case 'UNAUTHENTICATED':
-      //     // Handle token refresh here
-      //     break
-      // }
-    }
-  }
+  // if (graphQLErrors) {
+  //   for (const err of graphQLErrors) {
+  //     // Pass through if the error is not an authentication error
+  //     if ((err as any).extensions?.response?.message !== 'Unauthorized') {
+  //       forward(operation)
+  //       continue
+  //     }
+  //     switch (err.extensions?.code) {
+  //       case 'UNAUTHENTICATED':
+  //         // Handle token refresh here
+  //         break
+  //     }
+  //   }
+  // }
 })
 
 // Create Apollo Client
