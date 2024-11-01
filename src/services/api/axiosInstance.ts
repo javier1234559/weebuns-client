@@ -3,6 +3,8 @@ import axios, { AxiosInstance } from 'axios'
 import { globalConfig } from '~/config'
 import { Api } from '~/services/api/api-axios'
 import { TokenManager } from '~/services/tokenManagement'
+import { getToken } from '~/utils/token'
+// import { TokenManager } from '~/services/tokenManagement'
 
 class AxiosService {
   private static instance: AxiosService
@@ -44,7 +46,8 @@ export const axiosInstant = axiosService.getAxiosInstance()
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const injectHeaders = async (headers: any) => {
-  const token: string = (await TokenManager.getToken()) as string
+  // const token: string = (await TokenManager.getToken()) as string
+  const token = getToken() as string
 
   if (!headers) {
     return {

@@ -6,15 +6,28 @@ import { deleteToken, getRefreshCookie, getToken, redirectToLogin, setToken } fr
 export const TokenManager = new TokenManagement({
   getAccessToken: async () => {
     const token = getToken()
-    return `${token}`
+    // Return empty string if no token to prevent parsing errors
+    if (!token) return ''
+    return token
   },
   getRefreshToken: async () => {
     const refreshToken = getRefreshCookie()
-    return `${refreshToken}`
+    // Return empty string if no refresh token
+    if (!refreshToken) return ''
+    return refreshToken
   },
-  onInvalidRefreshToken: () => {
-    // Logout, redirect to login
+  onInvalidRefreshToken: async () => {
+    try {
+      // Clean up on invalid token
+      await axiosInstant.post('/api/auth/logout')
+    } catch (error) {
+      console.error('Logout error:', error)
+    } finally {
+      deleteToken()
+      redirectToLogin()
+    }
   },
+
   executeRefreshToken: async () => {
     try {
       const r = await axiosInstant.post('/api/auth/refresh-token')
@@ -28,9 +41,8 @@ export const TokenManager = new TokenManagement({
       // Abort all pending requests before logout
       console.log('Error while refreshing token', error)
 
-      // delete cookie
+      // Clean up
       await axiosInstant.post('/api/auth/logout')
-
       deleteToken()
       redirectToLogin()
 
@@ -40,9 +52,8 @@ export const TokenManager = new TokenManagement({
       }
     }
   },
-  onRefreshTokenSuccess: ({ token, refresh_token }) => {
-    console.log(refresh_token)
-    if (token) {
+  onRefreshTokenSuccess: ({ token }) => {
+    if (token && typeof token === 'string') {
       setToken(token)
     }
   }

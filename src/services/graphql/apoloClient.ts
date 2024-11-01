@@ -3,7 +3,7 @@ import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
 
 import { globalConfig } from '~/config'
-import { TokenManager } from '~/services/tokenManagement'
+import { getToken } from '~/utils/token'
 
 const httpLink = createHttpLink({
   uri: globalConfig.API_URL + '/graphql',
@@ -11,7 +11,8 @@ const httpLink = createHttpLink({
 })
 
 const authLink = setContext(async (_, { headers }) => {
-  const token: string = (await TokenManager.getToken()) as string
+  // const token: string = (await TokenManager.getToken()) as string
+  const token = getToken() as string
 
   return {
     headers: {

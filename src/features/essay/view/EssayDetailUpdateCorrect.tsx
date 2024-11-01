@@ -80,9 +80,8 @@ const EssayDetailUpdateCorrect = ({ essayData, data, onSubmit, onExit }: EssayDe
           overall_comment: overallComment
         }
       },
-      onCompleted: (data) => {
+      onCompleted: () => {
         // Handle success if needed
-        console.log('Updated correction:', data)
         onSubmit() // Trigger parent onSubmit to change mode
         toast.success('Correction update successfully', { id: loadingId })
         scrollToTop()
