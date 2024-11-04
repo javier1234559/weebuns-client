@@ -883,13 +883,63 @@ export interface DeleteHashtagResponseDto {
   hashtag: Hashtag
 }
 
-export interface TopicDto {
-  title: string
-  description: string
+export interface TranslateDto {
+  /** @example "Hello world" */
+  text: string
+  /** @example "English" */
+  sourceLanguage: string
+  /** @example "Spanish" */
+  targetLanguage: string
+}
+
+export interface TranslateResponseDto {
+  /** @example "Hello world" */
+  original_text: string
+  /** @example "Hola mundo" */
+  translated_text: string
+  /** @example "English" */
+  source_language: string
+  /** @example "Spanish" */
+  target_language: string
+}
+
+export interface CheckGrammarDto {
+  /** @example "This is a sample text with grammer mistakes." */
+  text: string
+}
+
+export interface PositionDto {
+  /** @example 0 */
+  start: number
+  /** @example 5 */
+  end: number
+}
+
+export interface CorrectionDto {
+  /** @example "grammer" */
+  original: string
+  /** @example "grammar" */
+  corrected: string
+  explanation: string
+  /** @example "spelling" */
+  type: 'grammar' | 'spelling' | 'punctuation' | 'style'
+  position: PositionDto
+}
+
+export interface CheckGrammarResponseDto {
+  corrections: CorrectionDto[]
+  /** @example "Found 2 spelling errors and 1 grammar mistake." */
+  summary: string
+  /**
+   * @min 0
+   * @max 100
+   * @example 85
+   */
+  overall_score: number
 }
 
 export interface RecommendTopicsResponseDto {
-  topics: TopicDto[]
+  topics: string[]
   category: string
   count: number
 }
@@ -1988,13 +2038,16 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags ai
-     * @name AiController
+     * @name AiControllerTranslate
      * @request POST:/api/ai/translate
      */
-    aiController: (params: RequestParams = {}) =>
-      this.request<void, any>({
+    aiControllerTranslate: (data: TranslateDto, params: RequestParams = {}) =>
+      this.request<TranslateResponseDto, any>({
         path: `/api/ai/translate`,
         method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
         ...params
       }),
 
@@ -2002,15 +2055,16 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags ai
-     * @name AiController2
+     * @name AiControllerCheckGrammar
      * @request POST:/api/ai/check-grammar
-     * @originalName aiController
-     * @duplicate
      */
-    aiController2: (params: RequestParams = {}) =>
-      this.request<void, any>({
+    aiControllerCheckGrammar: (data: CheckGrammarDto, params: RequestParams = {}) =>
+      this.request<CheckGrammarResponseDto, any>({
         path: `/api/ai/check-grammar`,
         method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
         ...params
       }),
 

@@ -1,4 +1,5 @@
 import ImageIcon from '@mui/icons-material/Image'
+import { SxProps, Theme } from '@mui/material'
 import Box from '@mui/material/Box'
 import Skeleton from '@mui/material/Skeleton'
 import { memo, useState } from 'react'
@@ -16,6 +17,7 @@ interface IAppImageProps {
   priority?: boolean
   blur?: boolean
   onClick?: () => void
+  sx?: SxProps<Theme>
 }
 
 function AppImage({
@@ -29,6 +31,7 @@ function AppImage({
   className,
   priority = false,
   blur = true,
+  sx,
   onClick
 }: IAppImageProps) {
   const [isLoading, setIsLoading] = useState(true)
@@ -44,7 +47,7 @@ function AppImage({
     setHasError(true)
   }
 
-  const containerStyles = {
+  const containerStyles: SxProps<Theme> = {
     position: 'relative',
     width,
     height,
@@ -56,7 +59,8 @@ function AppImage({
     transition: 'transform 0.2s ease-in-out',
     '&:hover': {
       transform: onClick && 'scale(1.02)'
-    }
+    },
+    ...sx
   }
 
   const imageStyles = {

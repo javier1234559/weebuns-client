@@ -120,7 +120,7 @@
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import { AppButton } from '~/components/common/AppButton'
 import CreateEssayForm from '~/features/essay/components/CreateEssayForm'

@@ -13,7 +13,7 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 import { AppError } from '~/components/common/AppError'
 import AppIcon from '~/components/common/AppIcon'
@@ -31,6 +31,7 @@ import usePagination from '~/hooks/usePagination'
 import { RouteNames } from '~/router/route-name'
 import { StatusParams } from '~/types/extend-api'
 import { convertToRelativeTime } from '~/utils/format-date'
+import { replacePathId } from '~/utils/replace-path'
 
 const STATUS_OPTIONS = [
   { value: '', label: 'All Status' },
@@ -154,9 +155,11 @@ function TableEssay() {
                 <TableRow key={essay.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                   <TableCell>
                     <Box>
-                      <Typography variant='body1' sx={{ fontWeight: 500 }}>
-                        {essay.title}
-                      </Typography>
+                      <Link to={`${replacePathId(RouteNames.EssayDetail, essay.id)}`}>
+                        <Typography variant='body1' color='text.primary'>
+                          {essay.title}
+                        </Typography>
+                      </Link>
                       {essay.summary && (
                         <Typography
                           variant='body2'

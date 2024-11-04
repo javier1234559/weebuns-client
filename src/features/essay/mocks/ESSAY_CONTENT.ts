@@ -11,3 +11,75 @@ Trong lúc trời còn tờ mờ sáng, tôi tập trung vào bước đi, cũng
 Nhưng khi ngủ sớm, dậy sớm, tôi thấy bản thân không uể oải, cũng không áp lực khi mở mắt ra là thấy một đống tin nhắn đang chờ tôi phản hồi. Tôi chọn cách chủ động đón nhận thay vì thụ động đón nhận những áp lực tứ phía đó.
 Thời gian tôi đi bộ như một cách tôi thiền động, tôi chỉ nghe nhạc, tập trung vào bước đi và cảnh quan cũng như con người xung quanh, điều đó giúp tôi quan sát được nhiều thứ trong cuộc sống hơn.
 Các cô chú lớn tuổi đạp xe, rảo bước nhanh trong công viên để rèn luyện thể lực, tôi thấy mình là người trẻ duy nhất đi tập lúc 5h sáng trong công viên. Tôi nghĩ rằng, bây giờ sức khoẻ của giới trẻ chúng tôi còn không tốt bằng cô chú.`
+
+export const CONTENT_MOCK_2 = `
+<div class="content-wrapper">
+  <h1>The Journey Through Seasons 🌍</h1>
+
+  <p dir="auto">In the <strong>depths of winter</strong>, the forest stands <u>silent and still</u>, with branches heavy under their <mark style="background-color: #FFFB8F">blanket of snow</mark>. The old oak tree, weathered by countless storms, reaches toward the steel-grey sky 🌳.</p>
+
+  <blockquote class="special-quote">
+    <p>Nature whispers her secrets to those who listen carefully, as ancient wisdom flows through every leaf and stream.</p>
+  </blockquote>
+
+  <div style="text-align: center;" class="image-wrapper">
+    <img src="https://example.com/winter.jpg" alt="Winter Scene" width="300" height="200">
+  </div>
+
+  <p>The changing seasons bring their own rhythms:</p>
+
+  <ul>
+    <li><strong>Spring</strong> arrives with a burst of color 🌺
+      <ul>
+        <li>Cherry blossoms paint the sky pink</li>
+        <li>New leaves unfurl in brilliant green</li>
+      </ul>
+    </li>
+    <li><em>Summer</em> brings warm, golden days ☀️
+      <ol>
+        <li>Fields of wildflowers dance in the breeze</li>
+        <li>Butterflies drift on gentle currents</li>
+      </ol>
+    </li>
+    <li><u>Autumn</u> transforms the landscape 🍁</li>
+  </ul>
+
+  <p>As the cycle continues, we observe that:</p>
+
+  <ol>
+    <li>Each season has its own <strong>unique beauty</strong> and purpose.</li>
+    <li>The transition between seasons creates moments of:
+      <ul>
+        <li>Reflection</li>
+        <li>Anticipation</li>
+        <li>Wonder</li>
+      </ul>
+    </li>
+  </ol>
+
+  <div class="special-section">
+    <h2>Natural Harmony</h2>
+    <p>In the <mark style="background-color: #90EE90">gentle rhythm</mark> of these changes, we find a deeper understanding of life's cycles. The morning dew sparkles like diamonds on spider webs, while evening brings a chorus of crickets 🦗.</p>
+  </div>
+
+  <blockquote>
+    <p><em>Every leaf speaks bliss to me, fluttering from the autumn tree</em> - Emily Brontë</p>
+  </blockquote>
+
+  <table>
+    <tr>
+      <th>Season</th>
+      <th>Characteristic</th>
+    </tr>
+    <tr>
+      <td>Winter</td>
+      <td>Silent beauty</td>
+    </tr>
+    <tr>
+      <td>Spring</td>
+      <td>Renewal</td>
+    </tr>
+  </table>
+
+  <p>And so, with each passing day, <strong>nature's grand performance</strong> continues - a testament to the <u>enduring cycle</u> of life and growth 🌱. Through sunshine ☀️ and storm ⛈️, the dance goes on.</p>
+</div>`

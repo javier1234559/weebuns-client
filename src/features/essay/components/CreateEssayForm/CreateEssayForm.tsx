@@ -1,141 +1,3 @@
-// import Box from '@mui/material/Box'
-// import Chip from '@mui/material/Chip'
-// import Typography from '@mui/material/Typography'
-// import { X } from 'lucide-react'
-// import React from 'react'
-// import { Control, Controller } from 'react-hook-form'
-
-// import { AppButton } from '~/components/common/AppButton'
-// import AppInput from '~/components/common/AppInput'
-// import ContentEditor from '~/components/feature/Editor/ContentEditor'
-// import ImageUpload from '~/components/feature/ImageUpload'
-// import { Card, CardContent, CardTitle } from '~/components/ui/card'
-// import { Select, SelectItem } from '~/components/ui/select'
-// import { useEventSwitchDarkMode } from '~/hooks/event'
-
-// export interface CreateEssayFormData {
-//   title: string
-//   content: string
-//   featuredImage: File | null
-//   language: string
-//   hashtags: string[]
-// }
-
-// interface CreateEssayFormProps {
-//   control: Control<CreateEssayFormData>
-// }
-
-// const CreateEssayForm: React.FC<CreateEssayFormProps> = ({ control }) => {
-//   const { isDarkMode } = useEventSwitchDarkMode()
-//   const [isShowUpload, setIsShowUpload] = React.useState(false)
-
-//   return (
-//     <Card>
-//       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-//         <CardTitle>Write a new post</CardTitle>
-
-//         <Box display='flex' gap={2}>
-//           <Box flexGrow={1} flexShrink={1} flexBasis='auto'>
-//             <Controller
-//               name='title'
-//               control={control}
-//               render={({ field, fieldState: { error } }) => (
-//                 <AppInput
-//                   {...field}
-//                   fullWidth
-//                   error={!!error}
-//                   placeholder='Write a title'
-//                   helperText={error?.message}
-//                   variant='outlined'
-//                 />
-//               )}
-//             />
-//           </Box>
-
-//           <Box flexGrow={0} flexShrink={0} flexBasis='auto'>
-//             <Controller
-//               name='language'
-//               control={control}
-//               render={({ field }) => (
-//                 <Select {...field} placeholder='Language'>
-//                   <SelectItem value='en'>English</SelectItem>
-//                   <SelectItem value='es'>Spanish</SelectItem>
-//                 </Select>
-//               )}
-//             />
-//           </Box>
-//         </Box>
-
-//         {/* <Box flexGrow={1} flexShrink={1} flexBasis='auto'>
-//           <AppButton onClick={(_e) => setIsShowUpload((pre) => !pre)}>
-//             {isShowUpload ? 'Hide Cover' : 'Add Cover'}
-//           </AppButton>
-//         </Box>
-//         {isShowUpload && (
-//           <Controller
-//             name='featuredImage'
-//             control={control}
-//             render={({ field }) => <ImageUpload value={field.value} onChange={(file) => field.onChange(file)} />}
-//           />
-//         )} */}
-
-//         <Controller
-//           name='content'
-//           control={control}
-//           render={({ field }) => (
-//             <ContentEditor isDark={isDarkMode} content={field.value} onChangeContent={field.onChange} />
-//           )}
-//         />
-
-//         <Box my={2}>
-//           <Controller
-//             name='hashtags'
-//             control={control}
-//             render={({ field }) => (
-//               <Box>
-//                 <Typography variant='h6' mb={1}>
-//                   Hashtags
-//                 </Typography>
-//                 {field.value.map((tag, index) => (
-//                   <Chip
-//                     key={index}
-//                     label={tag}
-//                     variant='outlined'
-//                     deleteIcon={<X size={14} />}
-//                     onDelete={() => {
-//                       const newTags = [...field.value]
-//                       newTags.splice(index, 1)
-//                       field.onChange(newTags)
-//                     }}
-//                     sx={{ margin: 0.5 }}
-//                   />
-//                 ))}
-//                 <AppInput
-//                   fullWidth
-//                   sx={{ marginTop: 2 }}
-//                   placeholder='Add a hashtag'
-//                   onKeyDown={(e) => {
-//                     if (e.key === 'Enter') {
-//                       e.preventDefault()
-//                       const input = e.target as HTMLInputElement
-//                       if (input.value) {
-//                         field.onChange([...field.value, input.value])
-//                         input.value = ''
-//                       }
-//                     }
-//                   }}
-//                 />
-//               </Box>
-//             )}
-//           />
-//         </Box>
-//       </CardContent>
-//     </Card>
-//   )
-// }
-
-// export default React.memo(CreateEssayForm)
-
 import { yupResolver } from '@hookform/resolvers/yup'
 import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
@@ -154,13 +16,16 @@ import ContentEditor from '~/components/feature/Editor/ContentEditor'
 import UploadImage from '~/components/feature/ImageUpload'
 import { Card, CardContent, CardTitle } from '~/components/ui/card'
 import { Select, SelectItem } from '~/components/ui/select'
+import { RecommendInput } from '~/features/essay/components/CreateEssayForm/RecommendInput'
 import { clearEssayData, setEssayData } from '~/features/essay/essaySlice'
 import { useCreateEssay } from '~/features/essay/hooks/useEssayQueries'
+import { CONTENT_MOCK_2 } from '~/features/essay/mocks/ESSAY_CONTENT'
 import { useEventSwitchDarkMode } from '~/hooks/event'
 import { RouteNames } from '~/router/route-name'
 import { EssayStatus } from '~/services/api/api-axios'
 import { RootState } from '~/store/store'
 import { replacePathId } from '~/utils/replace-path'
+import { textUtils } from '~/utils/text-utils'
 
 const schema = yup.object().shape({
   title: yup.string().required('Title is required').min(10, 'Title must be at least 10 characters'),
@@ -198,6 +63,7 @@ function CreateEssayForm() {
     resolver: yupResolver(schema),
     defaultValues: {
       ...essayData,
+      content: CONTENT_MOCK_2,
       hashtags: essayData?.hashtags || []
     }
   })
@@ -219,7 +85,7 @@ function CreateEssayForm() {
 
   const onSubmit = async (data: EssayFormData) => {
     const essayId = toast.loading('Create essay...')
-
+    const summary = textUtils.truncate(textUtils.sanitize(data.content), 100)
     try {
       const result = await mutation.mutateAsync({
         title: data.title,
@@ -228,7 +94,8 @@ function CreateEssayForm() {
         language: data.language,
         hashtag_names: data.hashtags.filter((tag): tag is string => !!tag),
         status: status as EssayStatus,
-        spaceId: idSpace as string
+        spaceId: idSpace as string,
+        summary: summary
       })
 
       // Clear Redux store after successful submission
@@ -249,7 +116,15 @@ function CreateEssayForm() {
           name='title'
           control={control}
           render={({ field, fieldState: { error } }) => (
-            <AppInput {...field} fullWidth error={!!error} placeholder='Write a title' helperText={error?.message} />
+            <Box>
+              <AppInput {...field} fullWidth error={!!error} placeholder='Write a title' helperText={error?.message} />
+              <RecommendInput
+                value={field.value}
+                onChange={(newValue) => {
+                  field.onChange(newValue)
+                }}
+              />
+            </Box>
           )}
         />
       </Box>

@@ -9,6 +9,7 @@ import { memo } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
+import { AppImage } from '~/components/common/AppImage'
 import AppTag from '~/components/common/AppTag'
 import { useUpdateEssay } from '~/features/essay/hooks/useEssayQueries'
 import { RouteNames } from '~/router/route-name'
@@ -41,6 +42,7 @@ function EssayCard({ item }: EssayCardProps) {
       toast.success('Upvote updated successfully')
     } catch (error) {
       toast.error('Failed to update upvote')
+      console.error(error)
     }
   }
 
@@ -76,9 +78,19 @@ function EssayCard({ item }: EssayCardProps) {
               </Typography>
             </Box>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-              <Chip size='small' label='English' variant='outlined' icon={<Globe size={12} />} />
-              <Chip size='small' label='Newbie' variant='outlined' icon={<Sprout size={14} />} />
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: { sm: 'left', sx: 'center' },
+                gap: 1,
+                mb: 1,
+                flexDirection: { xs: 'column', sm: 'row' }
+              }}
+            >
+              <Box display='flex' gap={1} flexWrap='wrap'>
+                <Chip size='small' label='English' variant='outlined' icon={<Globe size={12} />} />
+                <Chip size='small' label='Newbie' variant='outlined' icon={<Sprout size={14} />} />
+              </Box>
               <Typography variant='body2' sx={{ color: 'text.secondary' }}>
                 {item.language} · {convertToRelativeTime(item.created_at)}
               </Typography>
@@ -87,8 +99,13 @@ function EssayCard({ item }: EssayCardProps) {
         </Box>
 
         {/* Content Section */}
-        <Box sx={{ display: 'flex' }}>
-          <Box>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' } // Stack on mobile, row on desktop
+          }}
+        >
+          <Box sx={{ flex: 1 }}>
             <Typography
               variant='h5'
               component='button'
@@ -111,12 +128,10 @@ function EssayCard({ item }: EssayCardProps) {
                   color: 'primary.main',
                   textDecoration: 'underline'
                 },
-                // Ensure text doesn't wrap oddly
                 wordBreak: 'break-word',
-                // Better readability
                 lineHeight: 1.3
               }}
-              title={item.title} // Shows full title on hover
+              title={item.title}
               aria-label={`Read more about ${item.title}`}
             >
               {textUtils.truncate(textUtils.sanitize(item.title), 200)}
@@ -126,7 +141,6 @@ function EssayCard({ item }: EssayCardProps) {
               variant='body1'
               component='button'
               onClick={() => handleClick(item.id)}
-              // For accessibility and SEO
               aria-label={`Read full article about ${item.title}`}
               sx={{
                 color: 'text.secondary',
@@ -134,11 +148,8 @@ function EssayCard({ item }: EssayCardProps) {
                 WebkitLineClamp: 6,
                 WebkitBoxOrient: 'vertical',
                 overflow: 'hidden',
-                // Better readability
                 lineHeight: 1.5,
-                // Ensure text doesn't wrap oddly
                 wordBreak: 'break-word',
-                // If clickable
                 width: '100%',
                 textAlign: 'left',
                 border: 'none',
@@ -153,13 +164,27 @@ function EssayCard({ item }: EssayCardProps) {
               {textUtils.truncate(textUtils.sanitize(item.content), 1000)}
             </Typography>
           </Box>
-
           {/* Optional Image */}
-          {/* {item.cover_url && typeof item.cover_url === 'string' && item.cover_url.trim() !== '' && (
-            <Box sx={{ ml: 'auto' }}>
-              <AppImage src={item.cover_url} alt={item.title} width={180} height={180} fit='cover' rounded={1} />
+          {item.cover_url && typeof item.cover_url === 'string' && item.cover_url.trim() !== '' && (
+            <Box
+              sx={{
+                ml: { xs: 0, sm: 'auto' }, // No margin on mobile, auto margin on desktop
+                mt: { xs: 2, sm: 0 }, // Top margin on mobile only
+                width: { xs: '100%', sm: 'auto' } // Full width on mobile, auto on desktop
+              }}
+            >
+              <AppImage
+                src={item.cover_url}
+                alt={item.title}
+                height={180}
+                sx={{
+                  width: { xs: '100%', sm: 180 }
+                }}
+                fit='cover'
+                rounded={1}
+              />
             </Box>
-          )} */}
+          )}
         </Box>
 
         <Box sx={{ mt: 1 }}>
@@ -168,7 +193,7 @@ function EssayCard({ item }: EssayCardProps) {
             {item.hashtags?.map((hashtag, index) => {
               const { hashtag: tag } = hashtag
               if (!tag) return null
-              return <AppTag key={index} tag={tag.name} variant='paper' />
+              return <AppTag key={index} tag={tag.name} variant='outlined' />
             })}
           </Box>
 

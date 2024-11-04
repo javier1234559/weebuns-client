@@ -12,20 +12,12 @@ import { useSelector } from 'react-redux'
 
 import AppTag from '~/components/common/AppTag'
 import { Card } from '~/components/ui/card'
-import { RootState } from '~/store/store' // Adjust this import based on your Redux setup
+import { EssayFormData } from '~/features/essay/components/CreateEssayForm/CreateEssayForm'
+import { RootState } from '~/store/store'
 import { convertToRelativeTime } from '~/utils/format-date'
 
-interface Essay {
-  title: string
-  content: string
-  thumbnail: string
-  language: string
-  hashtags: string[]
-  createdAt: string // Add this field to your Essay interface
-}
-
 interface EssayPreviewProps {
-  data: Essay
+  data: EssayFormData
 }
 
 function EssayPreview({ data }: EssayPreviewProps) {
@@ -38,7 +30,7 @@ function EssayPreview({ data }: EssayPreviewProps) {
       <Container>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', mb: 1 }}>
           {data.hashtags.map((tag, index) => (
-            <AppTag key={index} tag={tag} variant={'filled'} />
+            <AppTag key={index} tag={tag || ''} variant={'filled'} />
           ))}
         </Box>
         <Typography variant='h2' gutterBottom fontWeight={600}>
@@ -53,7 +45,7 @@ function EssayPreview({ data }: EssayPreviewProps) {
           <Box>
             <Typography variant='subtitle1'>{auth.name}</Typography>
             <Typography variant='body2' color='textSecondary'>
-              {convertToRelativeTime(data.createdAt)}
+              {convertToRelativeTime(new Date().toISOString())}
             </Typography>
           </Box>
           <Box ml='auto'>
@@ -66,13 +58,15 @@ function EssayPreview({ data }: EssayPreviewProps) {
           </Box>
         </Box>
 
-        <Box sx={{ width: '100%', height: 400, overflow: 'hidden', mb: 4 }}>
-          <img
-            src={'https://images2.alphacoders.com/133/1335809.png'}
-            alt={data.title}
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-          />
-        </Box>
+        {data.cover_url && (
+          <Box sx={{ width: '100%', height: 400, overflow: 'hidden', mb: 4 }}>
+            <img
+              src={data.cover_url || ''}
+              alt={data.title}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          </Box>
+        )}
         <Box
           className='tiptap-preview ProseMirror'
           dangerouslySetInnerHTML={{ __html: sanitizedContent }}

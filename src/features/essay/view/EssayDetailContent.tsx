@@ -59,13 +59,12 @@ function EssayDetailContent({ data }: EssayDetailContentProps) {
         </Box>
       </Box>
 
-      <Box sx={{ width: '100%', height: 400, overflow: 'hidden', mb: 4 }}>
-        <img
-          src={'https://images2.alphacoders.com/133/1335809.png'}
-          alt={essay.title}
-          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-        />
-      </Box>
+      {essay.cover_url && (
+        <Box sx={{ width: '100%', height: 400, overflow: 'hidden', mb: 4 }}>
+          <img src={essay.cover_url} alt={essay.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        </Box>
+      )}
+
       <Box
         className='tiptap-preview ProseMirror'
         dangerouslySetInnerHTML={{ __html: sanitizedContent }}
