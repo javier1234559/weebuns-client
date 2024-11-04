@@ -44,6 +44,16 @@ const essayApi = {
       })
   },
 
+  deleteByUser(id: string) {
+    return api
+      .essayControllerDeleteByUser(id)
+      .then(() => void 0)
+      .catch((err) => {
+        handleApiError(err)
+        throw err.response.data
+      })
+  },
+
   delete(id: string) {
     return api
       .essayControllerDelete(id)
@@ -62,25 +72,17 @@ const essayApi = {
         handleApiError(err)
         throw err.response.data
       })
-  }
+  },
 
-  // getByUserId(
-  //   userId: string,
-  //   params?: {
-  //     status?: string
-  //     search?: string
-  //     page?: number
-  //     limit?: number
-  //   }
-  // ) {
-  //   return api
-  //     .essayControllerFindByUserId(userId, params)
-  //     .then((res) => res.data)
-  //     .catch((err) => {
-  //       handleApiError(err)
-  //       throw err.response.data
-  //     })
-  // },
+  getAllEssayByUser(query?: PaginationParams) {
+    return api
+      .essayControllerFindAllByUser(query)
+      .then((res) => res.data)
+      .catch((err) => {
+        handleApiError(err)
+        throw err.response.data
+      })
+  }
 
   // updateStatus(id: string, status: string) {
   //   return api

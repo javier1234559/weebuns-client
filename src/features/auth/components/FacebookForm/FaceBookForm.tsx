@@ -6,6 +6,7 @@ import { globalConfig } from '~/config'
 import { AuthResponse } from '~/features/auth/auth.type'
 import authApi from '~/features/auth/services/authApi'
 import { useLoadingToast } from '~/hooks/useLoadingToast'
+import logOnDev from '~/utils/log-on-dev'
 
 interface FaceBookFormProps {
   onSubmit: (data: AuthResponse) => void
@@ -23,6 +24,7 @@ function FaceBookForm({ onSubmit }: FaceBookFormProps) {
           successMessage: 'Successfully logged in',
           errorMessage: 'Failed to log in with Facebook'
         })
+        logOnDev('Facebook login successful:', JSON.stringify(result))
         onSubmit(result)
       } catch (error) {
         console.error('Facebook login failed:', error)

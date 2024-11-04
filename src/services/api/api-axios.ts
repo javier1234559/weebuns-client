@@ -6,6 +6,8 @@
  * ----------------------------------------------------------------------
  */
 
+export type DeleteResponseDto = object
+
 export interface UserLanguage {
   /** @example "00321d6f-2bcf-4985-9659-92a571275da6" */
   id: string
@@ -150,64 +152,52 @@ export interface Correction {
   replies: CorrectionReply[] | null
 }
 
+export interface HashtagCount {
+  /** @example 5 */
+  essays: number
+}
+
 export interface Hashtag {
   /** @example 1 */
   id: string
-  /**
-   * Name of the hashtag without # symbol
-   * @example "grammar"
-   */
+  /** @example "grammar" */
   name: string
   /**
-   * Number of times this hashtag has been used
-   * @min 0
-   * @example 42
-   */
-  usage_count: number
-  /**
-   * When the hashtag was created
    * @format date-time
    * @example "2024-01-01T00:00:00Z"
    */
   created_at: string
   /**
-   * When the hashtag was last updated
    * @format date-time
    * @example "2024-01-01T00:00:00Z"
    */
   updated_at: string
-  /** Essays associated with this hashtag */
   essays: EssayHashtag[] | null
+  _count: HashtagCount | null
 }
 
 export interface EssayHashtag {
   /**
-   * Unique identifier for the essay-hashtag association
    * @format uuid
    * @example "123e4567-e89b-12d3-a456-426614174000"
    */
   id: string
   /**
-   * ID of the associated essay
    * @format uuid
    * @example "123e4567-e89b-12d3-a456-426614174000"
    */
   essay_id: string
   /**
-   * ID of the associated hashtag
    * @format uuid
    * @example "123e4567-e89b-12d3-a456-426614174000"
    */
   hashtag_id: string
   /**
-   * Timestamp when the association was created
    * @format date-time
    * @example "2024-01-01T00:00:00.000Z"
    */
   created_at: string
-  /** The associated essay details. Only populated when explicitly requested. */
   essay?: Essay | null
-  /** The associated hashtag details. Only populated when explicitly requested. */
   hashtag?: Hashtag | null
 }
 
@@ -444,7 +434,6 @@ export interface FindOneEssayResponseDto {
   essay: Essay
 }
 
-/** The visibility status of the essay */
 export enum EssayStatus {
   Draft = 'draft',
   Public = 'public',
@@ -453,27 +442,17 @@ export enum EssayStatus {
 }
 
 export interface CreateEssayDto {
-  /**
-   * @minLength 1
-   * @maxLength 255
-   * @example "My Journey Learning English"
-   */
+  /** @example "My Journey Learning English" */
   title: string
   summary?: string | null
-  /**
-   * @minLength 1
-   * @example "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..."
-   */
+  /** @example "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua..." */
   content: string
   /**
    * @pattern ^https?://
    * @example "https://example.com/images/cover-123.jpg"
    */
   cover_url?: string | null
-  /**
-   * The visibility status of the essay
-   * @example "public"
-   */
+  /** @example "public" */
   status: EssayStatus
   /**
    * @minLength 2
@@ -481,58 +460,39 @@ export interface CreateEssayDto {
    * @example "en"
    */
   language: string
-  /**
-   * @format uuid
-   * @example "123e4567-e89b-12d3-a456-426614174000"
-   */
+  /** @example "123e4567-e89b-12d3-a456-426614174000" */
   spaceId: string
-  /**
-   * @format uuid
-   * @example "123e4567-e89b-12d3-a456-426614174000"
-   */
-  created_by: string
-  /** @example ["123e4567-e89b-12d3-a456-426614174000","123e4567-e89b-12d3-a456-426614174001"] */
-  hashtag_ids?: any[][]
+  /** @example ["english","travel"] */
+  hashtag_names?: string[]
 }
 
 export interface CreateEssayResponseDto {
-  /**
-   * The title of the essay
-   * @minLength 1
-   * @maxLength 255
-   * @example "Updated: My Journey Learning English"
-   */
+  /** @example "123e4567-e89b-12d3-a456-426614174000" */
+  id?: string
+  /** @example "123e4567-e89b-12d3-a456-426614174000" */
+  id_space?: string
+  /** @example "Updated: My Journey Learning English" */
   title?: string
-  /**
-   * A brief summary of the essay content
-   * @example "Updated summary of my language learning experience"
-   */
+  /** @example "Updated summary of my language learning experience" */
   summary?: string | null
   /**
-   * The main content of the essay
    * @minLength 1
    * @example "Updated content: Lorem ipsum dolor sit amet..."
    */
   content?: string
   /**
-   * Number of upvotes for the essay
    * @min 0
    * @example 42
    */
   upvote_count?: number
   /**
-   * URL of the essay cover image
    * @pattern ^https?://
    * @example "https://example.com/images/updated-cover-123.jpg"
    */
   cover_url?: string | null
+  /** @example "public" */
+  status?: string
   /**
-   * The visibility status of the essay
-   * @example "public"
-   */
-  status?: EssayStatus
-  /**
-   * The language code of the essay
    * @minLength 2
    * @maxLength 5
    * @example "en"
@@ -540,55 +500,42 @@ export interface CreateEssayResponseDto {
   language?: string
   /** Author */
   author?: User
-  /** Array of hashtag to associate with the essay */
   hashtags?: any[][]
 }
 
 export interface UpdateEssayDto {
   /**
-   * The title of the essay
    * @minLength 1
    * @maxLength 255
    * @example "Updated: My Journey Learning English"
    */
   title?: string
-  /**
-   * A brief summary of the essay content
-   * @example "Updated summary of my language learning experience"
-   */
+  /** @example "Updated summary of my language learning experience" */
   summary?: string | null
   /**
-   * The main content of the essay
    * @minLength 1
    * @example "Updated content: Lorem ipsum dolor sit amet..."
    */
   content?: string
   /**
-   * Number of upvotes for the essay
    * @min 0
    * @example 42
    */
   upvote_count?: number
   /**
-   * URL of the essay cover image
    * @pattern ^https?://
    * @example "https://example.com/images/updated-cover-123.jpg"
    */
   cover_url?: string | null
-  /**
-   * The visibility status of the essay
-   * @example "public"
-   */
+  /** @example "public" */
   status?: EssayStatus
   /**
-   * The language code of the essay
    * @minLength 2
    * @maxLength 5
    * @example "en"
    */
   language?: string
-  /** Array of hashtag IDs to associate with the essay */
-  hashtag_ids?: any[][]
+  hashtag_names?: any[][]
 }
 
 export interface UpdateEssayResponseDto {
@@ -638,94 +585,44 @@ export interface FindAllVocabularyDto {
 }
 
 export interface Vocabulary {
-  /**
-   * Unique identifier of the vocabulary entry
-   * @example "123e4567-e89b-12d3-a456-426614174000"
-   */
+  /** @example "123e4567-e89b-12d3-a456-426614174000" */
   id: string
-  /**
-   * URL of the associated image
-   * @example "https://example.com/images/word.jpg"
-   */
+  /** @example "https://example.com/images/word.jpg" */
   image_url: string | null
-  /**
-   * The vocabulary word
-   * @example "ephemeral"
-   */
+  /** @example "ephemeral" */
   word: string
-  /**
-   * Part of speech of the word
-   * @example "adjective"
-   */
+  /** @example "adjective" */
   part_of_speech: string
-  /**
-   * Definition of the word
-   * @example "Lasting for a very short time"
-   */
+  /** @example "Lasting for a very short time" */
   definition: string
-  /**
-   * Pronunciation guide for the word
-   * @example "ih-fem-er-uhl"
-   */
+  /** @example "ih-fem-er-uhl" */
   pronunciation: string
-  /**
-   * Example usage of the word
-   * @example "The ephemeral nature of fashion trends makes it hard to stay current."
-   */
+  /** @example "The ephemeral nature of fashion trends makes it hard to stay current." */
   example: string
-  /**
-   * Reference link for additional information
-   * @example "https://dictionary.com/ephemeral"
-   */
+  /** @example "https://dictionary.com/ephemeral" */
   reference_link: string | null
-  /**
-   * ID of the linked essay
-   * @example "123"
-   */
+  /** @example "123" */
   id_essay_link: string
-  /**
-   * ID of the space this vocabulary belongs to
-   * @example "456"
-   */
+  /** @example "456" */
   id_space: string
-  /**
-   * Current mastery level of the word
-   * @example "intermediate"
-   */
+  /** @example "intermediate" */
   mastery_level: string
-  /**
-   * Indicates if the word needs review
-   * @example true
-   */
+  /** @example true */
   is_need_review: boolean
-  /**
-   * Next scheduled review date
-   * @example "2024-10-25"
-   */
+  /** @example "2024-10-25" */
   next_review_date: string
-  /**
-   * Spaced repetition ease factor
-   * @example 2.5
-   */
+  /** @example 2.5 */
   ease_factor: number
-  /**
-   * Days interval for next review
-   * @example 7
-   */
+  /** @example 7 */
   interval: number
-  /**
-   * ID of the user who created this entry
-   * @example "789"
-   */
+  /** @example "789" */
   created_by: string
   /**
-   * Creation timestamp
    * @format date-time
    * @example "2024-10-24T12:00:00Z"
    */
   created_at: string
   /**
-   * Last update timestamp
    * @format date-time
    * @example "2024-10-24T12:00:00Z"
    */
@@ -977,6 +874,26 @@ export interface DeleteQuizQuestionResponseDto {
   message: string
 }
 
+export interface HashtagsResponseDto {
+  data: Hashtag[]
+  pagination: PaginationOutputDto
+}
+
+export interface DeleteHashtagResponseDto {
+  hashtag: Hashtag
+}
+
+export interface TopicDto {
+  title: string
+  description: string
+}
+
+export interface RecommendTopicsResponseDto {
+  topics: TopicDto[]
+  category: string
+  count: number
+}
+
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from 'axios'
 import axios from 'axios'
 
@@ -1135,6 +1052,97 @@ export class HttpClient<SecurityDataType = unknown> {
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
   api = {
+    /**
+     * No description
+     *
+     * @tags Upload
+     * @name UploadControllerUploadFile
+     * @request POST:/api/uploads
+     */
+    uploadControllerUploadFile: (
+      data: {
+        /** @format binary */
+        file?: File
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<DeleteResponseDto, any>({
+        path: `/api/uploads`,
+        method: 'POST',
+        body: data,
+        type: ContentType.FormData,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Upload
+     * @name UploadControllerUploadMany
+     * @request POST:/api/uploads/many
+     */
+    uploadControllerUploadMany: (
+      data: {
+        files: File[]
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<
+        {
+          key?: string
+          url?: string
+          name?: string
+          size?: number
+        }[],
+        any
+      >({
+        path: `/api/uploads/many`,
+        method: 'POST',
+        body: data,
+        type: ContentType.FormData,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Upload
+     * @name UploadControllerUploadVideo
+     * @request POST:/api/uploads/video
+     */
+    uploadControllerUploadVideo: (
+      data: {
+        /** @format binary */
+        file?: File
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<DeleteResponseDto, any>({
+        path: `/api/uploads/video`,
+        method: 'POST',
+        body: data,
+        type: ContentType.FormData,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Upload
+     * @name UploadControllerDeleteFile
+     * @request DELETE:/api/uploads/{key}
+     */
+    uploadControllerDeleteFile: (key: string, params: RequestParams = {}) =>
+      this.request<DeleteResponseDto, any>({
+        path: `/api/uploads/${key}`,
+        method: 'DELETE',
+        format: 'json',
+        ...params
+      }),
+
     /**
      * @description Retrieve a paginated list of users with optional filters
      *
@@ -1462,6 +1470,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /** @default 10 */
         perPage?: number
         search?: string
+        /** @example "public" */
+        status?: 'draft' | 'public' | 'private' | 'deleted'
       },
       params: RequestParams = {}
     ) =>
@@ -1486,6 +1496,33 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: 'POST',
         body: data,
         type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags essays
+     * @name EssayControllerFindAllByUser
+     * @request GET:/api/essays/user
+     */
+    essayControllerFindAllByUser: (
+      query?: {
+        /** @default 1 */
+        page?: number
+        /** @default 10 */
+        perPage?: number
+        search?: string
+        /** @example "public" */
+        status?: 'draft' | 'public' | 'private' | 'deleted'
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<EssaysResponse, any>({
+        path: `/api/essays/user`,
+        method: 'GET',
+        query: query,
         format: 'json',
         ...params
       }),
@@ -1532,6 +1569,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     essayControllerDelete: (id: string, params: RequestParams = {}) =>
       this.request<DeleteEssayResponseDto, any>({
         path: `/api/essays/${id}`,
+        method: 'DELETE',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags essays
+     * @name EssayControllerDeleteByUser
+     * @request DELETE:/api/essays/{id}/user
+     */
+    essayControllerDeleteByUser: (id: string, params: RequestParams = {}) =>
+      this.request<DeleteEssayResponseDto, any>({
+        path: `/api/essays/${id}/user`,
         method: 'DELETE',
         format: 'json',
         ...params
@@ -1888,6 +1940,99 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       >({
         path: `/api/health`,
         method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags hashtags
+     * @name HashtagControllerFindAll
+     * @request GET:/api/hashtags
+     */
+    hashtagControllerFindAll: (
+      query?: {
+        /** @default 1 */
+        page?: number
+        /** @default 10 */
+        perPage?: number
+        search?: string
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<HashtagsResponseDto, any>({
+        path: `/api/hashtags`,
+        method: 'GET',
+        query: query,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags hashtags
+     * @name HashtagControllerDeleteByName
+     * @request DELETE:/api/hashtags/{name}
+     */
+    hashtagControllerDeleteByName: (name: string, params: RequestParams = {}) =>
+      this.request<DeleteHashtagResponseDto, any>({
+        path: `/api/hashtags/${name}`,
+        method: 'DELETE',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags ai
+     * @name AiController
+     * @request POST:/api/ai/translate
+     */
+    aiController: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/ai/translate`,
+        method: 'POST',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags ai
+     * @name AiController2
+     * @request POST:/api/ai/check-grammar
+     * @originalName aiController
+     * @duplicate
+     */
+    aiController2: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/ai/check-grammar`,
+        method: 'POST',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags ai
+     * @name AiControllerRecommendTopics
+     * @request GET:/api/ai/recommend-topics
+     */
+    aiControllerRecommendTopics: (
+      query?: {
+        category?: string
+        /** @default 5 */
+        count?: number
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<RecommendTopicsResponseDto, any>({
+        path: `/api/ai/recommend-topics`,
+        method: 'GET',
+        query: query,
         format: 'json',
         ...params
       })

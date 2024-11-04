@@ -20,6 +20,7 @@ export enum RouteNames {
 
   Essay = '/essay',
   EssayCreate = '/essay/create',
+  EssayUpdate = '/essay/update/:id',
   EssayDetail = '/essay/:id',
 
   Quiz = '/quiz',

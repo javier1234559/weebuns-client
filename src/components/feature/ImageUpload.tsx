@@ -9,10 +9,13 @@ import Typography from '@mui/material/Typography'
 import { CloudUpload, X } from 'lucide-react'
 import React, { memo, useCallback, useRef, useState } from 'react'
 import Cropper, { Area } from 'react-easy-crop'
+import toast from 'react-hot-toast'
 
-interface ImageUploadProps {
-  value: File | null
-  onChange: (file: File | null) => void
+import uploadApi from '~/features/upload/services/uploadApi'
+
+interface UploadImageProps {
+  value: string | null
+  onChange: (url: string | null) => void
 }
 
 const BANNER_WIDTH = 1200
@@ -69,9 +72,15 @@ const RemoveButton = styled(Button)(({ theme }) => ({
   position: 'absolute',
   top: theme.spacing(1),
   right: theme.spacing(1),
-  minWidth: 'auto',
+  minWidth: '32px',
+  height: '32px',
   padding: theme.spacing(0.5),
-  zIndex: 2
+  backgroundColor: theme.palette.error.light,
+  color: theme.palette.common.white,
+  zIndex: 10,
+  '&:hover': {
+    backgroundColor: theme.palette.error.dark
+  }
 }))
 
 const createImage = (url: string): Promise<HTMLImageElement> =>
@@ -102,12 +111,13 @@ const getCroppedImg = async (imageSrc: string, pixelCrop: Area): Promise<Blob> =
   })
 }
 
-function BlogBannerUploadWithCrop({ onChange }: ImageUploadProps) {
-  const [preview, setPreview] = useState<string | null>(null)
+function UploadImage({ value, onChange }: UploadImageProps) {
+  const [preview, setPreview] = useState<string | null>(value)
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState(1)
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isUploading, setIsUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,16 +129,37 @@ function BlogBannerUploadWithCrop({ onChange }: ImageUploadProps) {
         setIsDialogOpen(true)
       }
       reader.readAsDataURL(file)
-    } else {
-      setPreview(null)
+    }
+    // Clear input value
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
     }
   }
 
-  const handleRemove = (event: React.MouseEvent) => {
+  const handleRemove = async (event: React.MouseEvent) => {
     event.preventDefault()
     event.stopPropagation()
-    setPreview(null)
-    onChange(null)
+
+    if (!value) return
+
+    try {
+      setIsUploading(true)
+      // Extract key from URL
+      const key = value.split('/').pop()
+      console.log('Deleting key:', key)
+      if (key) {
+        await uploadApi.deleteFile(key)
+      }
+      setPreview(null)
+      onChange(null)
+      toast.success('Image removed successfully')
+    } catch (error) {
+      console.error('Delete failed:', error)
+      toast.error('Failed to remove image')
+    } finally {
+      setIsUploading(false)
+    }
+
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
@@ -141,26 +172,51 @@ function BlogBannerUploadWithCrop({ onChange }: ImageUploadProps) {
   const handleCropConfirm = useCallback(async () => {
     if (preview && croppedAreaPixels) {
       try {
+        setIsUploading(true)
+        // First crop the image
         const croppedImage = await getCroppedImg(preview, croppedAreaPixels)
         const file = new File([croppedImage], 'cropped-banner.jpg', { type: 'image/jpeg' })
-        onChange(file)
-        setPreview(URL.createObjectURL(croppedImage))
+
+        // Then upload the cropped image
+        const result = await uploadApi.uploadFile(file)
+
+        // Update preview and form value
+        const imageUrl = result.data.appUrl
+        setPreview(imageUrl)
+        onChange(imageUrl)
+
         setIsDialogOpen(false)
-      } catch (e) {
-        console.error(e)
+        toast.success('Image uploaded successfully')
+      } catch (error) {
+        console.error('Failed to crop/upload:', error)
+        toast.error('Failed to process image')
+      } finally {
+        setIsUploading(false)
       }
     }
   }, [preview, croppedAreaPixels, onChange])
 
+  const handleCancel = () => {
+    setPreview(null)
+    setIsDialogOpen(false)
+  }
+
   return (
     <Box>
-      <HiddenInput accept='image/*' id='blog-banner-upload' type='file' onChange={handleChange} />
+      <HiddenInput
+        ref={fileInputRef}
+        accept='image/*'
+        id='blog-banner-upload'
+        type='file'
+        onChange={handleChange}
+        disabled={isUploading}
+      />
       <label htmlFor='blog-banner-upload'>
         <UploadBox hasImage={!!preview}>
           {preview && <PreviewImage src={preview} alt='Blog Banner Preview' />}
           <UploadContent>
             {preview ? (
-              <RemoveButton onClick={handleRemove} variant='contained' color='secondary'>
+              <RemoveButton onClick={handleRemove} variant='contained' color='secondary' disabled={isUploading}>
                 <X size={24} />
               </RemoveButton>
             ) : (
@@ -175,6 +231,7 @@ function BlogBannerUploadWithCrop({ onChange }: ImageUploadProps) {
           </UploadContent>
         </UploadBox>
       </label>
+
       <Dialog open={isDialogOpen} onClose={() => setIsDialogOpen(false)} maxWidth='md' fullWidth>
         <DialogContent>
           <Box position='relative' height={400}>
@@ -200,9 +257,11 @@ function BlogBannerUploadWithCrop({ onChange }: ImageUploadProps) {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setIsDialogOpen(false)}>Cancel</Button>
-          <Button onClick={handleCropConfirm} color='primary'>
-            Confirm
+          <Button onClick={handleCancel} disabled={isUploading}>
+            Cancel
+          </Button>
+          <Button onClick={handleCropConfirm} color='primary' disabled={isUploading}>
+            {isUploading ? 'Processing...' : 'Confirm'}
           </Button>
         </DialogActions>
       </Dialog>
@@ -210,4 +269,4 @@ function BlogBannerUploadWithCrop({ onChange }: ImageUploadProps) {
   )
 }
 
-export default memo(BlogBannerUploadWithCrop)
+export default memo(UploadImage)

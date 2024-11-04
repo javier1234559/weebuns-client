@@ -1,34 +1,36 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { CreateEssayFormData } from '~/features/essay/components/CreateEssayForm/CreateEssayForm'
+import { EssayFormData } from '~/features/essay/components/CreateEssayForm/CreateEssayForm'
 
 interface EssayState {
-  essayData: CreateEssayFormData | null
-  isPreview: boolean
-  isHiddenVocabTab: boolean
+  essayFormData: EssayFormData
 }
 
 const initialState: EssayState = {
-  essayData: null,
-  isPreview: false,
-  isHiddenVocabTab: false
+  essayFormData: {
+    title: '',
+    content: '',
+    cover_url: null,
+    language: 'en',
+    hashtags: []
+  }
 }
 
-const essaySlice = createSlice({
+export const essaySlice = createSlice({
   name: 'essay',
   initialState,
   reducers: {
-    setEssayData: (state, action: PayloadAction<CreateEssayFormData>) => {
-      state.essayData = action.payload
+    setEssayData: (state, action: PayloadAction<Partial<EssayFormData>>) => {
+      state.essayFormData = { ...state.essayFormData, ...action.payload }
     },
-    setIsPreview: (state, action: PayloadAction<boolean>) => {
-      state.isPreview = action.payload
+    clearEssayData: (state) => {
+      state.essayFormData = initialState.essayFormData
     },
-    setIsHiddenVocabTab: (state, action: PayloadAction<boolean>) => {
-      state.isHiddenVocabTab = action.payload
+    loadEssayData: (state, action: PayloadAction<EssayFormData>) => {
+      state.essayFormData = action.payload
     }
   }
 })
 
-export const { setEssayData, setIsPreview, setIsHiddenVocabTab } = essaySlice.actions
+export const { setEssayData, clearEssayData, loadEssayData } = essaySlice.actions
 export default essaySlice.reducer

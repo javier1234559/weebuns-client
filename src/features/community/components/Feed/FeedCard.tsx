@@ -10,8 +10,6 @@ import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
 import AppTag from '~/components/common/AppTag'
-import ChangeStatusModal from '~/components/modal/ChangeStatusModal'
-import { useModal } from '~/contexts/ModalContext'
 import { useUpdateEssay } from '~/features/essay/hooks/useEssayQueries'
 import { RouteNames } from '~/router/route-name'
 import { Essay } from '~/services/api/api-axios'
@@ -24,7 +22,6 @@ interface EssayCardProps {
 }
 
 function EssayCard({ item }: EssayCardProps) {
-  const { openModal } = useModal()
   const navigator = useNavigate()
   const mutate = useUpdateEssay()
 
@@ -34,7 +31,7 @@ function EssayCard({ item }: EssayCardProps) {
   }
 
   const handleMoreClick = () => {
-    openModal(ChangeStatusModal, { idItem: item.id })
+    // openModal(ChangeStatusModal, { idItem: item.id })
   }
 
   const handleUpvote = async () => {

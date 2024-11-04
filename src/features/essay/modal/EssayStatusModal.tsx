@@ -6,25 +6,47 @@ import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
+import toast from 'react-hot-toast'
 
 import { AppButton } from '~/components/common/AppButton'
+import { useUpdateEssay } from '~/features/essay/hooks/useEssayQueries'
+import { EssayStatus } from '~/services/api/api-axios'
 
-interface ChangeStatusModalProps {
-  idItem: string
+interface EssayUpdateStatusModalProps {
+  essayId: string
   currentStatus: string
   onConfirm: (newStatus: string) => void
   onClose: () => void
 }
 
-function ChangeStatusModal({ idItem, currentStatus, onConfirm, onClose }: ChangeStatusModalProps) {
+function EssayUpdateStatusModal({ essayId, currentStatus, onConfirm, onClose }: EssayUpdateStatusModalProps) {
   const [status, setStatus] = useState(currentStatus)
+  const mutation = useUpdateEssay()
 
   const handleStatusChange = (event: SelectChangeEvent) => {
     setStatus(event.target.value as string)
   }
 
-  const handleConfirm = () => {
-    onConfirm(status)
+  const handleConfirm = async () => {
+    const loadingId = toast.loading('Update status...')
+    try {
+      await mutation.mutateAsync({
+        id: essayId,
+        data: {
+          status: status as EssayStatus
+        }
+      })
+
+      toast.success('Update status successfully', { id: loadingId })
+    } catch (error) {
+      console.error('Facebook login failed:', error)
+      toast.error('Update status failed', { id: loadingId })
+    }
+
+    if (onConfirm) {
+      onConfirm(status)
+    }
+
     onClose()
   }
 
@@ -34,7 +56,7 @@ function ChangeStatusModal({ idItem, currentStatus, onConfirm, onClose }: Change
         Change Status
       </Typography>
       <Typography id='modal-description' sx={{ mt: 2, mb: 2 }}>
-        Select the new status for change: {idItem}
+        Select the new status for change
       </Typography>
       <FormControl fullWidth sx={{ mt: 2, mb: 2 }}>
         <InputLabel id='status-select-label'>Status</InputLabel>
@@ -45,9 +67,9 @@ function ChangeStatusModal({ idItem, currentStatus, onConfirm, onClose }: Change
           label='Status'
           onChange={handleStatusChange}
         >
-          <MenuItem value='publish'>Publish</MenuItem>
+          <MenuItem value='public'>Public</MenuItem>
           <MenuItem value='private'>Private</MenuItem>
-          <MenuItem value='private'>Draft</MenuItem>
+          <MenuItem value='draft'>Draft</MenuItem>
         </Select>
       </FormControl>
       <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>
@@ -62,4 +84,4 @@ function ChangeStatusModal({ idItem, currentStatus, onConfirm, onClose }: Change
   )
 }
 
-export default ChangeStatusModal
+export default EssayUpdateStatusModal

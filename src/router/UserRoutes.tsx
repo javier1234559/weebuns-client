@@ -21,6 +21,7 @@ const Essay = lazy(() => import('~/pages/essay'))
 const EssayCreate = lazy(() => import('~/pages/essay/[id]/essay-create'))
 const Setting = lazy(() => import('~/pages/setting'))
 const EssayDetail = lazy(() => import('~/pages/essay/[id]/essay-detail'))
+const EssayUpdate = lazy(() => import('~/pages/essay/[id]/essay-update'))
 
 const USER_ROUTES = [
   {
@@ -118,6 +119,14 @@ const USER_ROUTES = [
         element: (
           <Suspense fallback={<AppLoading />}>
             <EssayCreate />
+          </Suspense>
+        )
+      },
+      {
+        path: RouteNames.EssayUpdate,
+        element: (
+          <Suspense fallback={<AppLoading />}>
+            <EssayUpdate />
           </Suspense>
         )
       },

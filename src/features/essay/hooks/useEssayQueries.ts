@@ -1,16 +1,17 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient, UseQueryResult } from '@tanstack/react-query'
 
 import { ESSAY_KEY_FACTORY } from '~/features/essay/services/essay-key-factory'
 import essayApi from '~/features/essay/services/essayApi'
-import { CreateEssayDto, UpdateEssayDto } from '~/services/api/api-axios'
+import { CreateEssayDto, EssaysResponse, UpdateEssayDto } from '~/services/api/api-axios'
+import { PaginationParams } from '~/types/extend-api'
 
-// export const useEssays = (params: PaginationParams): UseQueryResult<EssaysResponse> => {
-//   return useQuery({
-//     queryKey: ESSAY_KEY_FACTORY.list(params),
-//     queryFn: () => essayApi.getAll(params),
-//     staleTime: 1000 * 60 * 5 // 5 minutes
-//   })
-// }
+export const useListEssayByUser = (params: PaginationParams): UseQueryResult<EssaysResponse> => {
+  return useQuery({
+    queryKey: ESSAY_KEY_FACTORY.list(params),
+    queryFn: () => essayApi.getAllEssayByUser(params),
+    staleTime: 1000 * 60 * 5 // 5 minutes
+  })
+}
 
 export const useEssay = (id: string) => {
   return useQuery({
@@ -46,27 +47,16 @@ export const useUpdateEssay = () => {
   })
 }
 
-export const useDeleteEssay = () => {
+export const useDeleteEssayByUser = () => {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: (id: string) => essayApi.delete(id),
+    mutationFn: (id: string) => essayApi.deleteByUser(id),
     onSuccess: (_, id) => {
       // Update essays list cache
       queryClient.invalidateQueries({ queryKey: ESSAY_KEY_FACTORY.lists() })
       // Remove the deleted essay from cache
       queryClient.invalidateQueries({ queryKey: ESSAY_KEY_FACTORY.detail(id) })
-    }
-  })
-}
-
-export const useCreateCorrectEssay = () => {
-  const queryClient = useQueryClient()
-
-  return useMutation({
-    mutationFn: (data: CreateEssayDto) => essayApi.create(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ESSAY_KEY_FACTORY.lists() })
     }
   })
 }

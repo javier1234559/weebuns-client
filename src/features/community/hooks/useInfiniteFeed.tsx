@@ -13,7 +13,7 @@ const useInfiniteFeed = () => {
   const { isPending, data, isFetchingNextPage, fetchNextPage, hasNextPage, isError, error } = useInfiniteQuery({
     queryKey: ESSAY_KEY_FACTORY.infinity,
     queryFn: async ({ pageParam = 1 }) => {
-      const response = await essayApi.getAll({ page: pageParam, perPage: ITEMS_PER_PAGE_FEED })
+      const response = await essayApi.getAll({ page: pageParam, perPage: ITEMS_PER_PAGE_FEED, status: 'public' })
       return response.data
     },
     getNextPageParam: (lastPage, allPages) => {
