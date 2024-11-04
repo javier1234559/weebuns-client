@@ -2,7 +2,6 @@ import axios, { AxiosInstance } from 'axios'
 
 import { globalConfig } from '~/config'
 import { Api } from '~/services/api/api-axios'
-import { TokenManager } from '~/services/tokenManagement'
 import { getToken } from '~/utils/token'
 // import { TokenManager } from '~/services/tokenManagement'
 
