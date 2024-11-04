@@ -1,6 +1,6 @@
 import TokenManagement from 'brainless-token-manager'
 
-import { axiosInstant } from '~/services/api/axiosInstance'
+import { axiosInstance } from '~/services/api/axiosInstance'
 import { deleteToken, getRefreshCookie, getToken, redirectToLogin, setToken } from '~/utils/token'
 
 export const TokenManager = new TokenManagement({
@@ -19,7 +19,7 @@ export const TokenManager = new TokenManagement({
   onInvalidRefreshToken: async () => {
     try {
       // Clean up on invalid token
-      await axiosInstant.post('/api/auth/logout')
+      await axiosInstance.post('/api/auth/logout')
     } catch (error) {
       console.error('Logout error:', error)
     } finally {
@@ -30,7 +30,7 @@ export const TokenManager = new TokenManagement({
 
   executeRefreshToken: async () => {
     try {
-      const r = await axiosInstant.post('/api/auth/refresh-token')
+      const r = await axiosInstance.post('/api/auth/refresh-token')
       const { access_token } = r.data
 
       return {
@@ -42,7 +42,7 @@ export const TokenManager = new TokenManagement({
       console.log('Error while refreshing token', error)
 
       // Clean up
-      await axiosInstant.post('/api/auth/logout')
+      await axiosInstance.post('/api/auth/logout')
       deleteToken()
       redirectToLogin()
 

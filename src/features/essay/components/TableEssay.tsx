@@ -75,7 +75,7 @@ function TableEssay() {
     openModal(EssayUpdateStatusModal, { essayId, currentStatus: currentStatus })
   }
 
-  const handleEdit = (essayId: string) => {
+  const handleView = (essayId: string) => {
     navigator(RouteNames.EssayUpdate.replace(':id', essayId))
   }
 
@@ -197,7 +197,7 @@ function TableEssay() {
                   </TableCell>
                   <TableCell align='right'>
                     <MoreActionButton
-                      onEdit={() => handleEdit(essay.id)}
+                      onEdit={() => handleView(essay.id)}
                       onDelete={() => handleDelete(essay.id)}
                       onChangeStatus={() => handleChangeStatus(essay.id, essay.status)}
                     />

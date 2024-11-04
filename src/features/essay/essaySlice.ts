@@ -4,10 +4,18 @@ import { EssayFormData } from '~/features/essay/components/CreateEssayForm/Creat
 
 interface EssayState {
   essayFormData: EssayFormData
+  essayViewData: EssayFormData
 }
 
 const initialState: EssayState = {
   essayFormData: {
+    title: '',
+    content: '',
+    cover_url: null,
+    language: 'en',
+    hashtags: []
+  },
+  essayViewData: {
     title: '',
     content: '',
     cover_url: null,
@@ -28,9 +36,15 @@ export const essaySlice = createSlice({
     },
     loadEssayData: (state, action: PayloadAction<EssayFormData>) => {
       state.essayFormData = action.payload
+    },
+    setEssayViewData: (state, action: PayloadAction<Partial<EssayFormData>>) => {
+      state.essayViewData = { ...state.essayViewData, ...action.payload }
+    },
+    clearEssayViewData: (state) => {
+      state.essayViewData = initialState.essayViewData
     }
   }
 })
 
-export const { setEssayData, clearEssayData, loadEssayData } = essaySlice.actions
+export const { setEssayData, clearEssayData, loadEssayData, setEssayViewData, clearEssayViewData } = essaySlice.actions
 export default essaySlice.reducer

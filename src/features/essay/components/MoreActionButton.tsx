@@ -58,7 +58,7 @@ function MoreActionButton({ onEdit, onDelete, onChangeStatus }: MoreActionButton
           <ListItemIcon>
             <EditIcon fontSize='small' />
           </ListItemIcon>
-          <ListItemText>Edit</ListItemText>
+          <ListItemText>Detail</ListItemText>
         </MenuItem>
         <MenuItem onClick={() => handleMenuItemClick(onDelete)}>
           <ListItemIcon>

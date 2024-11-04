@@ -4,7 +4,7 @@ import { globalConfig } from '~/config'
 import { Api } from '~/services/api/api-axios'
 import { getToken } from '~/utils/token'
 
-const axiosInstance = axios.create({
+export const axiosInstance = axios.create({
   baseURL: globalConfig.API_URL,
   withCredentials: true,
   headers: {

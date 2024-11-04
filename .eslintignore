@@ -1,3 +1,7 @@
 swagger-typescript-api.config.ts
 vite.config.js
 codegen.ts
+
+dist/*
+services/*
+vite.config.d.ts

@@ -3,14 +3,14 @@ import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 
 import AppBreadcrumb from '~/components/common/AppBreadcrumbs'
-import EssayUpdateView from '~/features/essay/view/EssayUpdateView'
+import EssayViewOnly from '~/features/essay/view/EssayViewOnly'
 import { RouteNames } from '~/router/route-name'
 
 function EssayUpdate() {
   const breadcrumb = [
     { title: 'Home', href: RouteNames.Dashboard },
     { title: 'Essay', href: RouteNames.Essay },
-    { title: 'Update Essay', href: '' }
+    { title: 'View Only Essay', href: '' }
   ]
 
   return (
@@ -19,7 +19,7 @@ function EssayUpdate() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Typography variant='h4'>Essay</Typography>
       </Box>
-      <EssayUpdateView />
+      <EssayViewOnly />
     </Container>
   )
 }
