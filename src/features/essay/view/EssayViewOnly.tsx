@@ -32,7 +32,7 @@ const EssayViewOnly: React.FC = () => {
         setEssayViewData({
           title: essayFormData.essay.title,
           content: essayFormData.essay.content,
-          cover_url: essayFormData.essay.cover_url,
+          cover_url: essayFormData.essay.coverUrl,
           hashtags: essayFormData.essay.hashtags?.map((hashtag) => hashtag.hashtag?.name) || [],
           language: essayFormData.essay.language
         })

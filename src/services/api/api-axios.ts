@@ -8,34 +8,24 @@
 
 export type DeleteResponseDto = object
 
-export interface UserLanguage {
-  /** @example "00321d6f-2bcf-4985-9659-92a571275da6" */
+export interface UnitContent {
   id: string
-  /** @example "00321d6f-2bcf-4985-9659-92a571275da6" */
-  user_id: string
-  /** @example "English" */
-  language: string
-  /** @example "Intermediate" */
-  proficiency_level: string
-  /** @example false */
-  is_native: boolean
+  unitId: string
+  title: string
+  contentType: string
+  content: object
+  /** @format int32 */
+  orderIndex: number
+  isPremium: boolean
+  isRequired: boolean
+  /** @format int32 */
+  completeWeight: number
+  isDone: boolean
   /** @format date-time */
-  created_at: string
+  createdAt: string
   /** @format date-time */
-  updated_at: string
-}
-
-export interface Follower {
-  /** @example 1 */
-  id: string
-  /** @example 1 */
-  id_follower: string
-  /** @example 2 */
-  id_following: string
-  /** @format date-time */
-  followed_at: string
-  follower: User | null
-  following: User | null
+  updatedAt: string
+  unit?: Unit
 }
 
 export interface Space {
@@ -46,50 +36,165 @@ export interface Space {
   /** @example "A space for learning English" */
   description: string | null
   /** @example 1 */
-  created_by: string
+  createdBy: string
   /** @format date-time */
-  created_at: string
+  createdAt: string
   /** @format date-time */
-  updated_at: string
-  /** @example {"essays":0,"quizzes":0,"vocabularies":0} */
+  updatedAt: string
+  target: string
+  language: string
+  /** @example {"essays":0,"notes":0,"vocabularies":0} */
   _count: {
     /** @example 0 */
     essays?: number
     /** @example 0 */
-    quizzes?: number
+    notes?: number
     /** @example 0 */
     vocabularies?: number
   }
+}
+
+export interface Note {
+  id: string
+  spaceId: string | null
+  unitId: string
+  title: string
+  content: string
+  /** @example ["grammar","important","review","vocabulary"] */
+  tags: object
+  isBookmarked: boolean
+  createdBy: string
+  /** @format date-time */
+  createdAt: string
+  /** @format date-time */
+  updatedAt: string
+  /** @format date-time */
+  deletedAt: string | null
+  unit?: Unit
+  creator?: User
+  space?: Space | null
+}
+
+export interface Unit {
+  id: string
+  courseId: string
+  title: string
+  description: string | null
+  /** @format int32 */
+  orderIndex: number
+  /** @example "[{" */
+  comments: object
+  /** @format date-time */
+  createdAt: string
+  /** @format date-time */
+  updatedAt: string
+  course?: Course
+  contents?: UnitContent[]
+  notes?: Note[]
+  currentInCourses?: Course[]
+}
+
+export interface UserCourse {
+  id: string
+  userId: string
+  courseId: string
+  paymentId: string | null
+  paymentStatus: string | null
+  /** @format double */
+  purchasePrice: number
+  /** @format date-time */
+  purchasedAt: string
+  user?: User
+  course?: Course
+}
+
+export interface SpaceCourse {
+  id: string
+  spaceId: string
+  courseId: string
+  /** @format date-time */
+  joinedAt: string
+  space?: Space
+  course?: Course
+}
+
+export interface Course {
+  id: string
+  currentUnitId: string | null
+  title: string
+  description: string | null
+  thumbnailUrl: string | null
+  level: 'BEGINNER' | 'ELEMENTARY' | 'INTERMEDIATE' | 'UPPER_INTERMEDIATE' | 'ADVANCED' | 'MASTER'
+  /** @format double */
+  price: number
+  /** @format int32 */
+  totalWeight: number
+  isPublished: boolean
+  /** @example "[{" */
+  reviews: object
+  createdBy: string
+  /** @format date-time */
+  createdAt: string
+  /** @format date-time */
+  updatedAt: string
+  currentUnit?: Unit | null
+  creator?: User
+  units?: Unit[]
+  userCourses?: UserCourse[]
+  spaces?: SpaceCourse[]
+}
+
+export interface Vocabulary {
+  id: string
+  spaceId: string
+  term: string
+  meaning: string
+  exampleSentence: string | null
+  imageUrl: string | null
+  referenceLink: string | null
+  referenceName: string | null
+  /** @example ["business","common","idiom","phrasal-verb"] */
+  tags: object
+  /** @format int32 */
+  repetitionLevel: number
+  /** @format date-time */
+  nextReview: string | null
+  createdBy: string
+  /** @format date-time */
+  createdAt: string
+  /** @format date-time */
+  updatedAt: string
+  space?: Space
+  creator?: User
 }
 
 export interface CorrectionSentence {
   /** @example "uuid" */
   id: string
   /** @example "uuid" */
-  id_correction: string
+  correctionId: string
   /** @example 0 */
   index: number
-  /** @example "Original text" */
-  original_text: string
-  /** @example "Corrected text" */
-  corrected_text: string
-  /** @example "Explanation of corrections" */
+  /** @example "original text" */
+  originalText: string
+  /** @example "corrected text" */
+  correctedText: string
+  /** @example "explanation" */
   explanation: string
-  /** @example false */
-  is_correct: boolean
-  /** @example 4 */
+  /** @example true */
+  isCorrect: boolean
+  /** @example 4.5 */
   rating: number
   /**
    * @format date-time
-   * @example "2024-01-01T00:00:00Z"
+   * @example "2024-11-11T16:43:00.999Z"
    */
-  created_at: string
+  createdAt: string
   /**
    * @format date-time
-   * @example "2024-01-01T00:00:00Z"
+   * @example "2024-11-11T16:43:00.999Z"
    */
-  updated_at: string
-  correction: Correction | null
+  updatedAt: string
 }
 
 export interface CorrectionReply {
@@ -99,7 +204,7 @@ export interface CorrectionReply {
    * ID of the related correction
    * @example 1
    */
-  correction_id: string
+  correctionId: string
   /**
    * Reply comment to the correction
    * @example "Great improvement on your grammar!"
@@ -109,11 +214,11 @@ export interface CorrectionReply {
    * User ID who created the reply
    * @example 1
    */
-  created_by: string
+  createdBy: string
   /** @format date-time */
-  created_at: string
+  createdAt: string
   /** @format date-time */
-  updated_at: string
+  updatedAt: string
   creator: User | null
 }
 
@@ -124,28 +229,28 @@ export interface Correction {
    * ID of the essay being corrected
    * @example 1
    */
-  essay_id: string
+  essayId: string
   /**
    * Overall feedback for the essay
    * @example "Good structure but needs work on tenses"
    */
-  overall_comment: string | null
+  overallComment: string | null
   /**
    * Rating score for the essay
    * @min 0
    * @max 10
-   * @example 8
+   * @example "8.0"
    */
   rating: number | null
   /**
    * User ID who created the correction
    * @example 1
    */
-  created_by: string
+  createdBy: string
   /** @format date-time */
-  created_at: string
+  createdAt: string
   /** @format date-time */
-  updated_at: string
+  updatedAt: string
   essay: Essay | null
   creator: User | null
   sentences: CorrectionSentence[] | null
@@ -162,16 +267,18 @@ export interface Hashtag {
   id: string
   /** @example "grammar" */
   name: string
+  /** @example 10 */
+  usageCount: number
   /**
    * @format date-time
    * @example "2024-01-01T00:00:00Z"
    */
-  created_at: string
+  createdAt: string
   /**
    * @format date-time
    * @example "2024-01-01T00:00:00Z"
    */
-  updated_at: string
+  updatedAt: string
   essays: EssayHashtag[] | null
   _count: HashtagCount | null
 }
@@ -186,17 +293,17 @@ export interface EssayHashtag {
    * @format uuid
    * @example "123e4567-e89b-12d3-a456-426614174000"
    */
-  essay_id: string
+  essayId: string
   /**
    * @format uuid
    * @example "123e4567-e89b-12d3-a456-426614174000"
    */
-  hashtag_id: string
+  hashtagId: string
   /**
    * @format date-time
    * @example "2024-01-01T00:00:00.000Z"
    */
-  created_at: string
+  createdAt: string
   essay?: Essay | null
   hashtag?: Hashtag | null
 }
@@ -205,7 +312,7 @@ export interface Essay {
   /** @example 1 */
   id: string
   /** @example 1 */
-  id_space: string
+  spaceId: string
   /** @example "My First Essay" */
   title: string
   /** @example "A brief summary" */
@@ -213,19 +320,21 @@ export interface Essay {
   /** @example "Essay content..." */
   content: string
   /** @example 0 */
-  upvote_count: number
+  upvoteCount: number
   /** @example "https://example.com/cover.jpg" */
-  cover_url: string | null
+  coverUrl: string | null
   /** @example "draft" */
   status: 'draft' | 'public' | 'private' | 'deleted'
   /** @example "en" */
   language: string
   /** @example 1 */
-  created_by: string
+  createdBy: string
   /** @format date-time */
-  created_at: string
+  createdAt: string
   /** @format date-time */
-  updated_at: string
+  updatedAt: string
+  /** @format date-time */
+  deletedAt: string
   space: Space | null
   author: User | null
   corrections: Correction[] | null
@@ -237,34 +346,39 @@ export interface User {
   /** @example "00321d6f-2bcf-4985-9659-92a571275da6" */
   id: string
   /** @example "johndoe" */
-  username: string | null
+  username: string
   /** @example "john@example.com" */
   email: string
-  password_hash: string | null
+  passwordHash: string | null
   /** @example "user" */
-  role: 'user' | 'admin'
+  role: 'user' | 'admin' | 'teacher'
   /** @example "local" */
-  auth_provider: 'local' | 'google' | 'facebook'
-  auth_provider_id: string | null
+  authProvider: 'local' | 'google' | 'facebook'
+  authProviderId: string | null
   /** @example "John" */
-  first_name: string | null
+  firstName: string | null
   /** @example "Doe" */
-  last_name: string | null
+  lastName: string | null
   /** @example "https://example.com/avatar.jpg" */
-  profile_picture: string | null
+  profilePicture: string | null
   /** @example false */
-  is_email_verified: boolean
+  isEmailVerified: boolean
+  currentLevel: 'BEGINNER' | 'ELEMENTARY' | 'INTERMEDIATE' | 'UPPER_INTERMEDIATE' | 'ADVANCED' | 'MASTER'
+  languages: object
   /** @format date-time */
-  last_login: string | null
+  lastLogin: string | null
   /** @format date-time */
-  created_at: string
+  createdAt: string
   /** @format date-time */
-  updated_at: string
-  languages: UserLanguage[] | null
-  followedBy: Follower[] | null
-  following: Follower[] | null
+  updatedAt: string
+  courses: Course[] | null
+  user_courses: UserCourse[] | null
+  notes: Note[] | null
+  vocabularies: Vocabulary[] | null
   spaces: Space[] | null
   essays: Essay[] | null
+  corrections: Correction[] | null
+  correction_replies: CorrectionReply[] | null
 }
 
 export interface PaginationOutputDto {
@@ -316,7 +430,7 @@ export interface CreateUserDto {
   email: string
   password: string
   profile_picture: string
-  role: 'user' | 'admin'
+  role: 'user' | 'admin' | 'teacher'
   auth_provider: 'local' | 'google' | 'facebook'
 }
 
@@ -330,7 +444,7 @@ export interface UpdateUserDto {
   username?: string
   email?: string
   profile_picture?: string
-  role?: 'user' | 'admin'
+  role?: 'user' | 'admin' | 'teacher'
   auth_provider?: 'local' | 'google' | 'facebook'
   id: number | null
 }
@@ -395,7 +509,18 @@ export interface FindOneSpaceResponseDto {
 export interface CreateSpaceDto {
   name: string
   description: string
-  created_by: string
+  /** @example "GENERAL_LEARNING" */
+  target:
+    | 'GENERAL_LEARNING'
+    | 'TEST_PREPARATION'
+    | 'BUSINESS'
+    | 'ACADEMIC'
+    | 'CONVERSATION'
+    | 'TRAVEL'
+    | 'PROFESSIONAL'
+    | 'ORTHER'
+  /** @example "ENGLISH" */
+  language: 'ENGLISH' | 'JAPANESE' | 'KOREAN' | 'CHINESE' | 'VIETNAMESE' | 'FRENCH' | 'GERMAN' | 'SPANISH'
 }
 
 export interface CreateSpaceResponseDto {
@@ -403,7 +528,7 @@ export interface CreateSpaceResponseDto {
   name: string
   description: string
   essay_number: number
-  quiz_number: number
+  notes_number: number
   vocab_number: number
 }
 
@@ -417,7 +542,7 @@ export interface UpdateSpaceResponseDto {
   name: string
   description: string
   essay_number: number
-  quiz_number: number
+  notes_number: number
   vocab_number: number
 }
 
@@ -546,34 +671,20 @@ export interface DeleteEssayResponseDto {
   essay: Essay
 }
 
-export type CreateVocabularyDto = object
-
-export type FlashCard = object
+export interface CreateVocabularyDto {
+  spaceId: string
+  term: string
+  meaning: string
+  exampleSentence?: string | null
+  imageUrl?: string | null
+  referenceLink?: string | null
+  referenceName?: string | null
+  /** @format date-time */
+  nextReview?: string | null
+}
 
 export interface CreateVocabularyResponseDto {
-  id: string
-  image_url?: string
-  word: string
-  part_of_speech?: string
-  definition?: string
-  pronunciation?: string
-  example?: string
-  reference_link?: string
-  id_essay_link?: string
-  id_space?: string
-  mastery_level?: string
-  is_need_review?: boolean
-  next_review_date?: string
-  ease_factor?: number
-  interval?: number
-  created_by: string
-  /** @format date-time */
-  created_at: string
-  /** @format date-time */
-  updated_at: string
-  creator?: User
-  space?: Space
-  flash_cards?: FlashCard[]
+  vocabulary: Vocabulary
 }
 
 export interface FindAllVocabularyDto {
@@ -584,293 +695,26 @@ export interface FindAllVocabularyDto {
   search?: string
 }
 
-export interface Vocabulary {
-  /** @example "123e4567-e89b-12d3-a456-426614174000" */
-  id: string
-  /** @example "https://example.com/images/word.jpg" */
-  image_url: string | null
-  /** @example "ephemeral" */
-  word: string
-  /** @example "adjective" */
-  part_of_speech: string
-  /** @example "Lasting for a very short time" */
-  definition: string
-  /** @example "ih-fem-er-uhl" */
-  pronunciation: string
-  /** @example "The ephemeral nature of fashion trends makes it hard to stay current." */
-  example: string
-  /** @example "https://dictionary.com/ephemeral" */
-  reference_link: string | null
-  /** @example "123" */
-  id_essay_link: string
-  /** @example "456" */
-  id_space: string
-  /** @example "intermediate" */
-  mastery_level: string
-  /** @example true */
-  is_need_review: boolean
-  /** @example "2024-10-25" */
-  next_review_date: string
-  /** @example 2.5 */
-  ease_factor: number
-  /** @example 7 */
-  interval: number
-  /** @example "789" */
-  created_by: string
-  /**
-   * @format date-time
-   * @example "2024-10-24T12:00:00Z"
-   */
-  created_at: string
-  /**
-   * @format date-time
-   * @example "2024-10-24T12:00:00Z"
-   */
-  updated_at: string
-}
-
 export interface FindOneVocabularyResponseDto {
   vocabulary: Vocabulary
 }
 
-export type UpdateVocabularyDto = object
+export interface UpdateVocabularyDto {
+  term?: string
+  meaning?: string
+  exampleSentence?: string | null
+  imageUrl?: string | null
+  referenceLink?: string | null
+  referenceName?: string | null
+  /** @format date-time */
+  nextReview?: string | null
+}
 
 export interface UpdateVocabularyResponseDto {
-  /**
-   * Unique identifier of the vocabulary entry
-   * @example "123e4567-e89b-12d3-a456-426614174000"
-   */
-  id: string
-  /**
-   * URL of the associated image
-   * @example "https://example.com/images/vocabulary/word.jpg"
-   */
-  image_url?: string | null
-  /**
-   * The vocabulary word
-   * @example "ephemeral"
-   */
-  word: string
-  /**
-   * Part of speech (e.g., noun, verb, adjective)
-   * @example "adjective"
-   */
-  part_of_speech?: string | null
-  /**
-   * Definition of the word
-   * @example "Lasting for a very short time"
-   */
-  definition?: string | null
-  /**
-   * Phonetic pronunciation of the word
-   * @example "ih-fem-er-uhl"
-   */
-  pronunciation?: string | null
-  /**
-   * Example sentence using the word
-   * @example "The ephemeral nature of fashion trends makes it hard to stay current."
-   */
-  example?: string | null
-  /**
-   * External reference link for the word
-   * @example "https://dictionary.com/word/ephemeral"
-   */
-  reference_link?: string | null
-  /**
-   * ID of the related essay
-   * @example "789abc-def-456"
-   */
-  id_essay_link?: string | null
-  /**
-   * ID of the space this vocabulary belongs to
-   * @example "123xyz-789"
-   */
-  id_space?: string | null
-  /**
-   * Current mastery level (e.g., beginner, intermediate, advanced)
-   * @example "intermediate"
-   */
-  mastery_level?: string | null
-  /**
-   * Indicates if the word needs to be reviewed
-   * @example true
-   */
-  is_need_review?: boolean | null
-  /**
-   * Next scheduled review date
-   * @example "2024-10-25T00:00:00Z"
-   */
-  next_review_date?: string | null
-  /**
-   * Spaced repetition ease factor (typically between 1.3 and 2.5)
-   * @example 2.5
-   */
-  ease_factor?: number | null
-  /**
-   * Days until next review
-   * @example 7
-   */
-  interval?: number | null
-  /**
-   * ID of the user who created this vocabulary entry
-   * @example "456def-789"
-   */
-  created_by: string
-  /**
-   * Timestamp when the vocabulary was created
-   * @format date-time
-   * @example "2024-10-24T12:00:00Z"
-   */
-  created_at: string
-  /**
-   * Timestamp of the last update
-   * @format date-time
-   * @example "2024-10-24T14:30:00Z"
-   */
-  updated_at: string
+  vocabulary: Vocabulary
 }
 
 export interface DeleteVocabularyResponseDto {
-  message: string
-}
-
-export interface CreateQuizDto {
-  title: string
-  id_space: string
-  created_by: string
-}
-
-export type QuizQuestion = object
-
-export interface CreateQuizResponseDto {
-  id: string
-  id_space: string
-  title: string
-  created_by: string
-  /** @format date-time */
-  created_at: string
-  /** @format date-time */
-  updated_at: string
-  space?: Space
-  creator?: User
-  questions?: QuizQuestion[]
-}
-
-export interface QuizResponse {
-  data: string[]
-  pagination: PaginationOutputDto
-}
-
-export type Quiz = object
-
-export interface FindOneQuizResponseDto {
-  quiz: Quiz
-}
-
-export interface UpdateQuizDto {
-  title?: string
-}
-
-export interface UpdateQuizResponseDto {
-  /**
-   * Quiz ID
-   * @example 1
-   */
-  id: string
-  /**
-   * Space ID that quiz belongs to
-   * @example 1
-   */
-  id_space: string
-  /**
-   * Quiz title
-   * @example "JavaScript Fundamentals Quiz"
-   */
-  title: string
-  /**
-   * ID of user who created the quiz
-   * @example 1
-   */
-  created_by: string
-  /**
-   * Creation timestamp
-   * @format date-time
-   * @example "2024-10-25T10:30:00Z"
-   */
-  created_at: string
-  /**
-   * Last update timestamp
-   * @format date-time
-   * @example "2024-10-25T10:30:00Z"
-   */
-  updated_at: string
-  /** Space details that quiz belongs to */
-  space?: Space
-  /** Creator details */
-  creator?: User
-  questions: QuizQuestion[][]
-}
-
-export interface DeleteQuizResponseDto {
-  message: string
-}
-
-export interface CreateQuizQuestionDto {
-  question_text: string
-  correct_answer: string
-  user_answer?: string
-  is_correct: boolean
-  id_vocabulary?: string
-}
-
-export interface CreateQuizQuestionResponseDto {
-  id: string
-  quiz_id: string
-  question_text: string
-  correct_answer: string
-  user_answer?: string
-  is_correct: boolean
-  id_vocabulary?: string
-  /** @format date-time */
-  created_at: string
-  /** @format date-time */
-  updated_at: string
-  quiz?: Quiz
-}
-
-export interface QuizQuestionResponse {
-  data: string[]
-  pagination: PaginationOutputDto
-}
-
-export interface FindOneQuizQuestionResponseDto {
-  quizQuestion: QuizQuestion
-}
-
-export interface UpdateQuizQuestionDto {
-  question_text?: string
-  correct_answer?: string
-  user_answer?: string
-  is_correct?: boolean
-  id_vocabulary?: string
-}
-
-export interface UpdateQuizQuestionResponseDto {
-  id: string
-  quiz_id: string
-  question_text: string
-  correct_answer: string
-  user_answer?: string
-  is_correct: boolean
-  id_vocabulary?: string
-  /** @format date-time */
-  created_at: string
-  /** @format date-time */
-  updated_at: string
-  quiz?: Quiz
-}
-
-export interface DeleteQuizQuestionResponseDto {
   message: string
 }
 
@@ -1640,15 +1484,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Creates a new vocabulary entry in the specified space
+     * No description
      *
      * @tags vocabularies
      * @name VocabularyControllerCreate
-     * @summary Create a new vocabulary
      * @request POST:/api/vocabularies
      */
     vocabularyControllerCreate: (data: CreateVocabularyDto, params: RequestParams = {}) =>
-      this.request<CreateVocabularyResponseDto, void>({
+      this.request<CreateVocabularyResponseDto, any>({
         path: `/api/vocabularies`,
         method: 'POST',
         body: data,
@@ -1658,11 +1501,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Retrieves all vocabularies with pagination and filtering options
+     * No description
      *
      * @tags vocabularies
      * @name VocabularyControllerFindAll
-     * @summary Get all vocabularies
      * @request GET:/api/vocabularies
      */
     vocabularyControllerFindAll: (
@@ -1675,7 +1517,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {}
     ) =>
-      this.request<FindAllVocabularyDto, void>({
+      this.request<FindAllVocabularyDto, any>({
         path: `/api/vocabularies`,
         method: 'GET',
         query: query,
@@ -1684,15 +1526,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Retrieves detailed information about a specific vocabulary
+     * No description
      *
      * @tags vocabularies
      * @name VocabularyControllerFindOne
-     * @summary Get vocabulary by ID
      * @request GET:/api/vocabularies/{id}
      */
     vocabularyControllerFindOne: (id: string, params: RequestParams = {}) =>
-      this.request<FindOneVocabularyResponseDto, void>({
+      this.request<FindOneVocabularyResponseDto, any>({
         path: `/api/vocabularies/${id}`,
         method: 'GET',
         format: 'json',
@@ -1700,15 +1541,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Updates an existing vocabulary with new data
+     * No description
      *
      * @tags vocabularies
      * @name VocabularyControllerUpdate
-     * @summary Update vocabulary by ID
      * @request PATCH:/api/vocabularies/{id}
      */
     vocabularyControllerUpdate: (id: string, data: UpdateVocabularyDto, params: RequestParams = {}) =>
-      this.request<UpdateVocabularyResponseDto, void>({
+      this.request<UpdateVocabularyResponseDto, any>({
         path: `/api/vocabularies/${id}`,
         method: 'PATCH',
         body: data,
@@ -1718,205 +1558,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Permanently removes a vocabulary entry
+     * No description
      *
      * @tags vocabularies
      * @name VocabularyControllerDelete
-     * @summary Delete vocabulary by ID
      * @request DELETE:/api/vocabularies/{id}
      */
     vocabularyControllerDelete: (id: string, params: RequestParams = {}) =>
-      this.request<DeleteVocabularyResponseDto, void>({
+      this.request<DeleteVocabularyResponseDto, any>({
         path: `/api/vocabularies/${id}`,
-        method: 'DELETE',
-        format: 'json',
-        ...params
-      }),
-
-    /**
-     * No description
-     *
-     * @tags quizs
-     * @name QuizControllerCreate
-     * @summary Create a new quiz
-     * @request POST:/api/quizs
-     */
-    quizControllerCreate: (data: CreateQuizDto, params: RequestParams = {}) =>
-      this.request<CreateQuizResponseDto, void>({
-        path: `/api/quizs`,
-        method: 'POST',
-        body: data,
-        type: ContentType.Json,
-        format: 'json',
-        ...params
-      }),
-
-    /**
-     * No description
-     *
-     * @tags quizs
-     * @name QuizControllerFindAll
-     * @summary Get all vocabularies
-     * @request GET:/api/quizs
-     */
-    quizControllerFindAll: (
-      query?: {
-        /** @default 1 */
-        page?: number
-        /** @default 10 */
-        perPage?: number
-        search?: string
-      },
-      params: RequestParams = {}
-    ) =>
-      this.request<QuizResponse, any>({
-        path: `/api/quizs`,
-        method: 'GET',
-        query: query,
-        format: 'json',
-        ...params
-      }),
-
-    /**
-     * No description
-     *
-     * @tags quizs
-     * @name QuizControllerFindOne
-     * @summary Get a Quiz by ID
-     * @request GET:/api/quizs/{id}
-     */
-    quizControllerFindOne: (id: string, params: RequestParams = {}) =>
-      this.request<FindOneQuizResponseDto, void>({
-        path: `/api/quizs/${id}`,
-        method: 'GET',
-        format: 'json',
-        ...params
-      }),
-
-    /**
-     * No description
-     *
-     * @tags quizs
-     * @name QuizControllerUpdate
-     * @summary Update a quiz by ID
-     * @request PATCH:/api/quizs/{id}
-     */
-    quizControllerUpdate: (id: string, data: UpdateQuizDto, params: RequestParams = {}) =>
-      this.request<UpdateQuizResponseDto, void>({
-        path: `/api/quizs/${id}`,
-        method: 'PATCH',
-        body: data,
-        type: ContentType.Json,
-        format: 'json',
-        ...params
-      }),
-
-    /**
-     * No description
-     *
-     * @tags quizs
-     * @name QuizControllerDelete
-     * @summary Delete a Quiz by ID
-     * @request DELETE:/api/quizs/{id}
-     */
-    quizControllerDelete: (id: string, params: RequestParams = {}) =>
-      this.request<DeleteQuizResponseDto, void>({
-        path: `/api/quizs/${id}`,
-        method: 'DELETE',
-        format: 'json',
-        ...params
-      }),
-
-    /**
-     * No description
-     *
-     * @tags quizs
-     * @name QuizQuestionControllerCreateQuestion
-     * @summary Create a new quiz question
-     * @request POST:/api/quizs/{quizId}/questions
-     */
-    quizQuestionControllerCreateQuestion: (quizId: string, data: CreateQuizQuestionDto, params: RequestParams = {}) =>
-      this.request<CreateQuizQuestionResponseDto, void>({
-        path: `/api/quizs/${quizId}/questions`,
-        method: 'POST',
-        body: data,
-        type: ContentType.Json,
-        format: 'json',
-        ...params
-      }),
-
-    /**
-     * No description
-     *
-     * @tags quizs
-     * @name QuizQuestionControllerFindAll
-     * @summary Find all quiz questions
-     * @request GET:/api/quizs/{quizId}/questions
-     */
-    quizQuestionControllerFindAll: (
-      quizId: string,
-      query?: {
-        /** @default 1 */
-        page?: number
-        /** @default 10 */
-        perPage?: number
-        search?: string
-      },
-      params: RequestParams = {}
-    ) =>
-      this.request<QuizQuestionResponse, any>({
-        path: `/api/quizs/${quizId}/questions`,
-        method: 'GET',
-        query: query,
-        format: 'json',
-        ...params
-      }),
-
-    /**
-     * No description
-     *
-     * @tags quizs
-     * @name QuizQuestionControllerFindOne
-     * @summary Find one quiz question
-     * @request GET:/api/quizs/{quizId}/questions/{id}
-     */
-    quizQuestionControllerFindOne: (quizId: string, id: string, params: RequestParams = {}) =>
-      this.request<FindOneQuizQuestionResponseDto, void>({
-        path: `/api/quizs/${quizId}/questions/${id}`,
-        method: 'GET',
-        format: 'json',
-        ...params
-      }),
-
-    /**
-     * No description
-     *
-     * @tags quizs
-     * @name QuizQuestionControllerUpdate
-     * @summary Update a quiz question
-     * @request PATCH:/api/quizs/questions/{id}
-     */
-    quizQuestionControllerUpdate: (id: string, data: UpdateQuizQuestionDto, params: RequestParams = {}) =>
-      this.request<UpdateQuizQuestionResponseDto, void>({
-        path: `/api/quizs/questions/${id}`,
-        method: 'PATCH',
-        body: data,
-        type: ContentType.Json,
-        format: 'json',
-        ...params
-      }),
-
-    /**
-     * No description
-     *
-     * @tags quizs
-     * @name QuizQuestionControllerDelete
-     * @summary Delete a quiz question
-     * @request DELETE:/api/quizs/questions/{id}
-     */
-    quizQuestionControllerDelete: (id: string, params: RequestParams = {}) =>
-      this.request<DeleteQuizQuestionResponseDto, void>({
-        path: `/api/quizs/questions/${id}`,
         method: 'DELETE',
         format: 'json',
         ...params

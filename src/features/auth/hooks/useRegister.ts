@@ -15,8 +15,8 @@ export const useRegister = () => {
       login({
         id: data.user.id,
         email: data.user.email,
-        name: `${data.user.first_name} ${data.user.last_name}`,
-        avatar_img: data.user.profile_picture,
+        name: `${data.user.firstName} ${data.user.lastName}`,
+        avatar_img: data.user.profilePicture,
         accessToken: data.access_token,
         role: data.user.role
       })

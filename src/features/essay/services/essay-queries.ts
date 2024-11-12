@@ -4,37 +4,37 @@ export const CREATE_CORRECTION_MUTATION = gql`
   mutation CreateCorrectionEssay($input: CreateCorrectionDto!) {
     createCorrectionEssay(input: $input) {
       id
-      essay_id
-      created_by
-      created_at
-      overall_comment
+      essayId
+      createdBy
+      createdAt
+      overallComment
       rating
-      updated_at
+      updatedAt
       sentences {
         id
-        id_correction
-        original_text
-        corrected_text
+        idCorrection
+        originalText
+        correctedText
         explanation
-        is_correct
+        isCorrect
         rating
-        updated_at
-        created_at
+        updatedAt
+        createdAt
       }
       creator {
         id
         username
         email
         role
-        auth_provider
-        auth_provider_id
-        first_name
-        last_name
-        profile_picture
-        is_email_verified
-        last_login
-        created_at
-        updated_at
+        authProvider
+        authProviderId
+        firstName
+        lastName
+        profilePicture
+        isEmailVerified
+        lastLogin
+        createdAt
+        updatedAt
       }
     }
   }
@@ -44,38 +44,38 @@ export const UPDATE_CORRECTION_MUTATION = gql`
   mutation UpdateCorrectionEssay($input: UpdateCorrectionDto!) {
     updateCorrectionEssay(input: $input) {
       id
-      essay_id
-      created_by
-      overall_comment
+      essayId
+      createdBy
+      overallComment
       rating
-      created_at
-      updated_at
+      createdAt
+      updatedAt
       creator {
         id
         username
         email
         role
-        auth_provider
-        auth_provider_id
-        first_name
-        last_name
-        profile_picture
-        is_email_verified
-        last_login
-        created_at
-        updated_at
+        authProvider
+        authProviderId
+        firstName
+        lastName
+        profilePicture
+        isEmailVerified
+        lastLogin
+        createdAt
+        updatedAt
       }
       sentences {
         id
-        id_correction
+        idCorrection
         index
-        original_text
-        corrected_text
+        originalText
+        correctedText
         explanation
-        is_correct
+        isCorrect
         rating
-        created_at
-        updated_at
+        createdAt
+        updatedAt
       }
     }
   }
@@ -86,39 +86,39 @@ export const GET_LIST_CORRECTION_BY_ESSAY_QUERY = gql`
     getCorrectionsByEssay(input: $input) {
       data {
         id
-        essay_id
-        created_by
-        overall_comment
+        essayId
+        createdBy
+        overallComment
         rating
-        created_at
-        updated_at
+        createdAt
+        updatedAt
         creator {
           id
           username
           email
-          password_hash
+          passwordHash
           role
-          auth_provider
-          auth_provider_id
-          first_name
-          last_name
-          profile_picture
-          is_email_verified
-          last_login
-          created_at
-          updated_at
+          authProvider
+          authProviderId
+          firstName
+          lastName
+          profilePicture
+          isEmailVerified
+          lastLogin
+          createdAt
+          updatedAt
         }
         sentences {
           id
-          id_correction
+          idCorrection
           index
-          original_text
-          corrected_text
+          originalText
+          correctedText
           explanation
-          is_correct
+          isCorrect
           rating
-          created_at
-          updated_at
+          createdAt
+          updatedAt
         }
       }
       pagination {
@@ -136,24 +136,24 @@ export const GET_LIST_CORRECTION_BY_ESSAY_QUERY = gql`
 export const CHECK_CORRECTION_EXIST_QUERY = gql`
   query GetCorrectionIfExist($essayId: String!) {
     getCorrectionIfExist(essayId: $essayId) {
-      essay_id
-      created_by
-      overall_comment
+      essayId
+      createdBy
+      overallComment
       rating
-      created_at
-      updated_at
+      createdAt
+      updatedAt
       id
       sentences {
         id
-        id_correction
+        idCorrection
         index
-        original_text
-        corrected_text
+        originalText
+        correctedText
         explanation
-        is_correct
+        isCorrect
         rating
-        created_at
-        updated_at
+        createdAt
+        updatedAt
       }
     }
   }

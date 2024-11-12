@@ -37,7 +37,7 @@ function EssayCard({ item }: EssayCardProps) {
 
   const handleUpvote = async () => {
     try {
-      await mutate.mutateAsync({ id: item.id, data: { upvote_count: item.upvote_count + 1 } })
+      await mutate.mutateAsync({ id: item.id, data: { upvote_count: item.upvoteCount + 1 } })
       // Refetch the feed data
       toast.success('Upvote updated successfully')
     } catch (error) {
@@ -67,7 +67,7 @@ function EssayCard({ item }: EssayCardProps) {
         {/* Author Section */}
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
           <Avatar
-            src={item.author?.profile_picture || ''}
+            src={item.author?.profilePicture || ''}
             alt={item.author?.username || ''}
             sx={{ width: 40, height: 40 }}
           />
@@ -92,7 +92,7 @@ function EssayCard({ item }: EssayCardProps) {
                 <Chip size='small' label='Newbie' variant='outlined' icon={<Sprout size={14} />} />
               </Box>
               <Typography variant='body2' sx={{ color: 'text.secondary' }}>
-                {item.language} · {convertToRelativeTime(item.created_at)}
+                {item.language} · {convertToRelativeTime(item.createdAt)}
               </Typography>
             </Box>
           </Box>
@@ -165,7 +165,7 @@ function EssayCard({ item }: EssayCardProps) {
             </Typography>
           </Box>
           {/* Optional Image */}
-          {item.cover_url && typeof item.cover_url === 'string' && item.cover_url.trim() !== '' && (
+          {item.coverUrl && typeof item.coverUrl === 'string' && item.coverUrl.trim() !== '' && (
             <Box
               sx={{
                 ml: { xs: 0, sm: 'auto' }, // No margin on mobile, auto margin on desktop
@@ -174,7 +174,7 @@ function EssayCard({ item }: EssayCardProps) {
               }}
             >
               <AppImage
-                src={item.cover_url}
+                src={item.coverUrl}
                 alt={item.title}
                 height={180}
                 sx={{
@@ -212,7 +212,7 @@ function EssayCard({ item }: EssayCardProps) {
                 onClick={handleUpvote}
               >
                 <ThumbsUp size={16} />
-                <Typography variant='body2'>{item.upvote_count} Upvote</Typography>
+                <Typography variant='body2'>{item.upvoteCount} Upvote</Typography>
               </Box>
 
               {/* Comment */}

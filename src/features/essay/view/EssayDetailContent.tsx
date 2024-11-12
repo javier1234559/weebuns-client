@@ -39,14 +39,14 @@ function EssayDetailContent({ data }: EssayDetailContentProps) {
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
         <Avatar
-          src={essay.author?.profile_picture || ''}
+          src={essay.author?.profilePicture || ''}
           alt={essay.author?.username || ''}
           sx={{ width: 50, height: 50, mr: 2 }}
         />
         <Box>
           <Typography variant='subtitle1'>{essay.author?.username || ''}</Typography>
           <Typography variant='body2' color='textSecondary'>
-            {convertToRelativeTime(essay.created_at)}
+            {convertToRelativeTime(essay.createdAt)}
           </Typography>
         </Box>
         <Box ml='auto'>
@@ -59,9 +59,9 @@ function EssayDetailContent({ data }: EssayDetailContentProps) {
         </Box>
       </Box>
 
-      {essay.cover_url && (
+      {essay.coverUrl && (
         <Box sx={{ width: '100%', height: 400, overflow: 'hidden', mb: 4 }}>
-          <img src={essay.cover_url} alt={essay.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+          <img src={essay.coverUrl} alt={essay.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         </Box>
       )}
 

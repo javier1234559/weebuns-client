@@ -19,19 +19,19 @@ export const GET_SPACES_BY_USER = gql`
         id
         name
         description
-        created_at
-        updated_at
+        createdAt
+        updatedAt
         _count {
           essays
-          quizzes
+          notes
           vocabularies
         }
       }
       pagination {
         totalItems
-        itemsPerPage
-        totalPages
         currentPage
+        totalPages
+        itemsPerPage
         hasNextPage
         hasPreviousPage
       }

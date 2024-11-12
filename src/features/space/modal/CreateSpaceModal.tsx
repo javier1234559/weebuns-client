@@ -8,6 +8,7 @@ import * as yup from 'yup'
 import { AppButton } from '~/components/common/AppButton'
 import { AppInput } from '~/components/common/AppInput'
 import { useCreateSpace } from '~/features/space/hooks/useSpaceQueries'
+import { ILanguageType, ITargetType } from '~/features/space/space.type'
 
 interface CreateSpaceModalProps {
   idUser: string
@@ -25,12 +26,14 @@ const createSpaceSchema = yup.object({
     .string()
     .required('Description is required')
     .min(1, 'Description is required')
-    .max(500, 'Description must be less than 500 characters')
+    .max(500, 'Description must be less than 500 characters'),
+  target: yup.string().required('target is required'),
+  language: yup.string().required('language is required')
 })
 
 type CreateSpaceFormData = yup.InferType<typeof createSpaceSchema>
 
-function CreateSpaceModal({ idUser, onClose }: CreateSpaceModalProps) {
+function CreateSpaceModal({ onClose }: CreateSpaceModalProps) {
   const {
     control,
     handleSubmit,
@@ -49,7 +52,8 @@ function CreateSpaceModal({ idUser, onClose }: CreateSpaceModalProps) {
       await mutate.mutateAsync({
         name: data.name,
         description: data.description,
-        created_by: idUser
+        target: data.target as ITargetType,
+        language: data.language as ILanguageType
       })
       toast.success('Space created successfully')
       onClose()
@@ -99,6 +103,41 @@ function CreateSpaceModal({ idUser, onClose }: CreateSpaceModalProps) {
           />
         )}
       />
+
+      <Controller
+        name='target'
+        control={control}
+        render={({ field }) => (
+          <AppInput
+            {...field}
+            fullWidth
+            error={!!errors.target}
+            placeholder='Write a target'
+            helperText={errors.target?.message}
+            variant='outlined'
+            rows={4}
+            sx={{ mb: 2 }}
+          />
+        )}
+      />
+
+      <Controller
+        name='language'
+        control={control}
+        render={({ field }) => (
+          <AppInput
+            {...field}
+            fullWidth
+            error={!!errors.language}
+            placeholder='Write a language'
+            helperText={errors.language?.message}
+            variant='outlined'
+            rows={4}
+            sx={{ mb: 2 }}
+          />
+        )}
+      />
+
       <Box
         sx={{
           mt: 3,

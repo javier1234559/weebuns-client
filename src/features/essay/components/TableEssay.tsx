@@ -192,7 +192,7 @@ function TableEssay() {
                   </TableCell>
                   <TableCell align='left'>
                     <Typography variant='body2' color='text.secondary'>
-                      {convertToRelativeTime(essay.updated_at)}
+                      {convertToRelativeTime(essay.updatedAt)}
                     </Typography>
                   </TableCell>
                   <TableCell align='right'>
