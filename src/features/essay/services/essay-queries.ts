@@ -7,12 +7,12 @@ export const CREATE_CORRECTION_MUTATION = gql`
       essayId
       createdBy
       createdAt
-      overallComment
+      overall_comment
       rating
       updatedAt
       sentences {
         id
-        idCorrection
+        correctionId
         originalText
         correctedText
         explanation
@@ -43,40 +43,7 @@ export const CREATE_CORRECTION_MUTATION = gql`
 export const UPDATE_CORRECTION_MUTATION = gql`
   mutation UpdateCorrectionEssay($input: UpdateCorrectionDto!) {
     updateCorrectionEssay(input: $input) {
-      id
-      essayId
-      createdBy
-      overallComment
-      rating
-      createdAt
-      updatedAt
-      creator {
-        id
-        username
-        email
-        role
-        authProvider
-        authProviderId
-        firstName
-        lastName
-        profilePicture
-        isEmailVerified
-        lastLogin
-        createdAt
-        updatedAt
-      }
-      sentences {
-        id
-        idCorrection
-        index
-        originalText
-        correctedText
-        explanation
-        isCorrect
-        rating
-        createdAt
-        updatedAt
-      }
+
     }
   }
 `
@@ -88,7 +55,7 @@ export const GET_LIST_CORRECTION_BY_ESSAY_QUERY = gql`
         id
         essayId
         createdBy
-        overallComment
+        overall_comment
         rating
         createdAt
         updatedAt
@@ -110,7 +77,7 @@ export const GET_LIST_CORRECTION_BY_ESSAY_QUERY = gql`
         }
         sentences {
           id
-          idCorrection
+          correctionId
           index
           originalText
           correctedText
@@ -138,14 +105,14 @@ export const CHECK_CORRECTION_EXIST_QUERY = gql`
     getCorrectionIfExist(essayId: $essayId) {
       essayId
       createdBy
-      overallComment
+      overall_comment
       rating
       createdAt
       updatedAt
       id
       sentences {
         id
-        idCorrection
+        correctionId
         index
         originalText
         correctedText

@@ -1,25 +1,22 @@
-import Edit from '@mui/icons-material/Edit'
 import MoreVert from '@mui/icons-material/MoreVert'
-import Share from '@mui/icons-material/Share'
 import { useTheme } from '@mui/material'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import CardMedia from '@mui/material/CardMedia'
-import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
-import { CircleHelp, LogOut, PenLine, WholeWord } from 'lucide-react'
+import { Clock, FileText, Globe, Notebook, Settings2, Target, Trash2, TreePalm, WholeWord } from 'lucide-react'
 import React, { memo, useState } from 'react'
 import toast from 'react-hot-toast'
 
-import { AppLink } from '~/components/common/AppLink'
+import AppLink from '~/components/common/AppLink'
 import DeleteModal from '~/components/modal/DeleteModal'
 import { useModal } from '~/contexts/ModalContext'
 import { useDeleteSpace } from '~/features/space/hooks/useSpaceQueries'
 import UpdateSpaceModal from '~/features/space/modal/UpdateSpaceModal'
+import { LANGUAGE_LABELS, LEVEL_LABELS, TARGET_LABELS } from '~/features/space/space.constants'
 import { GetSpacesByUserQuery } from '~/services/graphql/graphql'
 import { convertToRelativeTime } from '~/utils/format-date'
 
@@ -70,100 +67,161 @@ function LearningSpaceCard({ data }: LearningSpaceCardProps) {
         display: 'flex',
         flexDirection: 'column',
         height: '100%',
-        bgcolor: theme.palette.background.paper,
-        overflow: 'hidden'
+        bgcolor: 'background.default',
+        boxShadow: theme.shadows[2],
+        borderRadius: 2,
+        minWidth: 'fit-content',
+        width: 'auto',
+        transition: 'transform 0.2s, box-shadow 0.2s',
+        '&:hover': {
+          transform: 'translateY(-1px)',
+          boxShadow: theme.shadows[4]
+        }
       }}
     >
-      {/* Header */}
-      <Box sx={{ position: 'relative' }}>
-        <CardMedia component='img' height='140' image='/images/minimalist/cover-2.webp' alt={data.name} />
-        <IconButton
-          onClick={handleClick}
-          sx={{
-            position: 'absolute',
-            top: 8,
-            right: 8,
-            color: 'white'
-          }}
-        >
-          <MoreVert />
-        </IconButton>
-        <Menu
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          anchorOrigin={{
-            vertical: 'top',
-            horizontal: 'right'
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'right'
-          }}
-        >
-          <MenuItem onClick={updateSpacePopUp}>
-            <Edit fontSize='small' sx={{ mr: 1 }} /> Edit
-          </MenuItem>
-          <MenuItem onClick={handleDeleteConfirm}>
-            <LogOut fontSize='small' style={{ marginRight: '8px' }} /> Delete
-          </MenuItem>
-          <MenuItem onClick={handleClose}>
-            <Share fontSize='small' sx={{ mr: 1 }} /> Share
-          </MenuItem>
-        </Menu>
-      </Box>
-
       {/* Body */}
       <CardContent
         sx={{
           flexGrow: 1,
-          p: 2,
-          '&:last-child': { pb: 2 }
+          p: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'space-between'
         }}
       >
-        <AppLink to={`/learning-space?spaceId=${data.id}`}>
-          <Typography gutterBottom variant='h6' component='div' sx={{ fontWeight: 'bold' }}>
-            {data.name}
+        <Box>
+          <Box display='flex' alignItems='center' justifyContent='space-between'>
+            <AppLink to={`/learning-space?spaceId=${data.id}`}>
+              <Typography
+                gutterBottom
+                variant='h6'
+                component='div'
+                sx={{
+                  fontWeight: 'bold',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  flexGrow: 1
+                }}
+              >
+                {data.name}
+              </Typography>
+            </AppLink>
+            <Box sx={{ position: 'relative', height: 'fit-content' }}>
+              <IconButton
+                onClick={handleClick}
+                sx={{
+                  '&:hover': { bgcolor: 'rgba(0,0,0,0.2)' }
+                }}
+              >
+                <MoreVert />
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right'
+                }}
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center'
+                }}
+              >
+                <MenuItem onClick={updateSpacePopUp}>
+                  <Settings2 size='20' style={{ marginRight: 4 }} /> Edit
+                </MenuItem>
+                <MenuItem onClick={handleDeleteConfirm}>
+                  <Trash2 size='20' style={{ marginRight: 4 }} /> Delete
+                </MenuItem>
+                {/* <MenuItem onClick={handleClose}>
+                  <Share fontSize='small' sx={{ mr: 1 }} /> Share
+                </MenuItem> */}
+              </Menu>
+            </Box>
+          </Box>
+          <Typography variant='body2' color='text.secondary' noWrap>
+            {data.description}
           </Typography>
-        </AppLink>
-        <Typography variant='body2' color='text.body'>
-          {data.description}
-        </Typography>
+        </Box>
+
+        <Box sx={{ mt: 2 }}>
+          <Typography variant='body2' color='text.secondary' sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+            <Globe style={{ marginRight: '8px' }} size={20} />
+            Language: {LANGUAGE_LABELS[data.language]}
+          </Typography>
+          <Typography variant='body2' color='text.secondary' sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+            <Target style={{ marginRight: '8px' }} size={20} />
+            Level: {LEVEL_LABELS[data.currentLevel]} → {LEVEL_LABELS[data.targetLevel]}
+          </Typography>
+          <Typography variant='body2' color='text.secondary' sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+            <TreePalm style={{ marginRight: '8px' }} size={20} />
+            Purpose: {TARGET_LABELS[data.target]}
+          </Typography>
+          <Typography variant='body2' color='text.secondary' sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+            <Clock style={{ marginRight: '8px' }} size={20} />
+            {convertToRelativeTime(data.updatedAt)}
+          </Typography>
+        </Box>
       </CardContent>
 
       {/* Footer */}
-      <Box sx={{ p: 2, pt: 0 }}>
-        <Typography variant='body2' color='text.secondary' sx={{ mb: 1 }}>
-          {convertToRelativeTime(data.created_at)}
-        </Typography>
-        <Divider sx={{ my: 1, bgcolor: 'grey.200' }} />
-        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Typography
-            variant='body2'
-            color='text.secondary'
-            sx={{ color: 'grey.400', display: 'flex', alignItems: 'center' }}
+      <Box
+        sx={{
+          borderTop: '1px solid',
+          borderColor: 'divider',
+          p: 2,
+          minWidth: 0,
+          overflow: 'hidden'
+        }}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'nowrap',
+            gap: 2,
+            justifyContent: 'space-between'
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              minWidth: 'fit-content'
+            }}
           >
-            <CircleHelp style={{ marginRight: 'calc(1* var(--mui-spacing))', fontSize: 20, color: 'grey.400' }} />
-            {data._count?.quizzes ?? 0}
-          </Typography>
+            <FileText style={{ marginRight: '2px' }} size={20} />
+            <Typography component='span' noWrap>
+              {data?._count?.essays ?? 0} Essays
+            </Typography>
+          </Box>
 
-          <Typography
-            variant='body2'
-            color='text.secondary'
-            sx={{ color: 'grey.400', display: 'flex', alignItems: 'center' }}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              minWidth: 'fit-content'
+            }}
           >
-            <PenLine style={{ marginRight: 'calc(1* var(--mui-spacing))', fontSize: 20, color: 'grey.400' }} />
-            {data._count?.essays ?? 0}
-          </Typography>
+            <Notebook style={{ marginRight: '2px' }} size={20} />
+            <Typography component='span' noWrap>
+              {data?._count?.notes ?? 0} Notes
+            </Typography>
+          </Box>
 
-          <Typography
-            variant='body2'
-            color='text.secondary'
-            sx={{ color: 'grey.400', display: 'flex', alignItems: 'center' }}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              minWidth: 'fit-content'
+            }}
           >
-            <WholeWord style={{ marginRight: 'calc(1* var(--mui-spacing))', fontSize: 20, color: 'grey.400' }} />
-            {data._count?.vocabularies ?? 0}
-          </Typography>
+            <WholeWord style={{ marginRight: '2px' }} size={20} />
+            <Typography component='span' noWrap>
+              {data?._count?.vocabularies ?? 0} Vocab
+            </Typography>
+          </Box>
         </Box>
       </Box>
     </Card>

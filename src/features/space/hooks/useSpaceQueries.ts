@@ -12,14 +12,6 @@ import {
 } from '~/services/graphql/graphql'
 import { PaginationParams } from '~/types/extend-api'
 
-// export const useSpaces = (params: PaginationParams): UseQueryResult<SpacesResponse> => {
-//   return useQuery({
-//     queryKey: SPACE_KEY_FACTORY.list(params),
-//     queryFn: () => spaceApi.getAll(params),
-//     staleTime: 1000 * 60 * 5 // 5 minutes
-//   })
-// }
-
 export const useSpacesByUser = (params: PaginationParams, userId?: string | null) => {
   return useGetSpacesByUserQuery({
     variables: {
@@ -31,7 +23,6 @@ export const useSpacesByUser = (params: PaginationParams, userId?: string | null
       }
     },
     skip: !userId
-    // fetchPolicy: 'cache-and-network'
   })
 }
 
@@ -52,7 +43,6 @@ export const useSpacesByUserSelect = (userId?: string | null) => {
       }
     },
     skip: !userId
-    // fetchPolicy: 'cache-and-network'
   })
 }
 

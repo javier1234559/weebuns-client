@@ -69,6 +69,7 @@ function EssayCard({ item }: EssayCardProps) {
           <Avatar
             src={item.author?.profilePicture || ''}
             alt={item.author?.username || ''}
+            imgProps={{ referrerPolicy: 'no-referrer' }}
             sx={{ width: 40, height: 40 }}
           />
           <Box sx={{ ml: 1.5 }}>

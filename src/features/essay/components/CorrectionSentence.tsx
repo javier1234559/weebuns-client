@@ -12,7 +12,7 @@ interface CorrectionSentenceProps {
 }
 
 const CorrectionSentence = ({ item, isShowExplain }: CorrectionSentenceProps) => {
-  const isCorrect = item.is_correct
+  const isCorrect = item.isCorrect
 
   return (
     <Paper
@@ -37,9 +37,9 @@ const CorrectionSentence = ({ item, isShowExplain }: CorrectionSentenceProps) =>
         }}
       >
         <Typography variant='subtitle2' color='text.secondary'>
-          {item.original_text}
+          {item.originalText}
         </Typography>
-        {!isCorrect && <Typography>{item.corrected_text}</Typography>}
+        {!isCorrect && <Typography>{item.correctedText}</Typography>}
       </Box>
 
       {!isCorrect && (

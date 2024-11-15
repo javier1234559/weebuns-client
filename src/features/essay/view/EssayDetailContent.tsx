@@ -42,6 +42,7 @@ function EssayDetailContent({ data }: EssayDetailContentProps) {
           src={essay.author?.profilePicture || ''}
           alt={essay.author?.username || ''}
           sx={{ width: 50, height: 50, mr: 2 }}
+          imgProps={{ referrerPolicy: 'no-referrer' }}
         />
         <Box>
           <Typography variant='subtitle1'>{essay.author?.username || ''}</Typography>

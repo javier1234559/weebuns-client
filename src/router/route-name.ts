@@ -23,9 +23,13 @@ export enum RouteNames {
   EssayUpdate = '/essay/update/:id',
   EssayDetail = '/essay/:id',
 
-  Quiz = '/quiz',
-  QuizDetail = '/quiz/:id',
-  QuizCreate = '/quiz/create',
+  Note = '/note',
+  NoteDetail = '/note/:id',
+  NoteCreate = '/note/create',
+
+  MyCourse = '/my-course',
+  Course = '/course',
+  CourseDetail = '/course/:id',
 
   Setting = '/setting',
 

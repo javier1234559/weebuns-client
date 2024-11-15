@@ -1,6 +1,7 @@
 import FormControl from '@mui/material/FormControl'
 import { SelectChangeEvent } from '@mui/material/Select'
 import { useEffect, useMemo } from 'react'
+import toast from 'react-hot-toast'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation, useNavigate } from 'react-router-dom'
 
@@ -27,6 +28,7 @@ function SpaceSelect() {
       if (spaceId) {
         const space = spaces.find((s) => s.id === spaceId)
         if (space) {
+          toast.success(`Switched to ${space.name}`)
           dispatch(
             setCurrentSpace({
               id: space.id,

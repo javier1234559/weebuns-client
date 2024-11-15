@@ -21,6 +21,7 @@ import { Moon, Sun } from 'lucide-react/'
 import Assignment from '~/components/common/AppIcon/icons/Assignment'
 import Chat from '~/components/common/AppIcon/icons/Chat'
 import Check from '~/components/common/AppIcon/icons/Check'
+import Course from '~/components/common/AppIcon/icons/Course'
 import Delete from '~/components/common/AppIcon/icons/Delete'
 import Edit from '~/components/common/AppIcon/icons/Edit'
 import Essay from '~/components/common/AppIcon/icons/Essay'
@@ -28,6 +29,7 @@ import GoogleIcon from '~/components/common/AppIcon/icons/GoogleIcon'
 import LearningSpace from '~/components/common/AppIcon/icons/LearningSpace'
 import Like from '~/components/common/AppIcon/icons/Like'
 import Logo from '~/components/common/AppIcon/icons/Logo'
+import Note from '~/components/common/AppIcon/icons/Note'
 import Plus from '~/components/common/AppIcon/icons/Plus'
 import Quiz from '~/components/common/AppIcon/icons/Quiz'
 import Remove from '~/components/common/AppIcon/icons/Remove'
@@ -81,5 +83,7 @@ export const ICONS /* Note: Setting type disables property autocomplete :( was -
   switch: Switch,
   check: Check,
   remove: Remove,
-  save: Save
+  save: Save,
+  note: Note,
+  course: Course
 }

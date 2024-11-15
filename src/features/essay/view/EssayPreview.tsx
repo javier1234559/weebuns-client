@@ -41,7 +41,12 @@ function EssayPreview({ data }: EssayPreviewProps) {
           <Chip label='Newbie' variant='outlined' icon={<Sprout size={18} />} />
         </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-          <Avatar src={auth.avatar_img || ''} alt={auth.name || ''} sx={{ width: 50, height: 50, mr: 2 }} />
+          <Avatar
+            src={auth.avatar_img || ''}
+            alt={auth.name || ''}
+            sx={{ width: 50, height: 50, mr: 2 }}
+            imgProps={{ referrerPolicy: 'no-referrer' }}
+          />
           <Box>
             <Typography variant='subtitle1'>{auth.name}</Typography>
             <Typography variant='body2' color='textSecondary'>

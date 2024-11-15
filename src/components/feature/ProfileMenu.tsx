@@ -37,7 +37,6 @@ function ProfileMenu() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const auth = useSelector((state: RootState) => state.auth)
-  const image = auth.avatar_img
 
   const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget)
@@ -67,8 +66,8 @@ function ProfileMenu() {
     <Box>
       <Tooltip title='Open settings'>
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          {image ? (
-            <Avatar alt='User Avatar' src={image} />
+          {auth.avatar_img ? (
+            <Avatar src={auth.avatar_img} imgProps={{ referrerPolicy: 'no-referrer' }} alt={auth.name || 'Avatar'} />
           ) : (
             <Avatar alt='User Avatar' src='https://assets.minimals.cc/public/assets/images/mock/avatar/avatar-2.webp' />
           )}

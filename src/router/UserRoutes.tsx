@@ -16,7 +16,7 @@ const DevView = lazy(() => import('~/pages/dev-view'))
 const NotFoundView = lazy(() => import('~/pages/not-found'))
 const Vocabulary = lazy(() => import('~/pages/vocabulary'))
 const LearningSpace = lazy(() => import('~/pages/space'))
-const Quiz = lazy(() => import('~/pages/quiz'))
+const Note = lazy(() => import('~/pages/note'))
 const Essay = lazy(() => import('~/pages/essay'))
 const EssayCreate = lazy(() => import('~/pages/essay/[id]/essay-create'))
 const Setting = lazy(() => import('~/pages/setting'))
@@ -139,10 +139,10 @@ const USER_ROUTES = [
         )
       },
       {
-        path: RouteNames.Quiz,
+        path: RouteNames.Note,
         element: (
           <Suspense fallback={<AppLoading />}>
-            <Quiz />
+            <Note />
           </Suspense>
         )
       },

@@ -48,7 +48,7 @@ function getQuizStatus(correct: number, wrong: number): { label: string; color: 
   return { label: 'Needs Improvement', color: 'error' }
 }
 
-function TableQuiz() {
+function TableNote() {
   const theme = useTheme()
 
   const handleActionClick = (quizId: string) => {
@@ -114,4 +114,4 @@ function TableQuiz() {
   )
 }
 
-export default TableQuiz
+export default TableNote

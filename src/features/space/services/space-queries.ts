@@ -19,6 +19,7 @@ export const GET_SPACES_BY_USER = gql`
         id
         name
         description
+        target
         createdAt
         updatedAt
         _count {
@@ -26,6 +27,10 @@ export const GET_SPACES_BY_USER = gql`
           notes
           vocabularies
         }
+        language
+        currentLevel
+        topic
+        targetLevel
       }
       pagination {
         totalItems

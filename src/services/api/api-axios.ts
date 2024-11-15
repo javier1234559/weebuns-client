@@ -28,30 +28,71 @@ export interface UnitContent {
   unit?: Unit
 }
 
+export interface SpaceCount {
+  /** @example 0 */
+  essays: number
+  /** @example 0 */
+  notes: number
+  /** @example 0 */
+  vocabularies: number
+}
+
 export interface Space {
-  /** @example 1 */
+  /** @example "123e4567-e89b-12d3-a456-426614174000" */
   id: string
   /** @example "English Learning Space" */
   name: string
   /** @example "A space for learning English" */
   description: string | null
-  /** @example 1 */
+  /**
+   * Learning language
+   * @example "ENGLISH"
+   */
+  language: 'ENGLISH' | 'VIETNAMESE'
+  /**
+   * Learning target/purpose
+   * @example "COMMUNICATION"
+   */
+  target: 'COMMUNICATION' | 'IELTS' | 'TOEIC' | 'OTHER'
+  /**
+   * Current proficiency level
+   * @example "INTERMEDIATE"
+   */
+  currentLevel: 'BEGINNER' | 'ELEMENTARY' | 'INTERMEDIATE' | 'UPPER_INTERMEDIATE' | 'ADVANCED' | 'MASTER'
+  /**
+   * Main learning topic
+   * @example "BUSINESS"
+   */
+  topic: 'BUSINESS' | 'ACADEMIC' | 'TRAVEL' | 'DAILY_LIFE' | 'TECHNOLOGY' | 'OTHER'
+  /**
+   * Target proficiency level to achieve
+   * @example "ADVANCED"
+   */
+  targetLevel: 'BEGINNER' | 'ELEMENTARY' | 'INTERMEDIATE' | 'UPPER_INTERMEDIATE' | 'ADVANCED' | 'MASTER'
+  /**
+   * ID of the user who created this space
+   * @example "123e4567-e89b-12d3-a456-426614174000"
+   */
   createdBy: string
-  /** @format date-time */
+  /**
+   * Creation timestamp
+   * @format date-time
+   */
   createdAt: string
-  /** @format date-time */
+  /**
+   * Last update timestamp
+   * @format date-time
+   */
   updatedAt: string
-  target: string
-  language: string
-  /** @example {"essays":0,"notes":0,"vocabularies":0} */
-  _count: {
-    /** @example 0 */
-    essays?: number
-    /** @example 0 */
-    notes?: number
-    /** @example 0 */
-    vocabularies?: number
-  }
+  /** @format date-time */
+  deletedAt: string
+  /**
+   * Count of related entities
+   * @example {"essays":0,"notes":0,"vocabularies":0}
+   */
+  _count: SpaceCount
+  /** Creator user details */
+  creator: User | null
 }
 
 export interface Note {
@@ -98,10 +139,12 @@ export interface UserCourse {
   id: string
   userId: string
   courseId: string
+  /** @format int32 */
+  completedWeight: number
   paymentId: string | null
   paymentStatus: string | null
   /** @format double */
-  purchasePrice: number
+  purchasePrice: number | null
   /** @format date-time */
   purchasedAt: string
   user?: User
@@ -124,19 +167,19 @@ export interface Course {
   title: string
   description: string | null
   thumbnailUrl: string | null
-  level: 'BEGINNER' | 'ELEMENTARY' | 'INTERMEDIATE' | 'UPPER_INTERMEDIATE' | 'ADVANCED' | 'MASTER'
+  level: string
   /** @format double */
-  price: number
+  price: number | null
   /** @format int32 */
   totalWeight: number
   isPublished: boolean
-  /** @example "[{" */
-  reviews: object
   createdBy: string
   /** @format date-time */
   createdAt: string
   /** @format date-time */
   updatedAt: string
+  /** @format date-time */
+  deletedAt: string
   currentUnit?: Unit | null
   creator?: User
   units?: Unit[]
@@ -164,6 +207,8 @@ export interface Vocabulary {
   createdAt: string
   /** @format date-time */
   updatedAt: string
+  /** @format date-time */
+  deletedAt: string
   space?: Space
   creator?: User
 }
@@ -187,12 +232,12 @@ export interface CorrectionSentence {
   rating: number
   /**
    * @format date-time
-   * @example "2024-11-11T16:43:00.999Z"
+   * @example "2024-11-15T14:24:17.624Z"
    */
   createdAt: string
   /**
    * @format date-time
-   * @example "2024-11-11T16:43:00.999Z"
+   * @example "2024-11-15T14:24:17.624Z"
    */
   updatedAt: string
 }
@@ -251,6 +296,8 @@ export interface Correction {
   createdAt: string
   /** @format date-time */
   updatedAt: string
+  /** @format date-time */
+  deletedAt: string
   essay: Essay | null
   creator: User | null
   sentences: CorrectionSentence[] | null
@@ -363,14 +410,19 @@ export interface User {
   profilePicture: string | null
   /** @example false */
   isEmailVerified: boolean
-  currentLevel: 'BEGINNER' | 'ELEMENTARY' | 'INTERMEDIATE' | 'UPPER_INTERMEDIATE' | 'ADVANCED' | 'MASTER'
-  languages: object
+  /**
+   * User's native language
+   * @example "VIETNAMESE"
+   */
+  nativeLanguage: 'ENGLISH' | 'VIETNAMESE'
   /** @format date-time */
   lastLogin: string | null
   /** @format date-time */
   createdAt: string
   /** @format date-time */
   updatedAt: string
+  /** @format date-time */
+  deletedAt: string
   courses: Course[] | null
   user_courses: UserCourse[] | null
   notes: Note[] | null
@@ -429,6 +481,7 @@ export interface CreateUserDto {
   username: string
   email: string
   password: string
+  nativeLanguage: string
   profile_picture: string
   role: 'user' | 'admin' | 'teacher'
   auth_provider: 'local' | 'google' | 'facebook'
@@ -443,10 +496,10 @@ export interface UpdateUserDto {
   first_name?: string
   username?: string
   email?: string
+  nativeLanguage?: string
   profile_picture?: string
   role?: 'user' | 'admin' | 'teacher'
   auth_provider?: 'local' | 'google' | 'facebook'
-  id: number | null
 }
 
 export interface UpdateUserResponse {
@@ -463,6 +516,7 @@ export interface RegisterDto {
   password: string
   firstName: string
   lastName: string
+  nativeLanguage: string
 }
 
 export interface UserRegisterResponse {
@@ -509,45 +563,86 @@ export interface FindOneSpaceResponseDto {
 export interface CreateSpaceDto {
   name: string
   description: string
-  /** @example "GENERAL_LEARNING" */
-  target:
-    | 'GENERAL_LEARNING'
-    | 'TEST_PREPARATION'
-    | 'BUSINESS'
-    | 'ACADEMIC'
-    | 'CONVERSATION'
-    | 'TRAVEL'
-    | 'PROFESSIONAL'
-    | 'ORTHER'
   /** @example "ENGLISH" */
-  language: 'ENGLISH' | 'JAPANESE' | 'KOREAN' | 'CHINESE' | 'VIETNAMESE' | 'FRENCH' | 'GERMAN' | 'SPANISH'
-}
-
-export interface CreateSpaceResponseDto {
-  id: string
-  name: string
-  description: string
-  essay_number: number
-  notes_number: number
-  vocab_number: number
+  language: 'ENGLISH' | 'VIETNAMESE'
+  /** @example "COMMUNICATION" */
+  target: 'COMMUNICATION' | 'IELTS' | 'TOEIC' | 'OTHER'
+  /**
+   * Current proficiency level
+   * @example "INTERMEDIATE"
+   */
+  currentLevel: 'BEGINNER' | 'ELEMENTARY' | 'INTERMEDIATE' | 'UPPER_INTERMEDIATE' | 'ADVANCED' | 'MASTER'
+  /**
+   * Main learning topic
+   * @example "BUSINESS"
+   */
+  topic: 'BUSINESS' | 'ACADEMIC' | 'TRAVEL' | 'DAILY_LIFE' | 'TECHNOLOGY' | 'OTHER'
+  /**
+   * Target proficiency level to achieve
+   * @example "ADVANCED"
+   */
+  targetLevel: 'BEGINNER' | 'ELEMENTARY' | 'INTERMEDIATE' | 'UPPER_INTERMEDIATE' | 'ADVANCED' | 'MASTER'
 }
 
 export interface UpdateSpaceDto {
   name?: string
   description?: string
-}
-
-export interface UpdateSpaceResponseDto {
-  id: string
-  name: string
-  description: string
-  essay_number: number
-  notes_number: number
-  vocab_number: number
+  /** @example "ENGLISH" */
+  language?: 'ENGLISH' | 'VIETNAMESE'
+  /** @example "COMMUNICATION" */
+  target?: 'COMMUNICATION' | 'IELTS' | 'TOEIC' | 'OTHER'
+  /**
+   * Current proficiency level
+   * @example "INTERMEDIATE"
+   */
+  currentLevel?: 'BEGINNER' | 'ELEMENTARY' | 'INTERMEDIATE' | 'UPPER_INTERMEDIATE' | 'ADVANCED' | 'MASTER'
+  /**
+   * Main learning topic
+   * @example "BUSINESS"
+   */
+  topic?: 'BUSINESS' | 'ACADEMIC' | 'TRAVEL' | 'DAILY_LIFE' | 'TECHNOLOGY' | 'OTHER'
+  /**
+   * Target proficiency level to achieve
+   * @example "ADVANCED"
+   */
+  targetLevel?: 'BEGINNER' | 'ELEMENTARY' | 'INTERMEDIATE' | 'UPPER_INTERMEDIATE' | 'ADVANCED' | 'MASTER'
 }
 
 export interface DeleteSpaceResponseDto {
   space: Space
+}
+
+export interface CourseCreatorDto {
+  id: string
+  username: string
+  profilePicture: string | null
+}
+
+export interface SpaceCourseDto {
+  id: string
+  title: string
+  description: string | null
+  thumbnailUrl: string | null
+  level: 'BEGINNER' | 'ELEMENTARY' | 'INTERMEDIATE' | 'UPPER_INTERMEDIATE' | 'ADVANCED' | 'MASTER'
+  price: number | null
+  totalWeight: number
+  isPublished: boolean
+  createdAt: string
+  creator: CourseCreatorDto
+  is_joined: boolean
+  joined_at: string | null
+}
+
+export interface PaginationDto {
+  total: number
+  page: number
+  perPage: number
+  totalPages: number
+}
+
+export interface SpaceCoursesResponseDto {
+  data: SpaceCourseDto[]
+  pagination: PaginationDto
 }
 
 export interface EssaysResponse {
@@ -683,7 +778,7 @@ export interface CreateVocabularyDto {
   nextReview?: string | null
 }
 
-export interface CreateVocabularyResponseDto {
+export interface FindOneVocabularyResponseDto {
   vocabulary: Vocabulary
 }
 
@@ -695,11 +790,8 @@ export interface FindAllVocabularyDto {
   search?: string
 }
 
-export interface FindOneVocabularyResponseDto {
-  vocabulary: Vocabulary
-}
-
 export interface UpdateVocabularyDto {
+  spaceId?: string
   term?: string
   meaning?: string
   exampleSentence?: string | null
@@ -710,14 +802,6 @@ export interface UpdateVocabularyDto {
   nextReview?: string | null
 }
 
-export interface UpdateVocabularyResponseDto {
-  vocabulary: Vocabulary
-}
-
-export interface DeleteVocabularyResponseDto {
-  message: string
-}
-
 export interface HashtagsResponseDto {
   data: Hashtag[]
   pagination: PaginationOutputDto
@@ -725,6 +809,31 @@ export interface HashtagsResponseDto {
 
 export interface DeleteHashtagResponseDto {
   hashtag: Hashtag
+}
+
+export interface DailyActivityDto {
+  /** @example "2024-03-15" */
+  date: string
+  /** @example 2 */
+  level: number
+  /** @example 5 */
+  streak: number
+}
+
+export interface ActivityStreakResponseDto {
+  activities: DailyActivityDto[]
+  currentStreak: DailyActivityDto
+}
+
+export interface UserOverviewDto {
+  /** @example 10 */
+  essayCount: number
+  /** @example 20 */
+  vocabCount: number
+  /** @example 5 */
+  courseJoinedCount: number
+  /** @example 15 */
+  notesCount: number
 }
 
 export interface TranslateDto {
@@ -1038,11 +1147,10 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Retrieve a paginated list of users with optional filters
+     * No description
      *
      * @tags users
      * @name UserControllerFindAll
-     * @summary Get all users
      * @request GET:/api/users
      * @secure
      */
@@ -1056,7 +1164,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       },
       params: RequestParams = {}
     ) =>
-      this.request<UsersResponse, void>({
+      this.request<UsersResponse, any>({
         path: `/api/users`,
         method: 'GET',
         query: query,
@@ -1066,16 +1174,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Create a new user account. Admin access only.
+     * No description
      *
      * @tags users
      * @name UserControllerCreate
-     * @summary Create new user
      * @request POST:/api/users
      * @secure
      */
     userControllerCreate: (data: CreateUserDto, params: RequestParams = {}) =>
-      this.request<CreateUserResponse, void>({
+      this.request<CreateUserResponse, any>({
         path: `/api/users`,
         method: 'POST',
         body: data,
@@ -1086,16 +1193,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Retrieve detailed information about a specific user. Admin access only.
+     * No description
      *
      * @tags users
      * @name UserControllerFindOne
-     * @summary Get user by ID
      * @request GET:/api/users/{id}
      * @secure
      */
     userControllerFindOne: (id: string, params: RequestParams = {}) =>
-      this.request<UserResponse, void>({
+      this.request<UserResponse, any>({
         path: `/api/users/${id}`,
         method: 'GET',
         secure: true,
@@ -1104,16 +1210,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Update user information. Admin access only.
+     * No description
      *
      * @tags users
      * @name UserControllerUpdate
-     * @summary Update user by ID
      * @request PUT:/api/users/{id}
      * @secure
      */
     userControllerUpdate: (id: string, data: UpdateUserDto, params: RequestParams = {}) =>
-      this.request<UpdateUserResponse, void>({
+      this.request<UpdateUserResponse, any>({
         path: `/api/users/${id}`,
         method: 'PUT',
         body: data,
@@ -1124,16 +1229,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Permanently remove a user account. Admin access only.
+     * No description
      *
      * @tags users
      * @name UserControllerRemove
-     * @summary Delete user by ID
      * @request DELETE:/api/users/{id}
      * @secure
      */
     userControllerRemove: (id: string, params: RequestParams = {}) =>
-      this.request<DeleteUserResponse, void>({
+      this.request<DeleteUserResponse, any>({
         path: `/api/users/${id}`,
         method: 'DELETE',
         secure: true,
@@ -1294,11 +1398,37 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/api/spaces
      */
     spaceControllerCreate: (data: CreateSpaceDto, params: RequestParams = {}) =>
-      this.request<CreateSpaceResponseDto, any>({
+      this.request<FindOneSpaceResponseDto, any>({
         path: `/api/spaces`,
         method: 'POST',
         body: data,
         type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags spaces
+     * @name SpaceControllerGetUserSpaces
+     * @request GET:/api/spaces/user
+     */
+    spaceControllerGetUserSpaces: (
+      query?: {
+        /** @example 1 */
+        page?: number
+        /** @example 10 */
+        perPage?: number
+        /** @example "search term" */
+        search?: string
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<SpacesResponse, any>({
+        path: `/api/spaces/user`,
+        method: 'GET',
+        query: query,
         format: 'json',
         ...params
       }),
@@ -1326,7 +1456,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/api/spaces/{id}
      */
     spaceControllerUpdate: (id: string, data: UpdateSpaceDto, params: RequestParams = {}) =>
-      this.request<UpdateSpaceResponseDto, any>({
+      this.request<FindOneSpaceResponseDto, any>({
         path: `/api/spaces/${id}`,
         method: 'PATCH',
         body: data,
@@ -1346,6 +1476,29 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<DeleteSpaceResponseDto, any>({
         path: `/api/spaces/${id}`,
         method: 'DELETE',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags spaces
+     * @name SpaceControllerGetSpaceCourses
+     * @request GET:/api/spaces/{id}/courses
+     */
+    spaceControllerGetSpaceCourses: (
+      id: string,
+      query: {
+        page: number
+        perPage: number
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<SpaceCoursesResponseDto, any>({
+        path: `/api/spaces/${id}/courses`,
+        method: 'GET',
+        query: query,
         format: 'json',
         ...params
       }),
@@ -1491,7 +1644,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request POST:/api/vocabularies
      */
     vocabularyControllerCreate: (data: CreateVocabularyDto, params: RequestParams = {}) =>
-      this.request<CreateVocabularyResponseDto, any>({
+      this.request<FindOneVocabularyResponseDto, any>({
         path: `/api/vocabularies`,
         method: 'POST',
         body: data,
@@ -1548,7 +1701,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request PATCH:/api/vocabularies/{id}
      */
     vocabularyControllerUpdate: (id: string, data: UpdateVocabularyDto, params: RequestParams = {}) =>
-      this.request<UpdateVocabularyResponseDto, any>({
+      this.request<FindOneVocabularyResponseDto, any>({
         path: `/api/vocabularies/${id}`,
         method: 'PATCH',
         body: data,
@@ -1565,7 +1718,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request DELETE:/api/vocabularies/{id}
      */
     vocabularyControllerDelete: (id: string, params: RequestParams = {}) =>
-      this.request<DeleteVocabularyResponseDto, any>({
+      this.request<FindOneVocabularyResponseDto, any>({
         path: `/api/vocabularies/${id}`,
         method: 'DELETE',
         format: 'json',
@@ -1680,6 +1833,45 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<DeleteHashtagResponseDto, any>({
         path: `/api/hashtags/${name}`,
         method: 'DELETE',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags stats
+     * @name StatsControllerGetUserActivityStreak
+     * @request GET:/api/stats/user/activity-streak
+     */
+    statsControllerGetUserActivityStreak: (
+      query?: {
+        /** @example "2024-01-01" */
+        startDate?: string
+        /** @example "2024-12-31" */
+        endDate?: string
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<ActivityStreakResponseDto, any>({
+        path: `/api/stats/user/activity-streak`,
+        method: 'GET',
+        query: query,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags stats
+     * @name StatsControllerGetUserOverview
+     * @request GET:/api/stats/user/overview
+     */
+    statsControllerGetUserOverview: (params: RequestParams = {}) =>
+      this.request<UserOverviewDto, any>({
+        path: `/api/stats/user/overview`,
+        method: 'GET',
         format: 'json',
         ...params
       }),

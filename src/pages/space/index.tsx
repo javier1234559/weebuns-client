@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography'
 import AppBreadcrumb from '~/components/common/AppBreadcrumbs'
 import { ModalProvider } from '~/contexts/ModalContext'
 import CreateSpaceButton from '~/features/space/components/CreateSpaceButton'
+import SpaceDashBoard from '~/features/space/views/SpaceDashBoard'
 import SpaceListView from '~/features/space/views/SpaceListView'
 import { RouteNames } from '~/router/route-name'
 
@@ -21,7 +22,7 @@ function LearningSpace() {
           <Typography variant='h4'>Learning Space</Typography>
           <CreateSpaceButton />
         </Box>
-        <SpaceListView />
+        <SpaceDashBoard />
       </ModalProvider>
     </Box>
   )

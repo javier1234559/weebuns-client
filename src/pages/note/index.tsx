@@ -3,27 +3,25 @@ import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 
 import AppBreadcrumb from '~/components/common/AppBreadcrumbs'
-import CreateQuizButton from '~/features/quiz/components/CreateQuizButton'
-import QuizListView from '~/features/quiz/views/QuizListView.'
+import NoteListView from '~/features/note/views/NoteListView'
 import { RouteNames } from '~/router/route-name'
 
-function Quiz() {
+function Note() {
   const breadcrumb = [
     { title: 'Home', href: RouteNames.Dashboard },
-    { title: 'Quiz', href: '' }
+    { title: 'Note', href: '' }
   ]
 
   return (
     <Container>
       <AppBreadcrumb breadcrumb={breadcrumb} isHiddenBack />
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-        <Typography variant='h4'>Quiz</Typography>
-        <CreateQuizButton />
+        <Typography variant='h4'>Note</Typography>
       </Box>
-      <QuizListView />
+      <NoteListView />
     </Container>
   )
 }
 
-Quiz.displayName = 'Quiz'
-export default Quiz
+Note.displayName = 'Note'
+export default Note

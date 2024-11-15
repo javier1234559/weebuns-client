@@ -124,9 +124,9 @@ const EssayDetailUpdateCorrect = ({ essayData, data, onSubmit, onExit }: EssayDe
       return {
         index,
         original_text: text,
-        corrected_text: existingCorrection?.corrected_text ?? '',
+        corrected_text: existingCorrection?.correctedText ?? '',
         explanation: existingCorrection?.explanation ?? '',
-        is_correct: existingCorrection?.is_correct ?? false,
+        is_correct: existingCorrection?.isCorrect ?? false,
         rating: existingCorrection?.rating ?? 0
       }
     })

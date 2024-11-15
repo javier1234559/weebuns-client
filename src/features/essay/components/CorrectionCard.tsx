@@ -33,10 +33,15 @@ function CorrectionCard({ item }: CorrectionCardProps) {
             gap: 1
           }}
         >
-          <Avatar>{item.creator?.username?.[0]}</Avatar>
+          <Avatar
+            src={item.creator?.profilePicture || ''}
+            alt={item.creator?.username || ''}
+            imgProps={{ referrerPolicy: 'no-referrer' }}
+            sx={{ width: 40, height: 40 }}
+          />
           <Box>
             <Typography>{item.creator?.username} </Typography>
-            <Typography>{convertToRelativeTime(item.created_at)} </Typography>
+            <Typography>{convertToRelativeTime(item.createdAt)} </Typography>
           </Box>
           <Box ml='auto'>
             <AppButton variant='outlined' onClick={() => setIsShowExplain(!isShowExplain)}>

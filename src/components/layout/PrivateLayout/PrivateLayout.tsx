@@ -2,61 +2,12 @@ import { FunctionComponent, PropsWithChildren } from 'react'
 import { useSelector } from 'react-redux'
 
 import TopBarAndSideBarLayout from '~/components/layout/PrivateLayout/TopBarAndSideBarLayout'
-import { globalConfig } from '~/config'
-import { RouteNames } from '~/router/route-name'
+import { SIDEBAR_NAV_LINKS_USER, SIDEBAR_NAV_LINKS_USER_DEFAULT } from '~/router/sidebar-nav-link'
 import { RootState } from '~/store/store'
 import { LinkToPage } from '~/types/common'
 import { replacePathId } from '~/utils/replace-path'
 
 const TITLE_PRIVATE = 'Weebuns - English Learning'
-
-/**
- * SideBar navigation items with links for Private Layout
- */
-const SIDE_BAR_ITEMS: Array<LinkToPage> = [
-  {
-    title: 'Home',
-    path: RouteNames.Dashboard,
-    icon: 'home'
-  },
-  {
-    title: 'Learning Space',
-    path: RouteNames.LearningSpace,
-    icon: 'space'
-  }
-]
-
-const SIDE_BAR_ITEMS_SPACE: Array<LinkToPage> = [
-  {
-    title: 'Essay',
-    path: RouteNames.Essay,
-    icon: 'essay'
-  },
-  {
-    title: 'Quiz',
-    path: RouteNames.Quiz,
-    icon: 'quiz'
-  },
-  {
-    title: 'Vocabulary',
-    path: RouteNames.Vocabulary,
-    icon: 'vocabulary'
-  },
-  {
-    title: 'Setting',
-    path: RouteNames.Setting,
-    icon: 'settings'
-  }
-]
-
-// Add debug links
-if (globalConfig.IS_DEBUG) {
-  SIDE_BAR_ITEMS.push({
-    title: '[Debug Tools]',
-    path: '/dev',
-    icon: 'settings'
-  })
-}
 
 /**
  * Renders "Private Layout" composition
@@ -70,7 +21,7 @@ const PrivateLayout: FunctionComponent<PropsWithChildren> = ({ children }) => {
   let SETUP_SIDE_BAR_ITEMS_SPACE: LinkToPage[] = []
 
   if (idSpace) {
-    SETUP_SIDE_BAR_ITEMS_SPACE = SIDE_BAR_ITEMS_SPACE.map((item) => {
+    SETUP_SIDE_BAR_ITEMS_SPACE = SIDEBAR_NAV_LINKS_USER.map((item) => {
       const newPath = replacePathId(item.path, idSpace)
       return {
         ...item,
@@ -81,7 +32,7 @@ const PrivateLayout: FunctionComponent<PropsWithChildren> = ({ children }) => {
 
   return (
     <TopBarAndSideBarLayout
-      sidebarItems={SIDE_BAR_ITEMS}
+      sidebarItems={SIDEBAR_NAV_LINKS_USER_DEFAULT}
       sidebarItemsSpace={SETUP_SIDE_BAR_ITEMS_SPACE}
       title={title}
       variant='sidebarPersistentOnDesktop'
