@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import debounce from 'lodash/debounce'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 
 const DEFAULT_PAGE_SIZE = 10
@@ -7,15 +8,49 @@ const DEFAULT_PAGE = 1
 interface PaginationParams {
   defaultPage?: number
   defaultPerPage?: number
+  debounceDelay?: number
 }
 
-const usePagination = ({ defaultPage = DEFAULT_PAGE, defaultPerPage = DEFAULT_PAGE_SIZE }: PaginationParams = {}) => {
+const usePagination = ({
+  defaultPage = DEFAULT_PAGE,
+  defaultPerPage = DEFAULT_PAGE_SIZE,
+  debounceDelay = 500
+}: PaginationParams = {}) => {
   const navigate = useNavigate()
   const location = useLocation()
 
   const [page, setPage] = useState<number>(defaultPage)
   const [perPage, setPerPage] = useState<number>(defaultPerPage)
-  const [search, setSearch] = useState<string>('')
+  const [searchValue, setSearchValue] = useState<string>('')
+  const [searchParam, setSearchParam] = useState<string>('')
+
+  const updateParams = useCallback(
+    (newParams: { page?: number; perPage?: number; search?: string }) => {
+      const urlParams = new URLSearchParams(location.search)
+
+      if (newParams.page) urlParams.set('page', newParams.page.toString())
+      if (newParams.perPage) urlParams.set('perPage', newParams.perPage.toString())
+      if (typeof newParams.search === 'string') {
+        if (newParams.search) {
+          urlParams.set('search', newParams.search)
+        } else {
+          urlParams.delete('search')
+        }
+      }
+
+      navigate({ search: urlParams.toString() })
+    },
+    [location.search, navigate]
+  )
+
+  const debouncedUpdateParams = useMemo(
+    () =>
+      debounce((value: string) => {
+        updateParams({ search: value })
+        setSearchParam(value)
+      }, debounceDelay),
+    [updateParams]
+  )
 
   useEffect(() => {
     const params = new URLSearchParams(location.search)
@@ -25,20 +60,34 @@ const usePagination = ({ defaultPage = DEFAULT_PAGE, defaultPerPage = DEFAULT_PA
 
     if (pageParam) setPage(Number(pageParam))
     if (perPageParam) setPerPage(Number(perPageParam))
-    if (searchParam) setSearch(searchParam)
+    if (searchParam) {
+      setSearchParam(searchParam)
+      setSearchValue(searchParam)
+    }
   }, [location.search])
 
-  const updateQueryParams = (newParams: { page?: number; perPage?: number; search?: string }) => {
-    const params = new URLSearchParams(location.search)
+  useEffect(() => {
+    return () => {
+      debouncedUpdateParams.cancel()
+    }
+  }, [debouncedUpdateParams])
 
-    if (newParams.page !== undefined) params.set('page', newParams.page.toString())
-    if (newParams.perPage !== undefined) params.set('perPage', newParams.perPage.toString())
-    if (newParams.search !== undefined) params.set('search', newParams.search)
+  const handleSearch = useCallback(
+    (value: string) => {
+      setSearchValue(value) // Update UI immediately
+      debouncedUpdateParams(value) // Debounce URL update
+    },
+    [debouncedUpdateParams]
+  )
 
-    navigate({ search: params.toString() })
+  return {
+    page,
+    perPage,
+    search: searchValue, // For UI input
+    searchParam, // For API calls
+    setSearch: handleSearch,
+    updateQueryParams: updateParams
   }
-
-  return { page, perPage, search, updateQueryParams }
 }
 
 export default usePagination

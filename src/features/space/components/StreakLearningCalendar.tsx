@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box'
 import { ContributionCalendar, createTheme } from 'react-contribution-calendar'
 
 import AppError from '~/components/common/AppError'
@@ -23,7 +22,7 @@ function StreakLearningCalendar() {
       <style>
         {`
        table {
-        margin: auto !important;
+      margin: auto !important;
       }
     `}
       </style>
@@ -32,8 +31,8 @@ function StreakLearningCalendar() {
         style={{ width: '100%', height: '100%', margin: 'auto' }}
         textColor='var(--mui-palette-text-primary)'
         data={data.activities}
-        start={data.activities[data.activities.length - 1].date}
-        end={data.activities[0].date}
+        start={Object.keys(data.activities[data.activities.length - 1])[0]}
+        end={Object.keys(data.activities[0])[0]}
         daysOfTheWeek={['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']}
         startsOnSunday={true}
         includeBoundary={true}

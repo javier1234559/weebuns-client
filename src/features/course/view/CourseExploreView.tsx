@@ -1,183 +1,126 @@
+import Search from '@mui/icons-material/Search'
 import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
+import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import InputAdornment from '@mui/material/InputAdornment'
-import MenuItem from '@mui/material/MenuItem'
+import Skeleton from '@mui/material/Skeleton'
 import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
-import { Clock, Search, Star } from 'lucide-react'
-import { useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useSearchParams } from 'react-router-dom'
 
-import AppButton from '~/components/common/AppButton'
-import { Select } from '~/components/ui/select'
-import CourseCard from '~/features/course/components/CourseCard'
-import CourseCardSkeleton from '~/features/course/components/CourseCardSekeleton'
-import { useCourses, useRecommendedCourses } from '~/features/course/hooks/useCourseQueries'
+import AppError from '~/components/common/AppError'
+import PaginationUrl from '~/components/feature/PaginationUrl'
+import CourseCardExplore from '~/features/course/components/CourseCardExplore'
+import MegaFilterCourse from '~/features/course/components/MegaFilterCourse'
+import { useCoursesExplore } from '~/features/course/hooks/useCourseQueries'
+import { CourseLoadingState } from '~/features/course/view/MyCourseListView'
+import usePagination from '~/hooks/usePagination'
+import { RootState } from '~/store/store'
 
-function CourseExploreView() {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [selectedLevel, setSelectedLevel] = useState('')
-  const [selectedDuration, setSelectedDuration] = useState('')
+const useUrlParams = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
 
-  // Replace with your actual data fetching
-  const { data: recommendedCourses, isLoading: loadingRecommended } = useRecommendedCourses()
-  const { data: allCourses, isLoading: loadingCourses } = useCourses({
-    search: searchQuery,
-    level: selectedLevel,
-    duration: selectedDuration
+  const setParam = (key: string, value: string | null) => {
+    if (value) {
+      searchParams.set(key, value)
+    } else {
+      searchParams.delete(key)
+    }
+    setSearchParams(searchParams)
+  }
+
+  return {
+    params: {
+      search: searchParams.get('search') || '',
+      language: searchParams.get('language') || '',
+      minLevel: searchParams.get('minLevel') || '',
+      maxLevel: searchParams.get('maxLevel') || '',
+      courseType: searchParams.get('type') || '',
+      topics: searchParams.get('topics')?.split(',') || []
+    },
+    setParam
+  }
+}
+
+const CourseExploreLoadingState = ({ count = 10 }) => (
+  <Container maxWidth='lg' sx={{ py: 4 }}>
+    <Box sx={{ mb: 4, display: 'flex', gap: 2 }}>
+      <Skeleton variant='rectangular' sx={{ flex: 1, borderRadius: '16px' }} height={60} />
+      <Skeleton variant='rectangular' sx={{ borderRadius: '16px' }} width={50} height={60} />
+    </Box>
+    <CourseLoadingState count={count} />
+  </Container>
+)
+
+const CourseExploreView = () => {
+  const { params, setParam } = useUrlParams()
+  const spaceId = useSelector((state: RootState) => state.space.currentSpace?.id) || ''
+  const { search, searchParam, setSearch, page, perPage, updateQueryParams } = usePagination({
+    defaultPage: 1,
+    defaultPerPage: 10,
+    debounceDelay: 1000
   })
 
+  const {
+    data: courses,
+    isLoading,
+    error
+  } = useCoursesExplore(spaceId, {
+    page,
+    perPage,
+    search: searchParam
+  })
+
+  const handlePageChange = (newPage: number) => {
+    updateQueryParams({ page: newPage })
+  }
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value)
+  }
+
+  if (isLoading) return <CourseExploreLoadingState count={perPage} />
+  if (!courses || error) return <AppError message={error?.message || 'Error occur'} />
+
   return (
-    <Box sx={{ p: { xs: 2, md: 4 } }}>
-      {/* Recommended Section */}
-      <Box sx={{ mb: 6 }}>
-        <Typography variant='h4' fontWeight={600} gutterBottom>
-          Available Courses
-        </Typography>
-
-        {loadingRecommended ? (
-          <CourseCardSkeleton />
-        ) : (
-          recommendedCourses?.map((course) => (
-            <Card
-              key={course.id}
-              sx={{
-                p: 3,
-                mb: 2,
-                borderRadius: 2,
-                backgroundColor: 'background.paper'
-              }}
-            >
-              <Box sx={{ mb: 1 }}>
-                <Chip
-                  label='Recommended for you'
-                  size='small'
-                  icon={<Star size={16} />}
-                  sx={{
-                    bgcolor: 'primary.light',
-                    color: 'primary.main',
-                    fontWeight: 500,
-                    mb: 2
-                  }}
-                />
-                <Typography variant='h5' gutterBottom>
-                  {course.title}
-                </Typography>
-                <Typography variant='body2' color='text.secondary'>
-                  {course.description}
-                </Typography>
-              </Box>
-
-              {/* Course Thumbnail */}
-              <Box
-                sx={{
-                  width: '100%',
-                  height: 240,
-                  bgcolor: 'grey.100',
-                  borderRadius: 1,
-                  mb: 2
-                }}
-              >
-                {/* Your thumbnail image */}
-              </Box>
-
-              {/* Course Meta */}
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  mb: 2
-                }}
-              >
-                <Box sx={{ display: 'flex', gap: 3 }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Clock size={20} />
-                    <Typography>{course.duration} weeks</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Typography>{course.level}</Typography>
-                  </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                    <Star size={20} />
-                    <Typography>{course.rating}</Typography>
-                  </Box>
-                </Box>
-              </Box>
-
-              {/* Enroll Button */}
-              <AppButton
-                variant='contained'
-                fullWidth
-                sx={{
-                  height: 48,
-                  bgcolor: 'black',
-                  '&:hover': { bgcolor: 'black' }
-                }}
-              >
-                Enroll Now
-              </AppButton>
-            </Card>
-          ))
-        )}
-      </Box>
-
-      {/* Search and Filters */}
-      <Box
-        sx={{
-          display: 'flex',
-          gap: 2,
-          mb: 4,
-          flexDirection: { xs: 'column', md: 'row' }
-        }}
-      >
+    <Container maxWidth='lg' sx={{ py: 4 }}>
+      <Box sx={{ mb: 4, display: 'flex', gap: 2 }}>
         <TextField
           fullWidth
           placeholder='Search courses...'
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          value={search}
+          onChange={handleSearchChange}
           InputProps={{
             startAdornment: (
               <InputAdornment position='start'>
-                <Search size={20} />
+                <Search />
               </InputAdornment>
             )
           }}
-          sx={{ flex: 2 }}
         />
-
-        <Select value={selectedLevel} onChange={(e) => setSelectedLevel(e.target.value)} displayEmpty sx={{ flex: 1 }}>
-          <MenuItem value=''>Select Level</MenuItem>
-          <MenuItem value='beginner'>Beginner</MenuItem>
-          <MenuItem value='intermediate'>Intermediate</MenuItem>
-          <MenuItem value='advanced'>Advanced</MenuItem>
-        </Select>
-
-        <Select value={selectedDuration} onChange={(e) => setSelectedDuration(e.target.value)} sx={{ flex: 1 }}>
-          <MenuItem value=''>Select Duration</MenuItem>
-          <MenuItem value='4'>4 weeks</MenuItem>
-          <MenuItem value='8'>8 weeks</MenuItem>
-          <MenuItem value='12'>12 weeks</MenuItem>
-        </Select>
+        <MegaFilterCourse params={params} setParam={setParam} />
       </Box>
 
-      {/* Course Grid */}
       <Grid container spacing={3}>
-        {loadingCourses
-          ? Array(8)
-              .fill(0)
-              .map((_, index) => (
-                <Grid item key={index} xs={12} sm={6} md={4} lg={3}>
-                  <CourseCardSkeleton />
-                </Grid>
-              ))
-          : allCourses?.map((course) => (
-              <Grid item key={course.id} xs={12} sm={6} md={4} lg={3}>
-                <CourseCard data={course} />
-              </Grid>
-            ))}
+        {!isLoading &&
+          courses?.data?.map((course) => (
+            <Grid item xs={12} sm={6} md={4} key={course.id}>
+              <CourseCardExplore data={course} />
+            </Grid>
+          ))}
       </Grid>
-    </Box>
+
+      <Box mt={4}>
+        <PaginationUrl
+          currentPage={courses.pagination.currentPage}
+          totalPages={courses.pagination.totalPages}
+          onPageChange={handlePageChange}
+          variant='outlined'
+          color='primary'
+          size='large'
+        />
+      </Box>
+    </Container>
   )
 }
 

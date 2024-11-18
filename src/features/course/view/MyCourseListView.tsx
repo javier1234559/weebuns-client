@@ -10,7 +10,7 @@ import { useCourseJoined } from '~/features/course/hooks/useCourseQueries'
 import usePagination from '~/hooks/usePagination'
 import { RootState } from '~/store/store'
 
-const LoadingState = ({ count = 10 }) => (
+export const CourseLoadingState = ({ count = 10 }) => (
   <Grid container spacing={2}>
     {Array(count)
       .fill(0)
@@ -56,7 +56,7 @@ function MyCourseListView() {
   }
 
   if (isLoading) {
-    return <LoadingState count={perPage} />
+    return <CourseLoadingState count={perPage} />
   }
 
   if (!data || error) {

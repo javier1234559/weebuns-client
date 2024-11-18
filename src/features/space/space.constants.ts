@@ -29,3 +29,22 @@ export const TOPIC_LABELS: Record<TopicCode, string> = {
   [TopicCode.TECHNOLOGY]: 'Technology',
   [TopicCode.OTHER]: 'Other'
 }
+
+export const LEVEL_RANGE: Record<LevelCode, number> = {
+  [LevelCode.BEGINNER]: 0,
+  [LevelCode.ELEMENTARY]: 1,
+  [LevelCode.INTERMEDIATE]: 2,
+  [LevelCode.UPPER_INTERMEDIATE]: 3,
+  [LevelCode.ADVANCED]: 4,
+  [LevelCode.MASTER]: 5
+}
+
+export const convertLevelRangeToCode = (range: number[]): string[] => {
+  const levels = Object.entries(LEVEL_RANGE)
+  const [min, max] = range
+
+  return [
+    levels.find(([_, value]) => value === min)?.[0] || LevelCode.BEGINNER,
+    levels.find(([_, value]) => value === max)?.[0] || LevelCode.MASTER
+  ]
+}

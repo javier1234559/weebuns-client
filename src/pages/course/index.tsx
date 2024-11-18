@@ -3,6 +3,7 @@ import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 
 import AppBreadcrumb from '~/components/common/AppBreadcrumbs'
+import CourseExploreView from '~/features/course/view/CourseExploreView'
 import { RouteNames } from '~/router/route-name'
 
 function Note() {
@@ -18,7 +19,7 @@ function Note() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
         <Typography variant='h4'>Explore Course</Typography>
       </Box>
-      {/* <NoteListView /> */}
+      <CourseExploreView />
     </Container>
   )
 }

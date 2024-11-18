@@ -122,7 +122,6 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
 }) => {
   const theme = useTheme()
   const MenuProps = getMenuProps(maxHeight, theme)
-  console.log('options', options)
 
   return (
     <StyledFormControl fullWidth={fullWidth} error={!!error} disabled={disabled} size={size}>

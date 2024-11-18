@@ -8,21 +8,20 @@ import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgr
 import Typography from '@mui/material/Typography'
 import { Clock, Globe, Target, TreePalm } from 'lucide-react'
 import { ArrowRight } from 'lucide-react'
-import React from 'react'
+import { memo } from 'react'
 import toast from 'react-hot-toast'
+import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import AppButton from '~/components/common/AppButton'
+import { useJoinCourse } from '~/features/course/hooks/useCourseQueries'
 import { LANGUAGE_LABELS, LEVEL_LABELS, TARGET_LABELS } from '~/features/space/space.constants'
 import { RouteNames } from '~/router/route-name'
-import { CourseJoinedDto } from '~/services/api/api-axios'
+import { CourseWithJoinStatus } from '~/services/api/api-axios'
 import { LanguageCode, LevelCode, TargetCode } from '~/services/graphql/graphql'
+import { RootState } from '~/store/store'
 import { convertToRelativeTime } from '~/utils/format-date'
 import { replacePathId } from '~/utils/replace-path'
-
-interface CourseCardProps {
-  data?: CourseJoinedDto
-}
 
 const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -56,23 +55,39 @@ const TruncatedTypography = styled(Typography)({
   WebkitBoxOrient: 'vertical'
 })
 
-const CourseCard: React.FC<CourseCardProps> = ({ data }) => {
+interface CourseCardExploreProps {
+  data?: CourseWithJoinStatus
+}
+const CourseCardExplore = ({ data }: CourseCardExploreProps) => {
+  const spaceId = useSelector((state: RootState) => state.space.currentSpace?.id) || ''
   const theme = useTheme()
+  const mutate = useJoinCourse()
   const navigator = useNavigate()
 
-  if (!data) {
-    return null
-  }
+  if (!data) return null
 
-  const handleStartLearnCourse = async () => {
-    if (data.progress) {
+  const handleJoinCourse = async () => {
+    if (data.isJoined) {
       const currentId = data.progress?.currentUnitId
       if (currentId) {
         navigator(replacePathId(RouteNames.UnitDetail, currentId))
+        return
       } else {
         toast.error('Failed to navigate to unit detail')
       }
     }
+
+    const result = await mutate.mutateAsync({
+      id: data.id,
+      data: {
+        spaceId: spaceId
+      }
+    })
+    if (result.joinedAt) {
+      toast.success(result.message)
+      return
+    }
+    toast.error('Failed to join course')
   }
 
   const progress = data.progress ? (data.progress.completedWeight / data.totalWeight) * 100 : 0
@@ -106,19 +121,26 @@ const CourseCard: React.FC<CourseCardProps> = ({ data }) => {
           )}
         </CardMedia>
 
-        <CardContent sx={{ p: 2, display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <Box>
-            <Typography variant='h6' component='h2' gutterBottom sx={{ fontWeight: 600 }}>
-              {data.title}
-            </Typography>
+        <CardContent sx={{ p: 2, display: 'flex', flexDirection: 'column', flexGrow: 1 }}>
+          <Typography variant='h6' component='h2' gutterBottom sx={{ fontWeight: 600 }}>
+            {data.title}
+          </Typography>
 
-            <TruncatedTypography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
-              {data.description || 'No description available'}
-            </TruncatedTypography>
+          <TruncatedTypography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
+            {data.description || 'No description available'}
+          </TruncatedTypography>
 
+          <Box sx={{ mt: 'auto', pt: 1 }}>
             {data.progress && (
               <Box sx={{ mb: 2 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    mb: 1
+                  }}
+                >
                   <Typography variant='caption' color='text.secondary'>
                     Completed
                   </Typography>
@@ -129,9 +151,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ data }) => {
                 <StyledProgress variant='determinate' value={progress} />
               </Box>
             )}
-          </Box>
 
-          <Box sx={{ mt: 'auto' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <Avatar src={data.creator?.profilePicture || undefined} alt={data.creator?.username}>
                 {data.creator?.username?.[0]}
@@ -146,7 +166,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ data }) => {
               </Box>
             </Box>
 
-            <Box>
+            <Box sx={{ mt: 2 }}>
               <Typography variant='body2' color='text.secondary' sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                 <Globe style={{ marginRight: '8px' }} size={20} />
                 Language: {LANGUAGE_LABELS[data.language as LanguageCode]}
@@ -161,13 +181,18 @@ const CourseCard: React.FC<CourseCardProps> = ({ data }) => {
               </Typography>
               <Typography variant='body2' color='text.secondary' sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                 <Clock style={{ marginRight: '8px' }} size={20} />
-                {data.progress && data.progress.lastAccessedAt
-                  ? convertToRelativeTime(data.progress.lastAccessedAt)
-                  : 'Not started'}
+                {convertToRelativeTime(data.updatedAt)}
               </Typography>
             </Box>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mt: 2 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                mt: 2
+              }}
+            >
               <Typography
                 variant='h4'
                 sx={{
@@ -179,20 +204,22 @@ const CourseCard: React.FC<CourseCardProps> = ({ data }) => {
               </Typography>
             </Box>
 
-            <AppButton
-              fullWidth
-              variant='outlined'
-              color='primary'
-              endIcon={<ArrowRight size={20} />}
-              onClick={handleStartLearnCourse}
-              sx={{
-                mt: 3,
-                height: 48,
-                borderRadius: '24px'
-              }}
-            >
-              {hasStarted ? 'Continue Learning' : 'Start Learning'}
-            </AppButton>
+            <Box sx={{ mt: 'auto', pt: 2 }}>
+              <AppButton
+                fullWidth
+                variant={data.isJoined ? 'outlined' : 'contained'}
+                color='primary'
+                onClick={handleJoinCourse}
+                endIcon={<ArrowRight size={20} />}
+                sx={{
+                  mb: 'auto',
+                  height: 48,
+                  borderRadius: '24px'
+                }}
+              >
+                {data.isJoined ? (hasStarted ? 'Continue Learning' : 'Start Learning') : 'Join Course'}
+              </AppButton>
+            </Box>
           </Box>
         </CardContent>
       </Box>
@@ -200,4 +227,4 @@ const CourseCard: React.FC<CourseCardProps> = ({ data }) => {
   )
 }
 
-export default CourseCard
+export default memo(CourseCardExplore)

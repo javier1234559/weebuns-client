@@ -197,6 +197,7 @@ export interface Course {
   courseType: string
   /** @format int32 */
   totalWeight: number
+  isPremium: boolean
   isPublished: boolean
   createdBy: string
   /** @format date-time */
@@ -256,12 +257,12 @@ export interface CorrectionSentence {
   rating: number
   /**
    * @format date-time
-   * @example "2024-11-18T13:04:19.302Z"
+   * @example "2024-11-18T19:26:40.770Z"
    */
   createdAt: string
   /**
    * @format date-time
-   * @example "2024-11-18T13:04:19.302Z"
+   * @example "2024-11-18T19:26:40.770Z"
    */
   updatedAt: string
 }
@@ -707,6 +708,7 @@ export interface CourseJoinedDto {
   courseType: string
   /** @format int32 */
   totalWeight: number
+  isPremium: boolean
   isPublished: boolean
   createdBy: string
   /** @format date-time */
@@ -726,8 +728,33 @@ export interface SpaceCoursesJoinedResponseDto {
   pagination: PaginationOutputDto
 }
 
-export interface SpaceCoursesResponseDto {
-  data: Course[]
+export interface CourseWithJoinStatus {
+  id: string
+  title: string
+  description: string | null
+  thumbnailUrl: string | null
+  language: string
+  minLevel: string
+  maxLevel: string
+  topics: string[]
+  courseType: string
+  isPremium: boolean
+  totalWeight: number
+  isPublished: boolean
+  createdBy: string
+  /** @format date-time */
+  createdAt: string
+  /** @format date-time */
+  updatedAt: string
+  isJoined: boolean
+  /** @format date-time */
+  joinedAt: string | null
+  progress: CourseProgress | null
+  creator: User
+}
+
+export interface SpaceCoursesAllResponseDto {
+  data: CourseWithJoinStatus[]
   pagination: PaginationOutputDto
 }
 
@@ -897,18 +924,18 @@ export interface DeleteHashtagResponseDto {
   hashtag: Hashtag
 }
 
-export interface DailyActivityDto {
-  /** @example "2024-03-15" */
-  date: string
+export interface ActivityDataDto {
   /** @example 2 */
   level: number
-  /** @example 5 */
-  streak: number
+  /** @example {"streak":5} */
+  data: object
 }
 
 export interface ActivityStreakResponseDto {
-  activities: DailyActivityDto[]
-  currentStreak: DailyActivityDto
+  /** @example [{"2024-03-15":{"level":2,"data":{"streak":5}}}] */
+  activities: any[][]
+  /** @example {"level":2,"data":{"streak":5}} */
+  currentStreak: ActivityDataDto
 }
 
 export interface UserOverviewDto {
@@ -969,6 +996,7 @@ export interface JoinCourseRequestDto {
 export interface JoinCourseResponseDto {
   message: string
   joinedAt: string
+  progress: CourseProgress
 }
 
 export interface CourseLearnResponseDto {
@@ -1723,18 +1751,26 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags spaces
      * @name SpaceControllerGetSpaceCourses
-     * @request GET:/api/spaces/{id}/courses
+     * @request GET:/api/spaces/{id}/courses/explore
      */
     spaceControllerGetSpaceCourses: (
       id: string,
-      query: {
-        page: number
-        perPage: number
+      query?: {
+        /** @default 1 */
+        page?: number
+        /** @default 10 */
+        perPage?: number
+        search?: string
+        language?: string
+        minLevel?: string
+        maxLevel?: string
+        topics?: string[]
+        courseType?: string
       },
       params: RequestParams = {}
     ) =>
-      this.request<SpaceCoursesResponseDto, any>({
-        path: `/api/spaces/${id}/courses`,
+      this.request<SpaceCoursesAllResponseDto, any>({
+        path: `/api/spaces/${id}/courses/explore`,
         method: 'GET',
         query: query,
         format: 'json',
