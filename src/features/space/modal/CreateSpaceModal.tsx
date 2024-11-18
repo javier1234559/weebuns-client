@@ -11,6 +11,7 @@ import * as yup from 'yup'
 
 import { AppButton } from '~/components/common/AppButton'
 import { AppInput } from '~/components/common/AppInput'
+import MultiSelect from '~/components/ui/multiple-select'
 import { Select, SelectItem } from '~/components/ui/select'
 import { useCreateSpace } from '~/features/space/hooks/useSpaceQueries'
 import { LANGUAGE_LABELS, LEVEL_LABELS, TARGET_LABELS, TOPIC_LABELS } from '~/features/space/space.constants'
@@ -31,7 +32,11 @@ const createSpaceSchema = yup.object({
   currentLevel: yup.mixed<LevelCode>().oneOf(Object.values(LevelCode)).required('Please select the current level'),
   targetLevel: yup.mixed<LevelCode>().oneOf(Object.values(LevelCode)).required('Please select the target level'),
   target: yup.mixed<TargetCode>().oneOf(Object.values(TargetCode)).required('Please select a learning purpose'),
-  topic: yup.mixed<TopicCode>().oneOf(Object.values(TopicCode)).required('Please select a topic of interest')
+  topics: yup
+    .array()
+    .of(yup.mixed<TopicCode>().oneOf(Object.values(TopicCode)))
+    .min(1, 'Please select at least one topic of interest')
+    .required('Please select topics of interest')
 })
 
 type CreateSpaceFormData = yup.InferType<typeof createSpaceSchema>
@@ -54,7 +59,7 @@ function CreateSpaceModal({ onClose }: { onClose: () => void }) {
       currentLevel: LevelCode.BEGINNER,
       targetLevel: LevelCode.INTERMEDIATE,
       target: TargetCode.COMMUNICATION,
-      topic: TopicCode.DAILY_LIFE
+      topics: [TopicCode.DAILY_LIFE]
     }
   })
   const mutate = useCreateSpace()
@@ -63,7 +68,7 @@ function CreateSpaceModal({ onClose }: { onClose: () => void }) {
     const fieldsToValidate = {
       0: ['name', 'description'] as const,
       1: ['language', 'currentLevel', 'targetLevel', 'target'] as const,
-      2: ['topic'] as const
+      2: ['topics'] as const
     }[activeStep]
 
     const isStepValid = await trigger(fieldsToValidate)
@@ -81,7 +86,10 @@ function CreateSpaceModal({ onClose }: { onClose: () => void }) {
     }
 
     try {
-      await mutate.mutateAsync(data)
+      await mutate.mutateAsync({
+        ...data,
+        topics: data.topics.filter((topic): topic is TopicCode => !!topic)
+      })
       toast.success('Create new space successfully')
       onClose()
     } catch (error) {
@@ -245,24 +253,17 @@ function CreateSpaceModal({ onClose }: { onClose: () => void }) {
             <Typography variant='body1' color='text.secondary' gutterBottom>
               Which topic are you most interested in?
             </Typography>
-            <Controller
-              name='topic'
+            <MultiSelect
+              name='topics'
               control={control}
-              render={({ field }) => (
-                <Select {...field} placeholder='Select a topic'>
-                  {Object.entries(TOPIC_LABELS).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
-                    </SelectItem>
-                  ))}
-                </Select>
-              )}
+              placeholder='Please select a topic'
+              options={Object.entries(TOPIC_LABELS).map(([value, label]) => ({
+                value,
+                label
+              }))}
+              error={errors.topics?.message}
+              fullWidth
             />
-            {errors.topic && (
-              <Typography color='error' variant='caption' sx={{ mt: 1 }}>
-                {errors.topic.message}
-              </Typography>
-            )}
           </Box>
         )
 

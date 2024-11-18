@@ -29,7 +29,6 @@ export const GET_SPACES_BY_USER = gql`
         }
         language
         currentLevel
-        topic
         targetLevel
       }
       pagination {

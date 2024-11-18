@@ -2,6 +2,7 @@ import { lazy, Suspense } from 'react'
 
 import AppLoading from '~/components/common/AppLoading'
 import { PrivateLayout, PublicLayout } from '~/components/layout'
+import { globalConfig } from '~/config'
 import Register from '~/pages/(auth)/register'
 import AuthWrapper from '~/router/components/AuthRedirect'
 import PrivateRoute from '~/router/components/PrivateRoute'
@@ -17,6 +18,10 @@ const NotFoundView = lazy(() => import('~/pages/not-found'))
 const Vocabulary = lazy(() => import('~/pages/vocabulary'))
 const LearningSpace = lazy(() => import('~/pages/space'))
 const Note = lazy(() => import('~/pages/note'))
+const MyCourse = lazy(() => import('~/pages/course/my-course'))
+const Course = lazy(() => import('~/pages/course'))
+const CourseDetail = lazy(() => import('~/pages/course/[id]/CourseDetail'))
+const UnitDetail = lazy(() => import('~/pages/unit/[id]/UnitDetail'))
 const Essay = lazy(() => import('~/pages/essay'))
 const EssayCreate = lazy(() => import('~/pages/essay/[id]/essay-create'))
 const Setting = lazy(() => import('~/pages/setting'))
@@ -147,6 +152,38 @@ const USER_ROUTES = [
         )
       },
       {
+        path: RouteNames.MyCourse,
+        element: (
+          <Suspense fallback={<AppLoading />}>
+            <MyCourse />
+          </Suspense>
+        )
+      },
+      {
+        path: RouteNames.Course,
+        element: (
+          <Suspense fallback={<AppLoading />}>
+            <Course />
+          </Suspense>
+        )
+      },
+      {
+        path: RouteNames.CourseDetail,
+        element: (
+          <Suspense fallback={<AppLoading />}>
+            <CourseDetail />
+          </Suspense>
+        )
+      },
+      {
+        path: RouteNames.UnitDetail,
+        element: (
+          <Suspense fallback={<AppLoading />}>
+            <UnitDetail />
+          </Suspense>
+        )
+      },
+      {
         path: RouteNames.Setting,
         element: (
           <Suspense fallback={<AppLoading />}>
@@ -167,15 +204,15 @@ const USER_ROUTES = [
 ]
 
 // Add debug routes
-// if (globalConfig.IS_DEBUG) {
-USER_ROUTES[0].children.push({
-  path: '/dev',
-  element: (
-    <Suspense fallback={<AppLoading />}>
-      <DevView />
-    </Suspense>
-  )
-})
-// }
+if (globalConfig.IS_DEBUG) {
+  USER_ROUTES[0].children.push({
+    path: '/dev',
+    element: (
+      <Suspense fallback={<AppLoading />}>
+        <DevView />
+      </Suspense>
+    )
+  })
+}
 
 export default USER_ROUTES

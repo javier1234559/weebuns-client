@@ -8,6 +8,28 @@
 
 export type DeleteResponseDto = object
 
+export interface CourseProgress {
+  id: string
+  userId: string
+  courseId: string
+  currentUnitId: string | null
+  currentUnitContentId: string | null
+  nextUnitId: string | null
+  nextUnitContentId: string | null
+  /** @format int32 */
+  completedWeight: number
+  /** @format date-time */
+  lastAccessedAt: string | null
+  completedUnits: string[]
+  completedContents: string[]
+  user?: User
+  course?: Course
+  currentUnit?: Unit | null
+  nextUnit?: Unit | null
+  currentContent?: UnitContent | null
+  nextContent?: UnitContent | null
+}
+
 export interface UnitContent {
   id: string
   unitId: string
@@ -19,13 +41,14 @@ export interface UnitContent {
   isPremium: boolean
   isRequired: boolean
   /** @format int32 */
-  completeWeight: number
-  isDone: boolean
+  contentWeight: number
   /** @format date-time */
   createdAt: string
   /** @format date-time */
   updatedAt: string
   unit?: Unit
+  currentInProgress?: CourseProgress[]
+  nextInProgress?: CourseProgress[]
 }
 
 export interface SpaceCount {
@@ -61,9 +84,9 @@ export interface Space {
   currentLevel: 'BEGINNER' | 'ELEMENTARY' | 'INTERMEDIATE' | 'UPPER_INTERMEDIATE' | 'ADVANCED' | 'MASTER'
   /**
    * Main learning topic
-   * @example "BUSINESS"
+   * @example ["ACADEMIC","DAILY_LIFE"]
    */
-  topic: 'BUSINESS' | 'ACADEMIC' | 'TRAVEL' | 'DAILY_LIFE' | 'TECHNOLOGY' | 'OTHER'
+  topics: string[]
   /**
    * Target proficiency level to achieve
    * @example "ADVANCED"
@@ -116,6 +139,19 @@ export interface Note {
   space?: Space | null
 }
 
+export interface UnitComment {
+  id: string
+  unitId: string
+  createdBy: string
+  content: string
+  /** @format date-time */
+  createdAt: string
+  /** @format date-time */
+  updatedAt: string
+  unit?: Unit
+  creator?: User
+}
+
 export interface Unit {
   id: string
   courseId: string
@@ -123,8 +159,10 @@ export interface Unit {
   description: string | null
   /** @format int32 */
   orderIndex: number
-  /** @example "[{" */
-  comments: object
+  isPremium: boolean
+  /** @format int32 */
+  unitWeight: number
+  createdBy: string
   /** @format date-time */
   createdAt: string
   /** @format date-time */
@@ -132,23 +170,9 @@ export interface Unit {
   course?: Course
   contents?: UnitContent[]
   notes?: Note[]
-  currentInCourses?: Course[]
-}
-
-export interface UserCourse {
-  id: string
-  userId: string
-  courseId: string
-  /** @format int32 */
-  completedWeight: number
-  paymentId: string | null
-  paymentStatus: string | null
-  /** @format double */
-  purchasePrice: number | null
-  /** @format date-time */
-  purchasedAt: string
-  user?: User
-  course?: Course
+  comments?: UnitComment[]
+  courseProgress?: CourseProgress[]
+  nextUnits?: CourseProgress[]
 }
 
 export interface SpaceCourse {
@@ -163,13 +187,14 @@ export interface SpaceCourse {
 
 export interface Course {
   id: string
-  currentUnitId: string | null
   title: string
   description: string | null
   thumbnailUrl: string | null
-  level: string
-  /** @format double */
-  price: number | null
+  language: string
+  minLevel: string
+  maxLevel: string
+  topics: string[]
+  courseType: string
   /** @format int32 */
   totalWeight: number
   isPublished: boolean
@@ -179,11 +204,10 @@ export interface Course {
   /** @format date-time */
   updatedAt: string
   /** @format date-time */
-  deletedAt: string
-  currentUnit?: Unit | null
+  deletedAt: string | null
   creator?: User
   units?: Unit[]
-  userCourses?: UserCourse[]
+  progress?: CourseProgress[]
   spaces?: SpaceCourse[]
 }
 
@@ -232,12 +256,12 @@ export interface CorrectionSentence {
   rating: number
   /**
    * @format date-time
-   * @example "2024-11-15T14:24:17.624Z"
+   * @example "2024-11-18T13:04:19.302Z"
    */
   createdAt: string
   /**
    * @format date-time
-   * @example "2024-11-15T14:24:17.624Z"
+   * @example "2024-11-18T13:04:19.302Z"
    */
   updatedAt: string
 }
@@ -389,6 +413,49 @@ export interface Essay {
   hashtags: EssayHashtag[] | null
 }
 
+export interface SubscriptionPayment {
+  id: string
+  subscriptionId: string
+  /** @format double */
+  amount: number
+  paymentType: 'STRIPE' | 'MOMO' | 'ZALOPAY'
+  /** @format date-time */
+  paymentDate: string
+  status: string
+  subscription?: Subscription
+}
+
+export interface Subscription {
+  id: string
+  userId: string
+  type: 'FREE' | 'BASIC' | 'PREMIUM'
+  /** @format date-time */
+  startDate: string
+  /** @format date-time */
+  endDate: string | null
+  status: string
+  /** @format int32 */
+  correctionBalance: number
+  user?: User
+  payments?: SubscriptionPayment[]
+}
+
+export interface CorrectionCredit {
+  id: string
+  userId: string
+  /** @format int32 */
+  amount: number
+  /** @format double */
+  price: number
+  paymentId: string | null
+  paymentType: 'STRIPE' | 'MOMO' | 'ZALOPAY'
+  /** @format date-time */
+  expireDate: string | null
+  /** @format date-time */
+  createdAt: string
+  user?: User
+}
+
 export interface User {
   /** @example "00321d6f-2bcf-4985-9659-92a571275da6" */
   id: string
@@ -397,9 +464,15 @@ export interface User {
   /** @example "john@example.com" */
   email: string
   passwordHash: string | null
-  /** @example "user" */
+  /**
+   * User role in the system
+   * @example "user"
+   */
   role: 'user' | 'admin' | 'teacher'
-  /** @example "local" */
+  /**
+   * Authentication provider used
+   * @example "local"
+   */
   authProvider: 'local' | 'google' | 'facebook'
   authProviderId: string | null
   /** @example "John" */
@@ -421,16 +494,32 @@ export interface User {
   createdAt: string
   /** @format date-time */
   updatedAt: string
-  /** @format date-time */
-  deletedAt: string
+  /**
+   * Timestamp when the user was deleted (soft delete)
+   * @format date-time
+   */
+  deletedAt: string | null
   courses: Course[] | null
-  user_courses: UserCourse[] | null
+  /** Progress tracking for enrolled courses */
+  courseProgress: CourseProgress[] | null
+  /** Notes created by the user */
   notes: Note[] | null
+  /** Vocabulary items created by the user */
   vocabularies: Vocabulary[] | null
+  /** Learning spaces created by the user */
   spaces: Space[] | null
+  /** Essays written by the user */
   essays: Essay[] | null
+  /** Corrections made by the user */
   corrections: Correction[] | null
-  correction_replies: CorrectionReply[] | null
+  /** Replies to corrections */
+  correctionReplies: CorrectionReply[] | null
+  /** Comments made on course units */
+  unitComments: UnitComment[] | null
+  /** User subscriptions */
+  subscriptions: Subscription[] | null
+  /** Correction credits owned by the user */
+  correctionCredits: CorrectionCredit[] | null
 }
 
 export interface PaginationOutputDto {
@@ -572,11 +661,8 @@ export interface CreateSpaceDto {
    * @example "INTERMEDIATE"
    */
   currentLevel: 'BEGINNER' | 'ELEMENTARY' | 'INTERMEDIATE' | 'UPPER_INTERMEDIATE' | 'ADVANCED' | 'MASTER'
-  /**
-   * Main learning topic
-   * @example "BUSINESS"
-   */
-  topic: 'BUSINESS' | 'ACADEMIC' | 'TRAVEL' | 'DAILY_LIFE' | 'TECHNOLOGY' | 'OTHER'
+  /** @example ["BUSINESS","ACADEMIC"] */
+  topics: string[]
   /**
    * Target proficiency level to achieve
    * @example "ADVANCED"
@@ -596,11 +682,8 @@ export interface UpdateSpaceDto {
    * @example "INTERMEDIATE"
    */
   currentLevel?: 'BEGINNER' | 'ELEMENTARY' | 'INTERMEDIATE' | 'UPPER_INTERMEDIATE' | 'ADVANCED' | 'MASTER'
-  /**
-   * Main learning topic
-   * @example "BUSINESS"
-   */
-  topic?: 'BUSINESS' | 'ACADEMIC' | 'TRAVEL' | 'DAILY_LIFE' | 'TECHNOLOGY' | 'OTHER'
+  /** @example ["BUSINESS","ACADEMIC"] */
+  topics?: string[]
   /**
    * Target proficiency level to achieve
    * @example "ADVANCED"
@@ -612,37 +695,40 @@ export interface DeleteSpaceResponseDto {
   space: Space
 }
 
-export interface CourseCreatorDto {
-  id: string
-  username: string
-  profilePicture: string | null
-}
-
-export interface SpaceCourseDto {
+export interface CourseJoinedDto {
   id: string
   title: string
   description: string | null
   thumbnailUrl: string | null
-  level: 'BEGINNER' | 'ELEMENTARY' | 'INTERMEDIATE' | 'UPPER_INTERMEDIATE' | 'ADVANCED' | 'MASTER'
-  price: number | null
+  language: string
+  minLevel: string
+  maxLevel: string
+  topics: string[]
+  courseType: string
+  /** @format int32 */
   totalWeight: number
   isPublished: boolean
+  createdBy: string
+  /** @format date-time */
   createdAt: string
-  creator: CourseCreatorDto
-  is_joined: boolean
-  joined_at: string | null
+  /** @format date-time */
+  updatedAt: string
+  /** @format date-time */
+  deletedAt: string | null
+  creator?: User
+  units?: Unit[]
+  spaces?: SpaceCourse[]
+  progress: CourseProgress | null
 }
 
-export interface PaginationDto {
-  total: number
-  page: number
-  perPage: number
-  totalPages: number
+export interface SpaceCoursesJoinedResponseDto {
+  data: CourseJoinedDto[]
+  pagination: PaginationOutputDto
 }
 
 export interface SpaceCoursesResponseDto {
-  data: SpaceCourseDto[]
-  pagination: PaginationDto
+  data: Course[]
+  pagination: PaginationOutputDto
 }
 
 export interface EssaysResponse {
@@ -834,6 +920,135 @@ export interface UserOverviewDto {
   courseJoinedCount: number
   /** @example 15 */
   notesCount: number
+}
+
+export interface CreateCourseDto {
+  title: string
+  description?: string | null
+  thumbnailUrl?: string | null
+  language: string
+  minLevel: string
+  maxLevel: string
+  topics: string[]
+  courseType: string
+  totalWeight: number
+  isPublished: boolean
+}
+
+export interface CourseResponseDto {
+  course: Course
+}
+
+export interface UpdateCourseDto {
+  title?: string
+  description?: string | null
+  thumbnailUrl?: string | null
+  language?: string
+  minLevel?: string
+  maxLevel?: string
+  topics?: string[]
+  courseType?: string
+  totalWeight?: number
+  isPublished?: boolean
+}
+
+export interface CourseListResponseDto {
+  data: Course[]
+  pagination: PaginationOutputDto
+}
+
+export interface CourseUnitResponseDto {
+  data: Unit[]
+  pagination: PaginationOutputDto
+}
+
+export interface JoinCourseRequestDto {
+  spaceId: string
+}
+
+export interface JoinCourseResponseDto {
+  message: string
+  joinedAt: string
+}
+
+export interface CourseLearnResponseDto {
+  course: Course
+}
+
+export interface CourseProgressResponseDto {
+  courseProgress: CourseProgress
+}
+
+export interface UpdateCourseProgressDto {
+  currentUnitId?: string
+  currentUnitContentId?: string
+  nextUnitId?: string
+  nextUnitContentId?: string
+  completedWeight?: number
+  completedUnits?: string[]
+  completedContents?: string[]
+}
+
+export interface CreateUnitDto {
+  title?: string
+  description?: string | null
+  /** @format int32 */
+  orderIndex?: number
+  isPremium?: boolean
+  courseId: string
+}
+
+export interface GetUnitResponseDto {
+  unit: Unit
+}
+
+export interface GetUnitContentsResponseDto {
+  unitContents: UnitContent[]
+}
+
+export interface CreateNoteDto {
+  title: string
+  content: string
+  tags: string[]
+  /** @format date-time */
+  deletedAt?: string | null
+}
+
+export interface NoteResponseDto {
+  id: string
+  title: string
+  content: string
+  tags: string[]
+  isBookmarked: boolean
+  /** @format date-time */
+  createdAt: string
+  /** @format date-time */
+  updatedAt: string
+}
+
+export interface CreateUpdateNoteResponseDto {
+  status: string
+  note: NoteResponseDto
+}
+
+export interface UnitLearnResponseDto {
+  unit: Unit
+}
+
+export interface CreateUnitContentDto {
+  title: string
+  contentType: string
+  content: object
+  /** @format int32 */
+  orderIndex: number
+  isPremium: boolean
+  isRequired: boolean
+  /** @format int32 */
+  completeWeight: number
+}
+
+export interface GetUnitContentResponseDto {
+  unitContent: UnitContent
 }
 
 export interface TranslateDto {
@@ -1484,6 +1699,29 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags spaces
+     * @name SpaceControllerGetSpaceCoursesJoined
+     * @request GET:/api/spaces/{id}/courses/joined
+     */
+    spaceControllerGetSpaceCoursesJoined: (
+      id: string,
+      query: {
+        page: number
+        perPage: number
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<SpaceCoursesJoinedResponseDto, any>({
+        path: `/api/spaces/${id}/courses/joined`,
+        method: 'GET',
+        query: query,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags spaces
      * @name SpaceControllerGetSpaceCourses
      * @request GET:/api/spaces/{id}/courses
      */
@@ -1872,6 +2110,281 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<UserOverviewDto, any>({
         path: `/api/stats/user/overview`,
         method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courses
+     * @name CourseControllerCreateCourse
+     * @request POST:/api/courses
+     */
+    courseControllerCreateCourse: (data: CreateCourseDto, params: RequestParams = {}) =>
+      this.request<CourseResponseDto, any>({
+        path: `/api/courses`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courses
+     * @name CourseControllerGetCourses
+     * @request GET:/api/courses
+     */
+    courseControllerGetCourses: (
+      query?: {
+        /** @default 1 */
+        page?: number
+        /** @default 10 */
+        perPage?: number
+        search?: string
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<CourseListResponseDto, any>({
+        path: `/api/courses`,
+        method: 'GET',
+        query: query,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courses
+     * @name CourseControllerUpdate
+     * @request PATCH:/api/courses/{id}
+     */
+    courseControllerUpdate: (id: string, data: UpdateCourseDto, params: RequestParams = {}) =>
+      this.request<CourseResponseDto, any>({
+        path: `/api/courses/${id}`,
+        method: 'PATCH',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courses
+     * @name CourseControllerDelete
+     * @request DELETE:/api/courses/{id}
+     */
+    courseControllerDelete: (id: string, params: RequestParams = {}) =>
+      this.request<CourseResponseDto, any>({
+        path: `/api/courses/${id}`,
+        method: 'DELETE',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courses
+     * @name CourseControllerGetCourseById
+     * @request GET:/api/courses/{id}
+     */
+    courseControllerGetCourseById: (id: string, params: RequestParams = {}) =>
+      this.request<CourseResponseDto, any>({
+        path: `/api/courses/${id}`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courses
+     * @name CourseControllerGetCourseUnits
+     * @request GET:/api/courses/{id}/units
+     */
+    courseControllerGetCourseUnits: (
+      id: string,
+      query?: {
+        /** @default 1 */
+        page?: number
+        /** @default 10 */
+        perPage?: number
+        search?: string
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<CourseUnitResponseDto, any>({
+        path: `/api/courses/${id}/units`,
+        method: 'GET',
+        query: query,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courses
+     * @name CourseControllerJoinCourse
+     * @request PATCH:/api/courses/{id}/join
+     */
+    courseControllerJoinCourse: (id: string, data: JoinCourseRequestDto, params: RequestParams = {}) =>
+      this.request<JoinCourseResponseDto, any>({
+        path: `/api/courses/${id}/join`,
+        method: 'PATCH',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courses
+     * @name CourseControllerLearnCourse
+     * @request GET:/api/courses/{id}/learn
+     */
+    courseControllerLearnCourse: (id: string, params: RequestParams = {}) =>
+      this.request<CourseLearnResponseDto, any>({
+        path: `/api/courses/${id}/learn`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courses
+     * @name CourseControllerGetCourseProgress
+     * @request GET:/api/courses/{id}/progress
+     */
+    courseControllerGetCourseProgress: (id: string, params: RequestParams = {}) =>
+      this.request<CourseProgressResponseDto, any>({
+        path: `/api/courses/${id}/progress`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courses
+     * @name CourseControllerUpdateCourseProgress
+     * @request PATCH:/api/courses/{id}/progress
+     */
+    courseControllerUpdateCourseProgress: (id: string, data: UpdateCourseProgressDto, params: RequestParams = {}) =>
+      this.request<CourseProgressResponseDto, any>({
+        path: `/api/courses/${id}/progress`,
+        method: 'PATCH',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Units
+     * @name UnitControllerCreateUnit
+     * @request POST:/api/units
+     */
+    unitControllerCreateUnit: (data: CreateUnitDto, params: RequestParams = {}) =>
+      this.request<GetUnitResponseDto, any>({
+        path: `/api/units`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Units
+     * @name UnitControllerGetUnit
+     * @request GET:/api/units/{id}
+     */
+    unitControllerGetUnit: (id: string, params: RequestParams = {}) =>
+      this.request<GetUnitResponseDto, any>({
+        path: `/api/units/${id}`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Units
+     * @name UnitControllerGetUnitContents
+     * @request GET:/api/units/{id}/unit-contents
+     */
+    unitControllerGetUnitContents: (id: string, params: RequestParams = {}) =>
+      this.request<GetUnitContentsResponseDto[], any>({
+        path: `/api/units/${id}/unit-contents`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Units
+     * @name UnitControllerCreateOrUpdateNote
+     * @request POST:/api/units/{id}/notes
+     */
+    unitControllerCreateOrUpdateNote: (id: string, data: CreateNoteDto, params: RequestParams = {}) =>
+      this.request<CreateUpdateNoteResponseDto, any>({
+        path: `/api/units/${id}/notes`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Units
+     * @name UnitControllerLearnUnit
+     * @request GET:/api/units/{id}/learn
+     */
+    unitControllerLearnUnit: (id: string, params: RequestParams = {}) =>
+      this.request<UnitLearnResponseDto, any>({
+        path: `/api/units/${id}/learn`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags UnitContents
+     * @name UnitContentControllerCreateUnitContent
+     * @request POST:/api/unit-contents/{unitId}
+     */
+    unitContentControllerCreateUnitContent: (unitId: string, data: CreateUnitContentDto, params: RequestParams = {}) =>
+      this.request<GetUnitContentResponseDto, any>({
+        path: `/api/unit-contents/${unitId}`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
         format: 'json',
         ...params
       }),

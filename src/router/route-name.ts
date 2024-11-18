@@ -15,9 +15,6 @@ export enum RouteNames {
   Vocabulary = '/vocabulary',
   VocabularyDetail = '/vocabulary/:id',
 
-  // Feed = '/feed',
-  // FeedDetail = '/feed/:id',
-
   Essay = '/essay',
   EssayCreate = '/essay/create',
   EssayUpdate = '/essay/update/:id',
@@ -30,6 +27,10 @@ export enum RouteNames {
   MyCourse = '/my-course',
   Course = '/course',
   CourseDetail = '/course/:id',
+  CourseCreate = '/course/admin/create',
+
+  UnitDetail = '/unit/:id',
+  UnitCreate = '/unit/admin/create',
 
   Setting = '/setting',
 

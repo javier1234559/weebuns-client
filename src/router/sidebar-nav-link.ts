@@ -1,4 +1,3 @@
-import { globalConfig } from '~/config'
 import { RouteNames } from '~/router/route-name'
 import { LinkToPage } from '~/types/common'
 
@@ -47,10 +46,10 @@ export const SIDEBAR_NAV_LINKS_USER: Array<LinkToPage> = [
 ]
 
 // Add debug links
-if (globalConfig.IS_DEBUG) {
-  SIDEBAR_NAV_LINKS_USER_DEFAULT.push({
-    title: '[Debug Tools]',
-    path: '/dev',
-    icon: 'settings'
-  })
-}
+// if (globalConfig.IS_DEBUG) {
+//   SIDEBAR_NAV_LINKS_USER_DEFAULT.push({
+//     title: '[Debug Tools]',
+//     path: '/dev',
+//     icon: 'settings'
+//   })
+// }

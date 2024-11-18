@@ -43,7 +43,24 @@ export const CREATE_CORRECTION_MUTATION = gql`
 export const UPDATE_CORRECTION_MUTATION = gql`
   mutation UpdateCorrectionEssay($input: UpdateCorrectionDto!) {
     updateCorrectionEssay(input: $input) {
-
+      id
+      essayId
+      createdBy
+      overall_comment
+      rating
+      createdAt
+      updatedAt
+      sentences {
+        id
+        correctionId
+        originalText
+        correctedText
+        explanation
+        isCorrect
+        rating
+        createdAt
+        updatedAt
+      }
     }
   }
 `
@@ -63,7 +80,6 @@ export const GET_LIST_CORRECTION_BY_ESSAY_QUERY = gql`
           id
           username
           email
-          passwordHash
           role
           authProvider
           authProviderId
@@ -103,13 +119,13 @@ export const GET_LIST_CORRECTION_BY_ESSAY_QUERY = gql`
 export const CHECK_CORRECTION_EXIST_QUERY = gql`
   query GetCorrectionIfExist($essayId: String!) {
     getCorrectionIfExist(essayId: $essayId) {
+      id # Thêm id vào đây
       essayId
       createdBy
       overall_comment
       rating
       createdAt
       updatedAt
-      id
       sentences {
         id
         correctionId
