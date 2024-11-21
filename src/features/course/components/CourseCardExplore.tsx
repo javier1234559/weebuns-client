@@ -68,26 +68,30 @@ const CourseCardExplore = ({ data }: CourseCardExploreProps) => {
 
   const handleJoinCourse = async () => {
     if (data.isJoined) {
-      const currentId = data.progress?.currentUnitId
-      if (currentId) {
-        navigator(replacePathId(RouteNames.UnitDetail, currentId))
-        return
+      const { currentUnitId, currentUnitContentId } = data.progress || {}
+      const courseId = data.id
+
+      if (currentUnitId) {
+        navigator(
+          `${replacePathId(RouteNames.CourseLearn, courseId)}?unitId=${currentUnitId}&unitContentId=${currentUnitContentId}`
+        )
       } else {
         toast.error('Failed to navigate to unit detail')
       }
-    }
-
-    const result = await mutate.mutateAsync({
-      id: data.id,
-      data: {
-        spaceId: spaceId
-      }
-    })
-    if (result.joinedAt) {
-      toast.success(result.message)
       return
     }
-    toast.error('Failed to join course')
+
+    try {
+      const result = await mutate.mutateAsync({ id: data.id, data: { spaceId } })
+      if (result.joinedAt) {
+        toast.success(result.message)
+      } else {
+        toast.error('Failed to join course')
+      }
+    } catch (error) {
+      toast.error('Failed to join course')
+      console.error(error)
+    }
   }
 
   const progress = data.progress ? (data.progress.completedWeight / data.totalWeight) * 100 : 0
@@ -227,4 +231,5 @@ const CourseCardExplore = ({ data }: CourseCardExploreProps) => {
   )
 }
 
+CourseCardExplore.displayName = 'CourseCardExplore'
 export default memo(CourseCardExplore)

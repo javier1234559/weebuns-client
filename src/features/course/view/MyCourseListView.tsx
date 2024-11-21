@@ -20,7 +20,8 @@ export const CourseLoadingState = ({ count = 10 }) => (
           key={`skeleton-${index}`}
           xs={12}
           sm={6}
-          md={3}
+          md={4}
+          lg={3}
           sx={{
             display: 'flex',
             height: '100%'
@@ -72,7 +73,8 @@ function MyCourseListView() {
             key={`${item.id}`}
             xs={12}
             sm={6}
-            md={3}
+            md={4}
+            lg={3}
             sx={{
               display: 'flex',
               height: '100%'

@@ -3,6 +3,7 @@ import { FLUSH, PAUSE, PERSIST, persistReducer, persistStore, PURGE, REGISTER, R
 import storage from 'redux-persist/lib/storage'
 
 import AuthReducer from '../features/auth/authSlice'
+import CourseReducer from '../features/course/courseSlice'
 import EssayReducer from '../features/essay/essaySlice'
 import SpaceReducer from '../features/space/spaceSlice'
 import VocabReducer from '../features/vocabulary/vocabSlice'
@@ -22,7 +23,8 @@ const rootReducer = combineReducers({
   space: SpaceReducer,
   vocab: VocabReducer,
   modal: ModalReducer,
-  essay: EssayReducer
+  essay: EssayReducer,
+  course: CourseReducer
 })
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

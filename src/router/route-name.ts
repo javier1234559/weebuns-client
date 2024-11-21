@@ -27,6 +27,7 @@ export enum RouteNames {
   MyCourse = '/my-course',
   Course = '/course',
   CourseDetail = '/course/:id',
+  CourseLearn = '/course/:id/learn',
 
   CourseCreate = '/course/admin/create',
 

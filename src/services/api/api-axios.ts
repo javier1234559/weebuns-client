@@ -257,12 +257,12 @@ export interface CorrectionSentence {
   rating: number
   /**
    * @format date-time
-   * @example "2024-11-18T19:26:40.770Z"
+   * @example "2024-11-19T16:20:09.097Z"
    */
   createdAt: string
   /**
    * @format date-time
-   * @example "2024-11-18T19:26:40.770Z"
+   * @example "2024-11-19T16:20:09.097Z"
    */
   updatedAt: string
 }
@@ -1024,14 +1024,12 @@ export interface CreateUnitDto {
   orderIndex?: number
   isPremium?: boolean
   courseId: string
+  /** @format int32 */
+  unitWeight?: number
 }
 
 export interface GetUnitResponseDto {
   unit: Unit
-}
-
-export interface GetUnitContentsResponseDto {
-  unitContents: UnitContent[]
 }
 
 export interface CreateNoteDto {
@@ -1063,6 +1061,25 @@ export interface UnitLearnResponseDto {
   unit: Unit
 }
 
+export interface UpdateUnitDto {
+  title?: string
+  description?: string | null
+  /** @format int32 */
+  orderIndex?: number
+  isPremium?: boolean
+  courseId?: string
+  /** @format int32 */
+  unitWeight?: number
+}
+
+export interface GetUnitContentsResponseDto {
+  unitContents: UnitContent[]
+}
+
+export interface UnitContentResponseDto {
+  unitContent: UnitContent
+}
+
 export interface CreateUnitContentDto {
   title: string
   contentType: string
@@ -1075,8 +1092,16 @@ export interface CreateUnitContentDto {
   completeWeight: number
 }
 
-export interface GetUnitContentResponseDto {
-  unitContent: UnitContent
+export interface UpdateUnitContentDto {
+  title?: string
+  contentType?: string
+  content?: object
+  /** @format int32 */
+  orderIndex?: number
+  isPremium?: boolean
+  isRequired?: boolean
+  /** @format int32 */
+  completeWeight?: number
 }
 
 export interface TranslateDto {
@@ -2365,13 +2390,29 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Units
-     * @name UnitControllerGetUnitContents
-     * @request GET:/api/units/{id}/unit-contents
+     * @name UnitControllerDeleteUnit
+     * @request DELETE:/api/units/{id}
      */
-    unitControllerGetUnitContents: (id: string, params: RequestParams = {}) =>
-      this.request<GetUnitContentsResponseDto[], any>({
-        path: `/api/units/${id}/unit-contents`,
-        method: 'GET',
+    unitControllerDeleteUnit: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/units/${id}`,
+        method: 'DELETE',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Units
+     * @name UnitControllerUpdateUnit
+     * @request PATCH:/api/units/{id}
+     */
+    unitControllerUpdateUnit: (id: string, data: UpdateUnitDto, params: RequestParams = {}) =>
+      this.request<GetUnitResponseDto, any>({
+        path: `/api/units/${id}`,
+        method: 'PATCH',
+        body: data,
+        type: ContentType.Json,
         format: 'json',
         ...params
       }),
@@ -2411,17 +2452,83 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags UnitContents
-     * @name UnitContentControllerCreateUnitContent
-     * @request POST:/api/unit-contents/{unitId}
+     * @tags Units
+     * @name UnitControllerGetUnitContents
+     * @request GET:/api/units/{id}/unit-contents
      */
-    unitContentControllerCreateUnitContent: (unitId: string, data: CreateUnitContentDto, params: RequestParams = {}) =>
-      this.request<GetUnitContentResponseDto, any>({
-        path: `/api/unit-contents/${unitId}`,
+    unitControllerGetUnitContents: (id: string, params: RequestParams = {}) =>
+      this.request<GetUnitContentsResponseDto[], any>({
+        path: `/api/units/${id}/unit-contents`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Units
+     * @name UnitControllerCreateUnitContent
+     * @request POST:/api/units/{id}/unit-contents
+     */
+    unitControllerCreateUnitContent: (id: string, data: CreateUnitContentDto, params: RequestParams = {}) =>
+      this.request<UnitContentResponseDto, any>({
+        path: `/api/units/${id}/unit-contents`,
         method: 'POST',
         body: data,
         type: ContentType.Json,
         format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Units
+     * @name UnitControllerGetUnitContent
+     * @request GET:/api/units/{id}/unit-contents/{unitContentId}
+     */
+    unitControllerGetUnitContent: (id: string, unitContentId: string, params: RequestParams = {}) =>
+      this.request<UnitContentResponseDto, any>({
+        path: `/api/units/${id}/unit-contents/${unitContentId}`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Units
+     * @name UnitControllerUpdateUnitContent
+     * @request PATCH:/api/units/{id}/unit-contents/{unitContentId}
+     */
+    unitControllerUpdateUnitContent: (
+      id: string,
+      unitContentId: string,
+      data: UpdateUnitContentDto,
+      params: RequestParams = {}
+    ) =>
+      this.request<UnitContentResponseDto, any>({
+        path: `/api/units/${id}/unit-contents/${unitContentId}`,
+        method: 'PATCH',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Units
+     * @name UnitControllerDeleteUnitContent
+     * @request DELETE:/api/units/{id}/unit-contents/{unitContentId}
+     */
+    unitControllerDeleteUnitContent: (id: string, unitContentId: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/units/${id}/unit-contents/${unitContentId}`,
+        method: 'DELETE',
         ...params
       }),
 

@@ -6,7 +6,7 @@ import { SELECT_STYLES } from '~/theme/components/select'
 import { SHAPE } from '~/theme/radius'
 import { TYPOGRAPHY } from '~/theme/typography'
 
-import { PALETTE_COLORS } from './colors'
+import { PALETTE_COLORS_DARK } from './colors'
 
 /**
  * MUI theme options for "Dark Mode"
@@ -14,7 +14,7 @@ import { PALETTE_COLORS } from './colors'
 export const DARK_THEME: ThemeOptions = {
   palette: {
     mode: 'dark',
-    ...PALETTE_COLORS,
+    ...PALETTE_COLORS_DARK,
     background: {
       paper: '#313338', // Gray 800 - Background of "Paper" based component
       default: '#313338'

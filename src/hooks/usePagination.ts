@@ -31,8 +31,8 @@ const usePagination = ({
       if (newParams.page) urlParams.set('page', newParams.page.toString())
       if (newParams.perPage) urlParams.set('perPage', newParams.perPage.toString())
       if (typeof newParams.search === 'string') {
-        if (newParams.search) {
-          urlParams.set('search', newParams.search)
+        if (newParams.search.trim()) {
+          urlParams.set('search', newParams.search.trim())
         } else {
           urlParams.delete('search')
         }
@@ -47,11 +47,12 @@ const usePagination = ({
     () =>
       debounce((value: string) => {
         updateParams({ search: value })
-        setSearchParam(value)
+        setSearchParam(value.trim()) // Update searchParam only when debounced
       }, debounceDelay),
-    [updateParams]
+    [updateParams, debounceDelay]
   )
 
+  // Reset when location changes (e.g., from filters)
   useEffect(() => {
     const params = new URLSearchParams(location.search)
     const pageParam = params.get('page')
@@ -60,9 +61,14 @@ const usePagination = ({
 
     if (pageParam) setPage(Number(pageParam))
     if (perPageParam) setPerPage(Number(perPageParam))
+
+    // Only update search states if search param exists and has value
     if (searchParam) {
-      setSearchParam(searchParam)
       setSearchValue(searchParam)
+      setSearchParam(searchParam)
+    } else {
+      setSearchValue('')
+      setSearchParam('')
     }
   }, [location.search])
 
@@ -75,7 +81,7 @@ const usePagination = ({
   const handleSearch = useCallback(
     (value: string) => {
       setSearchValue(value) // Update UI immediately
-      debouncedUpdateParams(value) // Debounce URL update
+      debouncedUpdateParams(value) // Debounce URL update and API param
     },
     [debouncedUpdateParams]
   )
@@ -84,7 +90,7 @@ const usePagination = ({
     page,
     perPage,
     search: searchValue, // For UI input
-    searchParam, // For API calls
+    searchParam, // For API calls - only has value when needed
     setSearch: handleSearch,
     updateQueryParams: updateParams
   }

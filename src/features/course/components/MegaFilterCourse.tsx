@@ -72,7 +72,7 @@ const MegaFilterCourse = ({ params, setParam }: MegaFilterCourseProps) => {
     if (data.courseType) setParam('courseType', data.courseType)
 
     // validate if minLevelCode and maxLevelCode are valid
-    if (data.minLevel === data.maxLevel || data.minLevel == 0 || data.maxLevel == 5) {
+    if (data.minLevel === data.maxLevel) {
       setParam('minLevel', null)
       setParam('maxLevel', null)
       setOpen(false)

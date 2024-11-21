@@ -120,11 +120,12 @@ export const useUpdateCourseProgress = () => {
     onSuccess: (_data, { courseId }) => {
       queryClient.invalidateQueries({ queryKey: COURSE_KEY_FACTORY.progress(courseId) })
       queryClient.invalidateQueries({ queryKey: COURSE_KEY_FACTORY.detail(courseId) })
+      queryClient.invalidateQueries({ queryKey: COURSE_KEY_FACTORY.joined() })
     }
   })
 }
 
-export const useLearnCourse = (courseId: string, options?: unknown) => {
+export const useCourseLearn = (courseId: string, options?: unknown) => {
   return useQuery({
     queryKey: COURSE_KEY_FACTORY.learn(courseId),
     queryFn: () => courseApi.learn(courseId),

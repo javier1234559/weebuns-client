@@ -90,8 +90,7 @@ const getMenuProps = (maxHeight: number, theme: Theme) => ({
   PaperProps: {
     style: {
       maxHeight: maxHeight,
-      width: 250,
-      borderRadius: '8px'
+      width: 250
     },
     sx: {
       backgroundColor: theme.palette.background.default,

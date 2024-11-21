@@ -66,9 +66,14 @@ const CourseCard: React.FC<CourseCardProps> = ({ data }) => {
 
   const handleStartLearnCourse = async () => {
     if (data.progress) {
-      const currentId = data.progress?.currentUnitId
-      if (currentId) {
-        navigator(replacePathId(RouteNames.UnitDetail, currentId))
+      const currentUnitId = data.progress?.currentUnitId
+      const courseId = data.id
+      const currentContentId = data.progress?.currentUnitContentId
+
+      if (currentUnitId) {
+        navigator(
+          `${replacePathId(RouteNames.CourseLearn, courseId)}?unitId=${currentUnitId}&unitContentId=${currentContentId}`
+        )
       } else {
         toast.error('Failed to navigate to unit detail')
       }

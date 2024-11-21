@@ -68,7 +68,12 @@ const CourseExploreView = () => {
   } = useCoursesExplore(spaceId, {
     page,
     perPage,
-    search: searchParam
+    search: searchParam,
+    courseType: params.courseType,
+    language: params.language,
+    minLevel: params.minLevel,
+    maxLevel: params.maxLevel,
+    topics: params.topics
   })
 
   const handlePageChange = (newPage: number) => {

@@ -20,7 +20,8 @@ const LearningSpace = lazy(() => import('~/pages/space'))
 const Note = lazy(() => import('~/pages/note'))
 const MyCourse = lazy(() => import('~/pages/course/my-course'))
 const Course = lazy(() => import('~/pages/course'))
-const CourseDetail = lazy(() => import('~/pages/course/[id]/CourseDetail'))
+const CourseDetail = lazy(() => import('~/pages/course/[id]/detail'))
+const CourseLearn = lazy(() => import('~/pages/course/[id]/learn'))
 const UnitDetail = lazy(() => import('~/pages/unit/[id]/UnitDetail'))
 const Essay = lazy(() => import('~/pages/essay'))
 const EssayCreate = lazy(() => import('~/pages/essay/[id]/essay-create'))
@@ -172,6 +173,14 @@ const USER_ROUTES = [
         element: (
           <Suspense fallback={<AppLoading />}>
             <CourseDetail />
+          </Suspense>
+        )
+      },
+      {
+        path: RouteNames.CourseLearn,
+        element: (
+          <Suspense fallback={<AppLoading />}>
+            <CourseLearn />
           </Suspense>
         )
       },
