@@ -51,7 +51,7 @@ function EssayUpdateStatusModal({ essayId, currentStatus, onConfirm, onClose }: 
   }
 
   return (
-    <Box sx={{ width: 300 }}>
+    <Box sx={{ width: 300, margin: '1rem auto' }}>
       <Typography variant='h6' component='h2' id='modal-title' gutterBottom>
         Change Status
       </Typography>

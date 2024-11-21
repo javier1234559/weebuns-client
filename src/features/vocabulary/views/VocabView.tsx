@@ -1,12 +1,7 @@
-import { ModalProvider } from '~/contexts/ModalContext'
-import TableVocab from '~/features/vocabulary/components/TableVocab'
+import VocabularyManager from '~/features/vocabulary/views/VocabularyManager'
 
 function VocabView() {
-  return (
-    <ModalProvider>
-      <TableVocab />
-    </ModalProvider>
-  )
+  return <VocabularyManager />
 }
 
 VocabView.displayName = 'VocabView'

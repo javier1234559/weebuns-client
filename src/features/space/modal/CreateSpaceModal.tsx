@@ -273,7 +273,7 @@ function CreateSpaceModal({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <Box component='form' onSubmit={handleSubmit(onSubmit)} sx={{ width: 600, p: 2 }}>
+    <Box component='form' onSubmit={handleSubmit(onSubmit)} sx={{ width: '100%', p: 2, m: '1rem auto' }}>
       <Typography variant='h6' component='h2' gutterBottom>
         Create a new learning space
       </Typography>

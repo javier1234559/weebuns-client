@@ -23,12 +23,16 @@ const modalStyle = {
   bgcolor: 'background.paper',
   boxShadow: 24,
   borderRadius: '8px',
-  width: 'fit-content',
+  width: {
+    xs: '100%',
+    sm: '800px'
+  },
+  maxWidth: 'calc(100% - 32px)', // Giới hạn maxWidth để tạo margin
   maxHeight: '90vh',
   display: 'flex',
   flexDirection: 'column' as const,
-  overflow: 'hidden', // Hide overflow on the modal container
-  p: 0 // Remove padding from the modal container
+  overflow: 'hidden',
+  p: 0
 }
 
 interface ModalProviderProps {
@@ -64,7 +68,7 @@ export function ModalProvider({ children }: ModalProviderProps) {
                 flexGrow: 1,
                 display: 'flex',
                 flexDirection: 'column',
-                p: 4 // Add padding inside the scrollable area
+                width: '100%'
               }}
             >
               <ModalComponent {...(props as object)} onClose={closeModal} />
