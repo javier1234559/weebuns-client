@@ -11,11 +11,17 @@ import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
+import debounce from 'lodash/debounce'
 import { Bookmark, Search, SquareArrowOutUpRight } from 'lucide-react'
 import { useState } from 'react'
 
+import AppError from '~/components/common/AppError'
+import AppLoading from '~/components/common/AppLoading'
+import PaginationUrl from '~/components/feature/PaginationUrl'
 import NoteCard from '~/features/note/components/NoteCard'
+import { useNotes } from '~/features/note/hooks/useNoteQueries'
 import { MOCK_NOTES } from '~/features/note/mocks/MOCK_NOTES'
+import usePagination from '~/hooks/usePagination'
 
 const MasonryGrid = styled(Box)(({ theme }) => ({
   columnCount: 1,
@@ -35,20 +41,32 @@ const MasonryGrid = styled(Box)(({ theme }) => ({
 }))
 
 export default function NoteGridView() {
-  const [searchQuery, setSearchQuery] = useState('')
-  const [notes, setNotes] = useState(MOCK_NOTES)
-  const [filter, setFilter] = useState('all')
+  const [filter, setFilter] = useState<'all' | 'bookmarked'>('all')
 
-  const filteredNotes = notes.filter((note) => {
-    const matchesSearch =
-      note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      note.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      note.tags.some((tag) => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-
-    if (filter === 'bookmarked') return matchesSearch && note.isBookmarked
-    if (filter === 'not-bookmarked') return matchesSearch && !note.isBookmarked
-    return matchesSearch
+  const { page, perPage, search, tags, searchParam, setSearch, updateQueryParams } = usePagination({
+    defaultPage: 1,
+    defaultPerPage: 10
   })
+
+  const { data, isLoading, error } = useNotes({
+    page,
+    perPage,
+    search: searchParam || undefined,
+    tags: tags,
+    isBookmarked: filter === 'bookmarked' ? true : undefined
+  })
+
+  const handleFilterChange = (value: 'all' | 'bookmarked') => {
+    setFilter(value)
+    updateQueryParams({ page: 1 }) // Reset to first page when changing filter
+  }
+
+  const handlePageChange = (newPage: number) => {
+    updateQueryParams({ page: newPage })
+  }
+
+  if (isLoading) return <AppLoading />
+  if (!data || error) return <AppError message={error?.message || 'No data found'} />
 
   return (
     <Box>
@@ -56,8 +74,10 @@ export default function NoteGridView() {
         <TextField
           fullWidth
           placeholder='Search notes...'
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value)
+          }}
           InputProps={{
             startAdornment: (
               <InputAdornment position='start'>
@@ -68,19 +88,33 @@ export default function NoteGridView() {
         />
         <FormControl sx={{ minWidth: 200 }}>
           <InputLabel>Filter notes</InputLabel>
-          <Select value={filter} label='Filter notes' onChange={(e) => setFilter(e.target.value)}>
+          <Select
+            value={filter}
+            label='Filter notes'
+            onChange={(e) => handleFilterChange(e.target.value as 'all' | 'bookmarked')}
+          >
             <MenuItem value='all'>Show All</MenuItem>
             <MenuItem value='bookmarked'>Bookmarked</MenuItem>
-            <MenuItem value='not-bookmarked'>Not Bookmarked</MenuItem>
           </Select>
         </FormControl>
       </Box>
 
       <MasonryGrid>
-        {filteredNotes.map((note) => (
-          <NoteCard data={note} key={note.id} />
+        {data.data.map((note) => (
+          <NoteCard key={note.id} data={note} />
         ))}
       </MasonryGrid>
+
+      <Box mt={4}>
+        <PaginationUrl
+          currentPage={data.pagination.currentPage}
+          totalPages={data.pagination.totalPages}
+          onPageChange={handlePageChange}
+          variant='outlined'
+          color='primary'
+          size='large'
+        />
+      </Box>
     </Box>
   )
 }

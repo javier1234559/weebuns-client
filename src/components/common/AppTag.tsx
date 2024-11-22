@@ -2,15 +2,15 @@ import { styled } from '@mui/material/styles'
 import { Link, useSearchParams } from 'react-router-dom'
 
 const ChipLink = styled(Link, {
-  shouldForwardProp: (prop) => prop !== 'variant' && prop !== 'isActive'
-})<{ variant: TagVariant; isActive: boolean }>(({ theme, variant, isActive }) => {
+  shouldForwardProp: (prop) => prop !== 'variant' && prop !== 'isActive' && prop !== 'size'
+})<{ variant: TagVariant; isActive: boolean; size?: 'small' | 'medium' }>(({ theme, variant, isActive, size }) => {
   const baseStyles = {
     display: 'inline-block',
     margin: theme.spacing(0.5),
-    padding: theme.spacing(0.5, 1.5),
+    padding: size === 'small' ? theme.spacing(0.25, 1) : theme.spacing(0.5, 1.5),
     borderRadius: '20px',
     textDecoration: 'none',
-    fontSize: '0.8rem',
+    fontSize: size === 'small' ? '0.75rem' : '0.8rem',
     transition: theme.transitions.create(['background-color', 'color', 'border-color'], {
       duration: theme.transitions.duration.short
     })
@@ -70,14 +70,18 @@ type TagVariant = 'outlined' | 'filled' | 'paper' | 'soft'
 
 interface IAppTagProps {
   tag: string
-  variant: TagVariant
+  variant?: TagVariant
+  size?: 'small' | 'medium'
+  isCounter?: boolean
   className?: string
 }
 
-function AppTag({ tag, variant = 'outlined', className }: IAppTagProps) {
+export function AppTag({ tag, variant = 'outlined', size = 'small', isCounter = false, className }: IAppTagProps) {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const toggleTag = () => {
+    if (isCounter) return // Don't toggle if it's a counter tag
+
     const tags = searchParams.get('tags')?.split(',') || []
     const updatedTags = tags.includes(tag.toLowerCase())
       ? tags.filter((t) => t !== tag.toLowerCase())
@@ -92,7 +96,7 @@ function AppTag({ tag, variant = 'outlined', className }: IAppTagProps) {
     setSearchParams(searchParams)
   }
 
-  const isActive = searchParams.get('tags')?.split(',').includes(tag.toLowerCase()) || false
+  const isActive = !isCounter && (searchParams.get('tags')?.split(',').includes(tag.toLowerCase()) || false)
 
   return (
     <ChipLink
@@ -103,6 +107,7 @@ function AppTag({ tag, variant = 'outlined', className }: IAppTagProps) {
       }}
       variant={variant}
       isActive={isActive}
+      size={size}
       className={className}
     >
       {tag}

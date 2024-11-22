@@ -1,10 +1,4 @@
-import {
-  CreateNoteDto,
-  CreateUnitContentDto,
-  CreateUnitDto,
-  UpdateUnitContentDto,
-  UpdateUnitDto
-} from '~/services/api/api-axios'
+import { CreateUnitContentDto, CreateUnitDto, UpdateUnitContentDto, UpdateUnitDto } from '~/services/api/api-axios'
 import api from '~/services/api/axiosInstance'
 import { handleApiError } from '~/utils/handle-api-error'
 
@@ -59,12 +53,11 @@ const unitApi = {
       })
   },
 
-  createNote(id: string, data: CreateNoteDto) {
+  getUnitNote(id: string) {
     return api
-      .unitControllerCreateOrUpdateNote(id, data)
+      .unitControllerGetUnitNote(id)
       .then((res) => res.data)
       .catch((err) => {
-        handleApiError(err)
         throw err.response.data
       })
   },

@@ -105,3 +105,16 @@ export const useLearnUnit = (unitId: string, options?: unknown) => {
     ...(typeof options === 'object' ? options : {})
   })
 }
+
+export const useGetUnitNote = (unitId: string, options?: unknown) => {
+  return useQuery({
+    queryKey: UNIT_KEY_FACTORY.note(unitId),
+    queryFn: () => unitApi.getUnitNote(unitId),
+    staleTime: 1000 * 60 * 5,
+    retry: false, // Disable retries
+    refetchOnWindowFocus: false, // Turn off refetch on window focus
+    refetchOnReconnect: false, // Turn off refetch on reconnect
+    refetchOnMount: false, // Turn off refetch on mount
+    ...(typeof options === 'object' ? options : {})
+  })
+}

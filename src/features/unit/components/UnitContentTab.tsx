@@ -36,7 +36,7 @@ const UnitContentTabs = ({ contents }: UnitContentTabsProps) => {
 
   const activeTabIndex = contents.findIndex((content) => content.id === currentContentId)
 
-  const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
     const newContentId = contents[newValue].id
     setSearchParams((prev) => {
       prev.set('unitContentId', newContentId)
@@ -61,7 +61,7 @@ const UnitContentTabs = ({ contents }: UnitContentTabsProps) => {
 
       {contents.map((content, index) => {
         const isActive = activeTabIndex === index || (activeTabIndex === -1 && index === 0)
-        const ContentComponent = ContentTypeMap[content.contentType]
+        const ContentComponent = ContentTypeMap[content.contentType as keyof typeof ContentTypeMap]
 
         return (
           <Box

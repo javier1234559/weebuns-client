@@ -6,6 +6,7 @@ import { memo } from 'react'
 import AppError from '~/components/common/AppError'
 import AppLoading from '~/components/common/AppLoading'
 import UnitContentTab from '~/features/unit/components/UnitContentTab'
+import UnitNote from '~/features/unit/components/UnitNote'
 import { useLearnUnit } from '~/features/unit/hooks/useUnitQueries'
 
 interface UnitDetailLearnViewProps {
@@ -40,9 +41,7 @@ const UnitDetailLearnView = ({ unitId }: UnitDetailLearnViewProps) => {
         <Typography variant='h6' gutterBottom>
           Notes
         </Typography>
-        <Typography variant='body2' color='text.secondary'>
-          Your notes will appear here...
-        </Typography>
+        <UnitNote id={unitId} />
       </Paper>
 
       {/* Comments Section */}

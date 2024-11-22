@@ -28,4 +28,3 @@ export const MOCK_NOTES: Note[] = [
     }
   }
 ]
-export { Note }

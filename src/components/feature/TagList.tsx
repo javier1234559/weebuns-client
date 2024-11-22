@@ -1,8 +1,9 @@
 import { styled } from '@mui/material'
 import Box from '@mui/material/Box'
-import Chip from '@mui/material/Chip'
 import Stack from '@mui/material/Stack'
 import { useMemo } from 'react'
+
+import AppTag from '~/components/common/AppTag'
 
 interface TagListProps {
   tags: unknown
@@ -20,7 +21,7 @@ const TagContainer = styled(Stack)(({ theme }) => ({
   gap: theme.spacing(0.5)
 }))
 
-const TagList = ({ tags, variant = 'outlined', size = 'small', maxItems, onTagClick, className }: TagListProps) => {
+const TagList = ({ tags, variant = 'outlined', size = 'small', maxItems, className }: TagListProps) => {
   const validTags = useMemo(() => {
     try {
       if (typeof tags === 'string') {
@@ -47,16 +48,11 @@ const TagList = ({ tags, variant = 'outlined', size = 'small', maxItems, onTagCl
     <Box className={className}>
       <TagContainer>
         {displayTags.map((tag) => (
-          <Chip
-            key={tag}
-            label={tag}
-            size={size}
-            variant={variant}
-            onClick={onTagClick ? () => onTagClick(tag) : undefined}
-            clickable={Boolean(onTagClick)}
-          />
+          <AppTag key={tag} tag={tag} variant={variant} size={size} />
         ))}
-        {remainingCount > 0 && <Chip size={size} variant={variant} label={`+${remainingCount} more`} />}
+        {remainingCount > 0 && (
+          <AppTag tag={`+${remainingCount} more`} variant={variant} size={size} isCounter={true} />
+        )}
       </TagContainer>
     </Box>
   )

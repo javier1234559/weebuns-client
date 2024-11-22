@@ -125,7 +125,7 @@ export interface Note {
   title: string
   content: string
   /** @example ["grammar","important","review","vocabulary"] */
-  tags: object
+  tags: string[]
   isBookmarked: boolean
   createdBy: string
   /** @format date-time */
@@ -221,8 +221,7 @@ export interface Vocabulary {
   imageUrl: string | null
   referenceLink: string | null
   referenceName: string | null
-  /** @example ["business","common","idiom","phrasal-verb"] */
-  tags: object
+  tags: string[]
   /** @format int32 */
   repetitionLevel: number
   /** @format date-time */
@@ -257,12 +256,12 @@ export interface CorrectionSentence {
   rating: number
   /**
    * @format date-time
-   * @example "2024-11-22T07:02:28.260Z"
+   * @example "2024-11-22T15:14:14.782Z"
    */
   createdAt: string
   /**
    * @format date-time
-   * @example "2024-11-22T07:02:28.260Z"
+   * @example "2024-11-22T15:14:14.782Z"
    */
   updatedAt: string
 }
@@ -890,6 +889,10 @@ export interface CreateVocabularyDto {
   /** @format date-time */
   nextReview?: string | null
   tags: string[]
+  /**
+   * Repetition level from 0 to 6
+   * @example 1
+   */
   repetitionLevel?: number | null
 }
 
@@ -913,6 +916,10 @@ export interface UpdateVocabularyDto {
   /** @format date-time */
   nextReview?: string | null
   tags?: string[]
+  /**
+   * Repetition level from 0 to 6
+   * @example 1
+   */
   repetitionLevel?: number | null
 }
 
@@ -1048,6 +1055,10 @@ export interface UpdateUnitDto {
   unitWeight?: number
 }
 
+export interface FindOneNoteResponseDto {
+  note: Note | null
+}
+
 export interface GetUnitContentsResponseDto {
   unitContents: UnitContent[]
 }
@@ -1087,10 +1098,6 @@ export interface CreateNoteDto {
   content: string
   tags: string[]
   isBookmarked?: boolean
-}
-
-export interface FindOneNoteResponseDto {
-  note: Note
 }
 
 export interface NotesResponse {
@@ -1969,6 +1976,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /** @default 10 */
         perPage?: number
         search?: string
+        tags?: string[]
         dueDate?: boolean
         spaceId?: string
       },
@@ -2432,6 +2440,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     unitControllerLearnUnit: (id: string, params: RequestParams = {}) =>
       this.request<UnitLearnResponseDto, any>({
         path: `/api/units/${id}/learn`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Units
+     * @name UnitControllerGetUnitNote
+     * @request GET:/api/units/{id}/note
+     */
+    unitControllerGetUnitNote: (id: string, params: RequestParams = {}) =>
+      this.request<FindOneNoteResponseDto, any>({
+        path: `/api/units/${id}/note`,
         method: 'GET',
         format: 'json',
         ...params

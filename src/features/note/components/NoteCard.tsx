@@ -1,13 +1,16 @@
 import { styled } from '@mui/material'
 import Box from '@mui/material/Box'
 import CardContent from '@mui/material/CardContent'
-import Chip from '@mui/material/Chip'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import { Bookmark, SquareArrowOutUpRight } from 'lucide-react'
+import { Bookmark, Edit2, SquareArrowOutUpRight } from 'lucide-react'
 import { memo, useState } from 'react'
 
-import { MOCK_NOTES, Note } from '~/features/note/mocks/MOCK_NOTES'
+import TagList from '~/components/feature/TagList'
+import NoteForm from '~/features/note/components/NoteForm'
+import { useUpdateNote } from '~/features/note/hooks/useNoteQueries'
+import { Note } from '~/services/api/api-axios'
+import { convertToRelativeTime } from '~/utils/format-date'
 
 interface NoteCardProps {
   data: Note
@@ -20,6 +23,14 @@ const BookmarkButton = styled(IconButton)<{ bookmarked?: boolean }>(({ theme, bo
   opacity: bookmarked ? 1 : 0,
   transition: 'opacity 0.2s ease-in-out',
   color: bookmarked ? theme.palette.warning.main : theme.palette.text.primary
+}))
+
+const EditButton = styled(IconButton)(({ theme }) => ({
+  position: 'absolute',
+  top: theme.spacing(2),
+  right: theme.spacing(7),
+  opacity: 0,
+  transition: 'opacity 0.2s ease-in-out'
 }))
 
 const ContentWrapper = styled(Box)<{ expanded?: boolean }>(({ theme, expanded }) => ({
@@ -41,31 +52,33 @@ const ContentWrapper = styled(Box)<{ expanded?: boolean }>(({ theme, expanded })
 }))
 
 function NoteCard({ data }: NoteCardProps) {
-  const [notes, setNotes] = useState(MOCK_NOTES)
+  const [isEditing, setIsEditing] = useState(false)
   const [expandedNotes, setExpandedNotes] = useState<string[]>([])
+  const mutate = useUpdateNote()
 
   const toggleExpand = (id: string) => {
-    setExpandedNotes((prev) => (prev.includes(id) ? prev.filter((nId) => nId !== id) : [...prev, id]))
+    if (!isEditing) {
+      setExpandedNotes((prev) => (prev.includes(id) ? prev.filter((nId) => nId !== id) : [...prev, id]))
+    }
   }
 
-  const toggleBookmark = (id: string) => {
-    setNotes(notes.map((note) => (note.id === id ? { ...note, isBookmarked: !note.isBookmarked } : note)))
+  const toggleBookmark = () => {
+    mutate.mutateAsync({
+      id: data.id,
+      data: {
+        unitId: data.unitId,
+        isBookmarked: !data.isBookmarked
+      }
+    })
   }
 
   return (
-    <Box
-      sx={{
-        position: 'relative',
-        '&:hover .bookmark-icon': {
-          opacity: 1
-        }
-      }}
-    >
+    <Box sx={{ position: 'relative', boxShadow: 2, borderRadius: 1, '&:hover .action-icon': { opacity: 1 } }}>
       <CardContent>
         <Box sx={{ mb: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
             <Typography color='text.secondary' variant='body2'>
-              {data.title}
+              {data.unit?.title}
             </Typography>
             <IconButton
               href={`/course/${data?.unit?.courseId}/learn?unitId=${data.unitId}`}
@@ -75,40 +88,49 @@ function NoteCard({ data }: NoteCardProps) {
               <SquareArrowOutUpRight size={16} />
             </IconButton>
           </Box>
-          <Typography variant='h6' gutterBottom>
-            {data.title}
-          </Typography>
+
+          {isEditing ? (
+            <NoteForm data={data} onCancel={() => setIsEditing(false)} onSave={() => setIsEditing(false)} />
+          ) : (
+            <>
+              <Typography variant='h6' gutterBottom>
+                {data.title}
+              </Typography>
+              <ContentWrapper expanded={expandedNotes.includes(data.id)}>
+                <div dangerouslySetInnerHTML={{ __html: data.content }} />
+              </ContentWrapper>
+
+              {/* Rest of the view mode JSX */}
+              <Box
+                onClick={() => toggleExpand(data.id)}
+                sx={{
+                  cursor: 'pointer',
+                  textAlign: 'center',
+                  color: 'primary.main',
+                  mb: 2
+                }}
+              >
+                <Typography variant='button'>{expandedNotes.includes(data.id) ? 'Show Less' : 'Show More'}</Typography>
+              </Box>
+
+              <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
+                <TagList tags={data.tags} />
+              </Box>
+
+              <Typography variant='caption' color='text.secondary'>
+                Created on {convertToRelativeTime(data.createdAt)}
+              </Typography>
+            </>
+          )}
         </Box>
 
-        <ContentWrapper expanded={expandedNotes.includes(data.id)}>
-          <div dangerouslySetInnerHTML={{ __html: data.content }} />
-        </ContentWrapper>
+        {!isEditing && (
+          <EditButton className='action-icon' onClick={() => setIsEditing(!isEditing)}>
+            <Edit2 size={20} />
+          </EditButton>
+        )}
 
-        <Box
-          onClick={() => toggleExpand(data.id)}
-          sx={{
-            cursor: 'pointer',
-            textAlign: 'center',
-            color: 'primary.main',
-            mb: 2
-          }}
-        >
-          <Typography variant='button'>{expandedNotes.includes(data.id) ? 'Show Less' : 'Show More'}</Typography>
-        </Box>
-
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
-          <div>{Array.isArray(data.tags) && data.tags.map((tag) => <Chip key={tag} label={tag} size='small' />)}</div>
-        </Box>
-
-        <Typography variant='caption' color='text.secondary'>
-          Created on {new Date(data.createdAt).toLocaleDateString()}
-        </Typography>
-
-        <BookmarkButton
-          className='bookmark-icon'
-          bookmarked={data.isBookmarked}
-          onClick={() => toggleBookmark(data.id)}
-        >
+        <BookmarkButton className='action-icon' bookmarked={data.isBookmarked} onClick={toggleBookmark}>
           <Bookmark size={20} className={data.isBookmarked ? 'fill-current' : ''} />
         </BookmarkButton>
       </CardContent>

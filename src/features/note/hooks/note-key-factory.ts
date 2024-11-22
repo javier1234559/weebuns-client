@@ -4,6 +4,7 @@ export const NOTE_KEY_FACTORY = {
   list: (params: any) => [...NOTE_KEY_FACTORY.lists(), params] as const,
   details: () => [...NOTE_KEY_FACTORY.all, 'detail'] as const,
   detail: (id: string) => [...NOTE_KEY_FACTORY.details(), id] as const,
-  bookmarked: () => [...NOTE_KEY_FACTORY.lists(), 'bookmarked'] as const,
+  bookmark: () => [...NOTE_KEY_FACTORY.lists(), 'bookmark'] as const,
+  bookmarked: (params: any) => [...NOTE_KEY_FACTORY.bookmark(), params] as const,
   bySpace: (spaceId: string) => [...NOTE_KEY_FACTORY.lists(), 'space', spaceId] as const
 }
