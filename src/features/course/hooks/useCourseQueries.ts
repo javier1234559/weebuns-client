@@ -12,7 +12,7 @@ import { PaginationParams } from '~/types/extend-api'
 
 export const useCourseJoined = (id: string, params: PaginationParams, options?: unknown) => {
   return useQuery({
-    queryKey: COURSE_KEY_FACTORY.joined(),
+    queryKey: [...COURSE_KEY_FACTORY.joined(), { id, ...params }],
     queryFn: () => courseApi.getAllJoined(id, { page: params.page || 1, perPage: params.perPage || 10 }),
     staleTime: 1000 * 60 * 5,
     ...(typeof options === 'object' ? options : {})
@@ -21,7 +21,7 @@ export const useCourseJoined = (id: string, params: PaginationParams, options?: 
 
 export const useCourses = (params: PaginationParams, options?: unknown) => {
   return useQuery({
-    queryKey: COURSE_KEY_FACTORY.lists(),
+    queryKey: COURSE_KEY_FACTORY.list(params),
     queryFn: () => courseApi.getAll(params),
     staleTime: 1000 * 60 * 5,
     ...(typeof options === 'object' ? options : {})
@@ -30,7 +30,7 @@ export const useCourses = (params: PaginationParams, options?: unknown) => {
 
 export const useCoursesExplore = (spaceId: string, params: CourseExploreQueryParams, options?: unknown) => {
   return useQuery({
-    queryKey: COURSE_KEY_FACTORY.explore(),
+    queryKey: [...COURSE_KEY_FACTORY.explore(), { spaceId, ...params }],
     queryFn: () => courseApi.getExplore(spaceId, params),
     staleTime: 1000 * 60 * 5,
     ...(typeof options === 'object' ? options : {})
@@ -43,8 +43,11 @@ export const useUpdateCourse = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: UpdateCourseDto }) => courseApi.update(id, data),
     onSuccess: (_updatedCourse, { id }) => {
-      // Update both list and detail caches
-      queryClient.invalidateQueries({ queryKey: COURSE_KEY_FACTORY.lists() })
+      // Invalidate all list-related queries and the specific detail
+      queryClient.invalidateQueries({
+        queryKey: COURSE_KEY_FACTORY.lists(),
+        exact: false
+      })
       queryClient.invalidateQueries({ queryKey: COURSE_KEY_FACTORY.detail(id) })
     }
   })
@@ -65,7 +68,11 @@ export const useCreateCourse = () => {
   return useMutation({
     mutationFn: (data: CreateCourseDto) => courseApi.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: COURSE_KEY_FACTORY.lists() })
+      // Invalidate all list-related queries
+      queryClient.invalidateQueries({
+        queryKey: COURSE_KEY_FACTORY.lists(),
+        exact: false
+      })
     }
   })
 }
@@ -76,14 +83,18 @@ export const useDeleteCourse = () => {
   return useMutation({
     mutationFn: (id: string) => courseApi.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: COURSE_KEY_FACTORY.lists() })
+      // Invalidate all list-related queries
+      queryClient.invalidateQueries({
+        queryKey: COURSE_KEY_FACTORY.lists(),
+        exact: false
+      })
     }
   })
 }
 
 export const useGetCourseUnits = (courseId: string, params: PaginationParams, options?: unknown) => {
   return useQuery({
-    queryKey: COURSE_KEY_FACTORY.units(courseId),
+    queryKey: [...COURSE_KEY_FACTORY.units(courseId), params],
     queryFn: () => courseApi.getUnits(courseId, params),
     staleTime: 1000 * 60 * 5,
     ...(typeof options === 'object' ? options : {})
@@ -96,8 +107,15 @@ export const useJoinCourse = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: JoinCourseRequestDto }) => courseApi.join(id, data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: COURSE_KEY_FACTORY.joined() })
-      queryClient.invalidateQueries({ queryKey: COURSE_KEY_FACTORY.explore() })
+      // Invalidate both joined and explore queries with all params
+      queryClient.invalidateQueries({
+        queryKey: COURSE_KEY_FACTORY.joined(),
+        exact: false
+      })
+      queryClient.invalidateQueries({
+        queryKey: COURSE_KEY_FACTORY.explore(),
+        exact: false
+      })
     }
   })
 }
@@ -120,7 +138,10 @@ export const useUpdateCourseProgress = () => {
     onSuccess: (_data, { courseId }) => {
       queryClient.invalidateQueries({ queryKey: COURSE_KEY_FACTORY.progress(courseId) })
       queryClient.invalidateQueries({ queryKey: COURSE_KEY_FACTORY.detail(courseId) })
-      queryClient.invalidateQueries({ queryKey: COURSE_KEY_FACTORY.joined() })
+      queryClient.invalidateQueries({
+        queryKey: COURSE_KEY_FACTORY.joined(),
+        exact: false
+      })
     }
   })
 }

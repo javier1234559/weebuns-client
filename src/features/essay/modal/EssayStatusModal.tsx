@@ -1,3 +1,4 @@
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz'
 import { SelectChangeEvent } from '@mui/material'
 import Box from '@mui/material/Box'
 import FormControl from '@mui/material/FormControl'
@@ -51,12 +52,19 @@ function EssayUpdateStatusModal({ essayId, currentStatus, onConfirm, onClose }: 
   }
 
   return (
-    <Box sx={{ width: 300, margin: '1rem auto' }}>
-      <Typography variant='h6' component='h2' id='modal-title' gutterBottom>
+    <Box sx={{ width: 400, p: 3 }}>
+      <Typography
+        variant='h6'
+        component='h2'
+        id='modal-title'
+        sx={{ display: 'inline-flex', alignItems: 'center' }}
+        gutterBottom
+      >
+        <SwapHorizIcon fontSize='medium' sx={{ marginRight: 1 }} />
         Change Status
       </Typography>
-      <Typography id='modal-description' sx={{ mt: 2, mb: 2 }}>
-        Select the new status for change
+      <Typography id='modal-description' sx={{ mb: 2 }}>
+        Select the new status to change
       </Typography>
       <FormControl fullWidth sx={{ mt: 2, mb: 2 }}>
         <InputLabel id='status-select-label'>Status</InputLabel>

@@ -216,7 +216,7 @@ export interface Vocabulary {
   id: string
   spaceId: string
   term: string
-  meaning: string
+  meaning: string[]
   exampleSentence: string | null
   imageUrl: string | null
   referenceLink: string | null
@@ -257,12 +257,12 @@ export interface CorrectionSentence {
   rating: number
   /**
    * @format date-time
-   * @example "2024-11-19T16:20:09.097Z"
+   * @example "2024-11-22T07:02:28.260Z"
    */
   createdAt: string
   /**
    * @format date-time
-   * @example "2024-11-19T16:20:09.097Z"
+   * @example "2024-11-22T07:02:28.260Z"
    */
   updatedAt: string
 }
@@ -882,37 +882,38 @@ export interface DeleteEssayResponseDto {
 export interface CreateVocabularyDto {
   spaceId: string
   term: string
-  meaning: string
+  meaning: string[]
   exampleSentence?: string | null
   imageUrl?: string | null
   referenceLink?: string | null
   referenceName?: string | null
   /** @format date-time */
   nextReview?: string | null
+  tags: string[]
+  repetitionLevel?: number | null
 }
 
 export interface FindOneVocabularyResponseDto {
   vocabulary: Vocabulary
 }
 
-export interface FindAllVocabularyDto {
-  /** @default 1 */
-  page?: number
-  /** @default 10 */
-  perPage?: number
-  search?: string
+export interface VocabularyResponse {
+  data: Vocabulary[]
+  pagination: PaginationOutputDto
 }
 
 export interface UpdateVocabularyDto {
   spaceId?: string
   term?: string
-  meaning?: string
+  meaning?: string[]
   exampleSentence?: string | null
   imageUrl?: string | null
   referenceLink?: string | null
   referenceName?: string | null
   /** @format date-time */
   nextReview?: string | null
+  tags?: string[]
+  repetitionLevel?: number | null
 }
 
 export interface HashtagsResponseDto {
@@ -1032,31 +1033,6 @@ export interface GetUnitResponseDto {
   unit: Unit
 }
 
-export interface CreateNoteDto {
-  title: string
-  content: string
-  tags: string[]
-  /** @format date-time */
-  deletedAt?: string | null
-}
-
-export interface NoteResponseDto {
-  id: string
-  title: string
-  content: string
-  tags: string[]
-  isBookmarked: boolean
-  /** @format date-time */
-  createdAt: string
-  /** @format date-time */
-  updatedAt: string
-}
-
-export interface CreateUpdateNoteResponseDto {
-  status: string
-  note: NoteResponseDto
-}
-
 export interface UnitLearnResponseDto {
   unit: Unit
 }
@@ -1102,6 +1078,33 @@ export interface UpdateUnitContentDto {
   isRequired?: boolean
   /** @format int32 */
   completeWeight?: number
+}
+
+export interface CreateNoteDto {
+  spaceId: string
+  unitId: string
+  title: string
+  content: string
+  tags: string[]
+  isBookmarked?: boolean
+}
+
+export interface FindOneNoteResponseDto {
+  note: Note
+}
+
+export interface NotesResponse {
+  data: Note[]
+  pagination: PaginationOutputDto
+}
+
+export interface UpdateNoteDto {
+  spaceId?: string
+  unitId?: string
+  title?: string
+  content?: string
+  tags?: string[]
+  isBookmarked?: boolean
 }
 
 export interface TranslateDto {
@@ -1966,10 +1969,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /** @default 10 */
         perPage?: number
         search?: string
+        dueDate?: boolean
+        spaceId?: string
       },
       params: RequestParams = {}
     ) =>
-      this.request<FindAllVocabularyDto, any>({
+      this.request<VocabularyResponse, any>({
         path: `/api/vocabularies`,
         method: 'GET',
         query: query,
@@ -2421,23 +2426,6 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Units
-     * @name UnitControllerCreateOrUpdateNote
-     * @request POST:/api/units/{id}/notes
-     */
-    unitControllerCreateOrUpdateNote: (id: string, data: CreateNoteDto, params: RequestParams = {}) =>
-      this.request<CreateUpdateNoteResponseDto, any>({
-        path: `/api/units/${id}/notes`,
-        method: 'POST',
-        body: data,
-        type: ContentType.Json,
-        format: 'json',
-        ...params
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Units
      * @name UnitControllerLearnUnit
      * @request GET:/api/units/{id}/learn
      */
@@ -2529,6 +2517,115 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, any>({
         path: `/api/units/${id}/unit-contents/${unitContentId}`,
         method: 'DELETE',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notes
+     * @name NoteControllerCreate
+     * @request POST:/api/notes
+     */
+    noteControllerCreate: (data: CreateNoteDto, params: RequestParams = {}) =>
+      this.request<FindOneNoteResponseDto, any>({
+        path: `/api/notes`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notes
+     * @name NoteControllerFindAll
+     * @request GET:/api/notes
+     */
+    noteControllerFindAll: (
+      query?: {
+        /** @default 1 */
+        page?: number
+        /** @default 10 */
+        perPage?: number
+        search?: string
+        tags?: string[]
+        isBookmarked?: boolean
+        spaceId?: string
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<NotesResponse, any>({
+        path: `/api/notes`,
+        method: 'GET',
+        query: query,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notes
+     * @name NoteControllerCreateOrUpdate
+     * @request POST:/api/notes/upsert
+     */
+    noteControllerCreateOrUpdate: (data: CreateNoteDto, params: RequestParams = {}) =>
+      this.request<FindOneNoteResponseDto, any>({
+        path: `/api/notes/upsert`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notes
+     * @name NoteControllerFindOne
+     * @request GET:/api/notes/{id}
+     */
+    noteControllerFindOne: (id: string, params: RequestParams = {}) =>
+      this.request<FindOneNoteResponseDto, any>({
+        path: `/api/notes/${id}`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notes
+     * @name NoteControllerUpdate
+     * @request PATCH:/api/notes/{id}
+     */
+    noteControllerUpdate: (id: string, data: UpdateNoteDto, params: RequestParams = {}) =>
+      this.request<FindOneNoteResponseDto, any>({
+        path: `/api/notes/${id}`,
+        method: 'PATCH',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags notes
+     * @name NoteControllerDelete
+     * @request DELETE:/api/notes/{id}
+     */
+    noteControllerDelete: (id: string, params: RequestParams = {}) =>
+      this.request<FindOneNoteResponseDto, any>({
+        path: `/api/notes/${id}`,
+        method: 'DELETE',
+        format: 'json',
         ...params
       }),
 

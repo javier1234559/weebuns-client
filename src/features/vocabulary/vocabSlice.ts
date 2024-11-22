@@ -1,51 +1,55 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-export interface VocabItem {
-  id: number
-  word: string
-  phonetics: string
-  definition: string
-  example: string
-  picture: string
-  sourceLink: string
-}
+import { Vocabulary } from '~/services/api/api-axios'
 
 interface VocabState {
-  items: VocabItem[]
-  currentItem: VocabItem | null
+  selectedVocabList: Vocabulary[]
+}
+
+interface UpdateVocabPayload {
+  id: string
+  data: Partial<Vocabulary>
 }
 
 const initialState: VocabState = {
-  items: [],
-  currentItem: null
+  selectedVocabList: []
 }
 
 const vocabSlice = createSlice({
   name: 'vocab',
   initialState,
   reducers: {
-    addVocabItem: (state, action: PayloadAction<VocabItem>) => {
-      state.items.push(action.payload)
+    setSelectedVocabs: (state, action: PayloadAction<Vocabulary[]>) => {
+      state.selectedVocabList = action.payload
     },
-    updateVocabItem: (state, action: PayloadAction<VocabItem>) => {
-      const index = state.items.findIndex((item) => item.id === action.payload.id)
-      if (index !== -1) {
-        state.items[index] = action.payload
-      }
+    addSelectedVocab: (state, action: PayloadAction<Vocabulary>) => {
+      state.selectedVocabList.push(action.payload)
     },
-    deleteVocabItem: (state, action: PayloadAction<number>) => {
-      state.items = state.items.filter((item) => item.id !== action.payload)
+    removeSelectedVocab: (state, action: PayloadAction<string>) => {
+      state.selectedVocabList = state.selectedVocabList.filter((vocab) => vocab.id !== action.payload)
     },
-    setCurrentItem: (state, action: PayloadAction<VocabItem | null>) => {
-      state.currentItem = action.payload
+    updateSelectedVocab: (state, action: PayloadAction<UpdateVocabPayload>) => {
+      const { id, data } = action.payload
+      state.selectedVocabList = state.selectedVocabList.map((vocab) =>
+        vocab.id === id ? { ...vocab, ...data } : vocab
+      )
     },
-    clearAllItems: (state) => {
-      state.items = []
-      state.currentItem = null
+    clearSelectedVocabs: (state) => {
+      state.selectedVocabList = []
+    },
+    clearAllVocabData(state) {
+      state.selectedVocabList = []
     }
   }
 })
 
-export const { addVocabItem, updateVocabItem, deleteVocabItem, setCurrentItem, clearAllItems } = vocabSlice.actions
+export const {
+  setSelectedVocabs,
+  addSelectedVocab,
+  removeSelectedVocab,
+  updateSelectedVocab,
+  clearSelectedVocabs,
+  clearAllVocabData
+} = vocabSlice.actions
 
 export default vocabSlice.reducer

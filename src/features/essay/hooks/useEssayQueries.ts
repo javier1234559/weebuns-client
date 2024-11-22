@@ -28,7 +28,7 @@ export const useCreateEssay = () => {
   return useMutation({
     mutationFn: (data: CreateEssayDto) => essayApi.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ESSAY_KEY_FACTORY.lists() })
+      queryClient.invalidateQueries({ queryKey: ESSAY_KEY_FACTORY.lists(), exact: false })
     }
   })
 }
@@ -40,8 +40,8 @@ export const useUpdateEssay = () => {
     mutationFn: ({ id, data }: { id: string; data: UpdateEssayDto }) => essayApi.update(id, data),
     onSuccess: (_updatedEssay, { id }) => {
       // Update both list and detail caches
-      queryClient.invalidateQueries({ queryKey: ESSAY_KEY_FACTORY.lists() })
-      queryClient.invalidateQueries({ queryKey: ESSAY_KEY_FACTORY.infinity })
+      queryClient.invalidateQueries({ queryKey: ESSAY_KEY_FACTORY.lists(), exact: false })
+      queryClient.invalidateQueries({ queryKey: ESSAY_KEY_FACTORY.lists(), exact: false })
       queryClient.invalidateQueries({ queryKey: ESSAY_KEY_FACTORY.detail(id) })
     }
   })
@@ -54,7 +54,7 @@ export const useDeleteEssayByUser = () => {
     mutationFn: (id: string) => essayApi.deleteByUser(id),
     onSuccess: (_, id) => {
       // Update essays list cache
-      queryClient.invalidateQueries({ queryKey: ESSAY_KEY_FACTORY.lists() })
+      queryClient.invalidateQueries({ queryKey: ESSAY_KEY_FACTORY.lists(), exact: false })
       // Remove the deleted essay from cache
       queryClient.invalidateQueries({ queryKey: ESSAY_KEY_FACTORY.detail(id) })
     }

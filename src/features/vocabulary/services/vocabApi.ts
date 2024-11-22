@@ -1,18 +1,32 @@
-import { CreateVocabularyDto, UpdateVocabularyDto } from '~/services/api/api-axios'
+import {
+  CreateVocabularyDto,
+  FindOneVocabularyResponseDto,
+  UpdateVocabularyDto,
+  VocabularyResponse
+} from '~/services/api/api-axios'
 import api from '~/services/api/axiosInstance'
 import { handleApiError } from '~/utils/handle-api-error'
 
+export interface VocabularyQueryParams {
+  page?: number
+  perPage?: number
+  search?: string
+  dueDate?: boolean
+  spaceId?: string
+}
+
 const vocabularyApi = {
-  create(form: CreateVocabularyDto) {
+  create(data: CreateVocabularyDto) {
     return api
-      .vocabularyControllerCreate(form)
+      .vocabularyControllerCreate(data)
       .then((res) => res.data)
       .catch((err) => {
         handleApiError(err)
         throw err.response.data
       })
   },
-  getAll(query?: { page?: number; perPage?: number; search?: string; spaceId?: string }) {
+
+  findAll(query: VocabularyQueryParams): Promise<VocabularyResponse> {
     return api
       .vocabularyControllerFindAll(query)
       .then((res) => res.data)
@@ -21,7 +35,8 @@ const vocabularyApi = {
         throw err.response.data
       })
   },
-  getById(id: string) {
+
+  findOne(id: string): Promise<FindOneVocabularyResponseDto> {
     return api
       .vocabularyControllerFindOne(id)
       .then((res) => res.data)
@@ -30,19 +45,21 @@ const vocabularyApi = {
         throw err.response.data
       })
   },
-  update(id: string, form: UpdateVocabularyDto) {
+
+  update(id: string, data: UpdateVocabularyDto): Promise<FindOneVocabularyResponseDto> {
     return api
-      .vocabularyControllerUpdate(id, form)
+      .vocabularyControllerUpdate(id, data)
       .then((res) => res.data)
       .catch((err) => {
         handleApiError(err)
         throw err.response.data
       })
   },
-  delete(id: string) {
+
+  delete(id: string): Promise<FindOneVocabularyResponseDto> {
     return api
       .vocabularyControllerDelete(id)
-      .then(() => void 0)
+      .then((res) => res.data)
       .catch((err) => {
         handleApiError(err)
         throw err.response.data

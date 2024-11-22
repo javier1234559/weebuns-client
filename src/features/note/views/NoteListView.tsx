@@ -1,10 +1,10 @@
 import { ModalProvider } from '~/contexts/ModalContext'
-import TableNote from '~/features/note/components/TableNote'
+import NoteGridView from '~/features/note/views/NoteGridView'
 
 function NoteListView() {
   return (
     <ModalProvider>
-      <TableNote />
+      <NoteGridView />
     </ModalProvider>
   )
 }

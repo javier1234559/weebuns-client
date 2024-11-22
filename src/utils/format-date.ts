@@ -1,8 +1,14 @@
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
+import timezone from 'dayjs/plugin/timezone'
+import utc from 'dayjs/plugin/utc'
 
 // Extend dayjs with the relativeTime plugin
 dayjs.extend(relativeTime)
+dayjs.extend(utc)
+dayjs.extend(timezone)
+
+export default dayjs
 
 export const convertToRelativeTime = (date: string): string => {
   const now = dayjs()

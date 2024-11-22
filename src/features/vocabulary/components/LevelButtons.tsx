@@ -2,6 +2,15 @@ import { styled } from '@mui/material'
 import Stack from '@mui/material/Stack'
 import ToggleButton from '@mui/material/ToggleButton'
 import { Check, Trash2 } from 'lucide-react'
+import toast from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
+
+import WarningModal from '~/components/modal/WarningModal'
+import { useModal } from '~/contexts/ModalContext'
+import calculateNextReview from '~/features/vocabulary/helper/calculateSRS'
+import { useDeleteVocabulary, useUpdateVocabulary } from '~/features/vocabulary/hooks/useVocabularyQueries'
+import { RepetitionLevel } from '~/features/vocabulary/vocab.type'
+import { updateSelectedVocab } from '~/features/vocabulary/vocabSlice'
 
 const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
   '&.Mui-selected': {
@@ -24,22 +33,80 @@ interface LevelButtonsProps {
 }
 
 const LevelButtons = ({ id, level, isHideDelete }: LevelButtonsProps) => {
+  const { openModal } = useModal()
+  const dispatch = useDispatch()
+  const updateMutation = useUpdateVocabulary()
+  const deleteMutation = useDeleteVocabulary()
+
   const handleButtonClick = (e: React.MouseEvent, callback: () => void) => {
-    e.stopPropagation() // Prevent bubble
+    e.stopPropagation()
     callback()
   }
 
   const handleDelete = () => {
-    console.log('Delete')
-    console.log(id)
+    openModal(WarningModal, {
+      message: 'Are you sure you want to delete this vocabulary?',
+      onConfirm: () => {
+        deleteMutation.mutateAsync(id, {
+          onSuccess: () => {
+            toast.success('Vocabulary deleted successfully')
+          },
+          onError: (error) => {
+            toast.error(`Failed to delete vocabulary: ${error.message}`)
+          }
+        })
+      }
+    })
+  }
+
+  const updateLevel = (newLevel: RepetitionLevel) => {
+    const originalNextReview = new Date().toISOString()
+    const nextReview = calculateNextReview(newLevel)
+    const updateData = {
+      repetitionLevel: newLevel,
+      nextReview
+    }
+
+    // Optimistic update
+    dispatch(
+      updateSelectedVocab({
+        id,
+        data: updateData
+      })
+    )
+
+    updateMutation.mutate(
+      {
+        id,
+        data: updateData
+      },
+      {
+        onError: (error) => {
+          // Rollback on error
+          dispatch(
+            updateSelectedVocab({
+              id,
+              data: {
+                repetitionLevel: level,
+                nextReview: originalNextReview // reset to original but just use current time
+              }
+            })
+          )
+          toast.error(`Failed to update vocabulary level: ${error.message}`)
+        }
+      }
+    )
   }
 
   const handleComplete = () => {
-    console.log('Complete')
+    updateLevel(RepetitionLevel.MASTERED)
   }
 
-  const handleLevel = () => {
-    console.log('Level')
+  const handleLevel = (selectedLevel: RepetitionLevel) => {
+    console.log('selectedLevel', selectedLevel)
+    if (level !== selectedLevel) {
+      updateLevel(selectedLevel)
+    }
   }
 
   return (
@@ -47,7 +114,8 @@ const LevelButtons = ({ id, level, isHideDelete }: LevelButtonsProps) => {
       {!isHideDelete && (
         <StyledToggleButton
           value='delete'
-          onClick={(e) => handleButtonClick(e, () => handleDelete())}
+          onClick={(e) => handleButtonClick(e, handleDelete)}
+          disabled={deleteMutation.isPending}
           sx={{
             width: 32,
             height: 32,
@@ -59,12 +127,19 @@ const LevelButtons = ({ id, level, isHideDelete }: LevelButtonsProps) => {
           <Trash2 size={16} />
         </StyledToggleButton>
       )}
-      {[1, 2, 3, 4].map((num) => (
+      {[
+        RepetitionLevel.LEVEL_1,
+        RepetitionLevel.LEVEL_2,
+        RepetitionLevel.LEVEL_3,
+        RepetitionLevel.LEVEL_4,
+        RepetitionLevel.LEVEL_5
+      ].map((num) => (
         <StyledToggleButton
           key={num}
           value={num}
-          selected={level == num}
-          onClick={(e) => handleButtonClick(e, handleLevel)}
+          selected={level === num}
+          disabled={updateMutation.isPending}
+          onClick={(e) => handleButtonClick(e, () => handleLevel(num))}
           sx={{
             width: 32,
             height: 32,
@@ -78,7 +153,8 @@ const LevelButtons = ({ id, level, isHideDelete }: LevelButtonsProps) => {
       ))}
       <StyledToggleButton
         value='complete'
-        selected={level == 5}
+        selected={level === RepetitionLevel.MASTERED}
+        disabled={updateMutation.isPending}
         onClick={(e) => handleButtonClick(e, handleComplete)}
         sx={{
           width: 32,
@@ -86,7 +162,13 @@ const LevelButtons = ({ id, level, isHideDelete }: LevelButtonsProps) => {
           borderRadius: '50%',
           p: 0,
           minWidth: 'auto',
-          bgcolor: level === 5 ? 'success.main' : ''
+          bgcolor: level === RepetitionLevel.MASTERED ? 'success.main' : '',
+          '&.Mui-selected': {
+            bgcolor: 'success.main',
+            '&:hover': {
+              bgcolor: 'success.dark'
+            }
+          }
         }}
       >
         <Check size={16} />

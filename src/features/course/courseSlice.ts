@@ -51,9 +51,13 @@ export const courseSlice = createSlice({
     },
     clearCourseProgress: (state) => {
       state.currentCourseProgress = initialState.currentCourseProgress
+    },
+    clearAllCourseData: (state) => {
+      state.currentCourseProgress = initialState.currentCourseProgress
+      state.navigation = initialState.navigation
     }
   }
 })
 
-export const { setCourseProgress, clearCourseProgress, setNavigation } = courseSlice.actions
+export const { setCourseProgress, clearCourseProgress, setNavigation, clearAllCourseData } = courseSlice.actions
 export default courseSlice.reducer

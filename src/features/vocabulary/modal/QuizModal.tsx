@@ -1,16 +1,17 @@
 import { useMediaQuery, useTheme } from '@mui/material'
 import Box from '@mui/material/Box'
-import Chip from '@mui/material/Chip'
 import LinearProgress from '@mui/material/LinearProgress'
 import Stack from '@mui/material/Stack'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import { useCallback, useState } from 'react'
+import { useSelector } from 'react-redux'
 
+import TagList from '~/components/feature/TagList'
 import AudioButton from '~/features/vocabulary/components/AudioButton'
 import LevelButtons from '~/features/vocabulary/components/LevelButtons'
 import VocabQuiz from '~/features/vocabulary/components/VocabQuiz'
-import { Vocabulary } from '~/features/vocabulary/mocks/MOCK_VOCABULARIES'
+import { RootState } from '~/store/store'
 
 const StyledProgressBar = styled(LinearProgress)(({ theme }) => ({
   height: 10,
@@ -23,13 +24,13 @@ const StyledProgressBar = styled(LinearProgress)(({ theme }) => ({
   }
 }))
 
-const TagsContainer = styled(Box)(() => ({
-  display: 'flex',
-  gap: '4px',
-  flexWrap: 'wrap',
-  justifyContent: 'center',
-  width: '100%'
-}))
+// const TagsContainer = styled(Box)(() => ({
+//   display: 'flex',
+//   gap: '4px',
+//   flexWrap: 'wrap',
+//   justifyContent: 'center',
+//   width: '100%'
+// }))
 
 const ExampleText = styled(Box)(({ theme }) => ({
   borderLeft: `3px solid ${theme.palette.primary.main}`,
@@ -120,7 +121,8 @@ const CardContent = styled(Box)<{ $isExpanded?: boolean }>(({ theme, $isExpanded
   }
 }))
 
-function QuizModal({ data }: { data: Vocabulary[] }) {
+function QuizModal() {
+  const data = useSelector((state: RootState) => state.vocab.selectedVocabList)
   const [progress, setProgress] = useState(0)
   const [showFrontContent, setShowFrontContent] = useState(false)
   const [showBackContent, setShowBackContent] = useState(false)
@@ -195,15 +197,7 @@ function QuizModal({ data }: { data: Vocabulary[] }) {
             )}
 
             {/* Tags Section */}
-            {vocab.tags.length > 0 && (
-              <Box>
-                <TagsContainer>
-                  {vocab.tags.map((tag) => (
-                    <Chip key={tag} label={tag} size='small' variant='outlined' sx={{ m: 0.5 }} />
-                  ))}
-                </TagsContainer>
-              </Box>
-            )}
+            <TagList tags={vocab.tags} />
           </Stack>
         </CardContent>
         <ShowMoreButton onClick={toggleShowFront}>
@@ -258,7 +252,8 @@ function QuizModal({ data }: { data: Vocabulary[] }) {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        width: '100%',
+        width: '90vw',
+        maxWidth: '900px',
         px: { xs: 2, sm: 6 },
         pb: 2
       }}

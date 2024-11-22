@@ -24,8 +24,9 @@ const modalStyle = {
   boxShadow: 24,
   borderRadius: '8px',
   width: {
-    xs: '100%',
-    sm: '800px'
+    xs: 'fit-content',
+    // sm: '800px',
+    md: 'fit-content'
   },
   maxWidth: 'calc(100% - 32px)', // Giới hạn maxWidth để tạo margin
   maxHeight: '90vh',
@@ -68,7 +69,10 @@ export function ModalProvider({ children }: ModalProviderProps) {
                 flexGrow: 1,
                 display: 'flex',
                 flexDirection: 'column',
-                width: '100%'
+                width: 'fit-content',
+                margin: {
+                  sm: 'auto'
+                }
               }}
             >
               <ModalComponent {...(props as object)} onClose={closeModal} />

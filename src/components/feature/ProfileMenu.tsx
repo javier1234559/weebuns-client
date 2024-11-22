@@ -10,6 +10,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { logout } from '~/features/auth/authSlice'
+import { clearAllCourseData } from '~/features/course/courseSlice'
+import { clearAllEssayData } from '~/features/essay/essaySlice'
+import { clearCurrentSpace } from '~/features/space/spaceSlice'
+import { clearAllVocabData } from '~/features/vocabulary/vocabSlice'
 import { RouteNames } from '~/router/route-name'
 import { RootState } from '~/store/store'
 
@@ -58,6 +62,13 @@ function ProfileMenu() {
   const handleLogout = () => {
     // Dispatch logout action
     dispatch(logout())
+    //Clear all data
+    dispatch(clearCurrentSpace())
+    dispatch(clearAllEssayData())
+    dispatch(clearAllCourseData())
+    dispatch(clearAllVocabData())
+    localStorage.clear()
+
     // Navigate to home or login page after logout
     navigate(RouteNames.Home)
   }

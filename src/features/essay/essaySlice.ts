@@ -42,9 +42,14 @@ export const essaySlice = createSlice({
     },
     clearEssayViewData: (state) => {
       state.essayViewData = initialState.essayViewData
+    },
+    clearAllEssayData: (state) => {
+      state.essayViewData = initialState.essayViewData
+      state.essayFormData = initialState.essayFormData
     }
   }
 })
 
-export const { setEssayData, clearEssayData, loadEssayData, setEssayViewData, clearEssayViewData } = essaySlice.actions
+export const { setEssayData, clearEssayData, loadEssayData, setEssayViewData, clearEssayViewData, clearAllEssayData } =
+  essaySlice.actions
 export default essaySlice.reducer
