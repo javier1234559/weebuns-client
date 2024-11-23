@@ -256,12 +256,12 @@ export interface CorrectionSentence {
   rating: number
   /**
    * @format date-time
-   * @example "2024-11-22T18:28:00.626Z"
+   * @example "2024-11-23T06:06:00.982Z"
    */
   createdAt: string
   /**
    * @format date-time
-   * @example "2024-11-22T18:28:00.626Z"
+   * @example "2024-11-23T06:06:00.983Z"
    */
   updatedAt: string
 }

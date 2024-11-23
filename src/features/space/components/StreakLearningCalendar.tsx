@@ -27,10 +27,9 @@ function StreakLearningCalendar() {
     `}
       </style>
       <ContributionCalendar
-        className='contribution-calendar'
         style={{ width: '100%', height: '100%', margin: 'auto' }}
         textColor='var(--mui-palette-text-primary)'
-        data={data.activities}
+        data={data.activities as any}
         start={Object.keys(data.activities[data.activities.length - 1])[0]}
         end={Object.keys(data.activities[0])[0]}
         daysOfTheWeek={['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']}
@@ -41,7 +40,7 @@ function StreakLearningCalendar() {
         cx={16}
         cy={16}
         cr={2}
-        onCellClick={(e, data) => console.log(data)}
+        onCellClick={(_, data) => console.log(data)}
       />
     </>
   )

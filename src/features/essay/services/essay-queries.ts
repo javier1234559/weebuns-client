@@ -79,6 +79,7 @@ export const GET_LIST_CORRECTION_BY_ESSAY_QUERY = gql`
         creator {
           id
           username
+          nativeLanguage
           email
           role
           authProvider

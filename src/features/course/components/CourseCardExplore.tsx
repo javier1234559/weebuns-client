@@ -10,16 +10,13 @@ import { Clock, Globe, Target, TreePalm } from 'lucide-react'
 import { ArrowRight } from 'lucide-react'
 import { memo } from 'react'
 import toast from 'react-hot-toast'
-import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import AppButton from '~/components/common/AppButton'
-import { useJoinCourse } from '~/features/course/hooks/useCourseQueries'
 import { LANGUAGE_LABELS, LEVEL_LABELS, TARGET_LABELS } from '~/features/space/space.constants'
 import { RouteNames } from '~/router/route-name'
 import { CourseWithJoinStatus } from '~/services/api/api-axios'
 import { LanguageCode, LevelCode, TargetCode } from '~/services/graphql/graphql'
-import { RootState } from '~/store/store'
 import { convertToRelativeTime } from '~/utils/format-date'
 import { replacePathId } from '~/utils/replace-path'
 
@@ -63,34 +60,6 @@ const CourseCardExplore = ({ data }: CourseCardExploreProps) => {
   const navigator = useNavigate()
 
   if (!data) return null
-
-  // const handleJoinCourse = async () => {
-  //   if (data.isJoined) {
-  //     const { currentUnitId, currentUnitContentId } = data.progress || {}
-  //     const courseId = data.id
-
-  //     if (currentUnitId) {
-  //       navigator(
-  //         `${replacePathId(RouteNames.CourseLearn, courseId)}?unitId=${currentUnitId}&unitContentId=${currentUnitContentId}`
-  //       )
-  //     } else {
-  //       toast.error('Failed to navigate to unit detail')
-  //     }
-  //     return
-  //   }
-
-  //   try {
-  //     const result = await mutate.mutateAsync({ id: data.id, data: { spaceId } })
-  //     if (result.joinedAt) {
-  //       toast.success(result.message)
-  //     } else {
-  //       toast.error('Failed to join course')
-  //     }
-  //   } catch (error) {
-  //     toast.error('Failed to join course')
-  //     console.error(error)
-  //   }
-  // }
 
   const handleViewDetailCourseOrContinueLearn = () => {
     if (data.isJoined) {

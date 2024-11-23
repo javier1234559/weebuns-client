@@ -148,7 +148,7 @@ export const useUpdateNote = () => {
       }
     },
 
-    onSettled: (_data, _error, { id, data }) => {
+    onSettled: (_data, _error, { data }) => {
       // If we have unitId in the data
       if (data.unitId) {
         queryClient.invalidateQueries({

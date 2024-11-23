@@ -12,6 +12,7 @@ import * as yup from 'yup'
 import { AppButton } from '~/components/common/AppButton'
 import { AppInput } from '~/components/common/AppInput'
 import AppLoading from '~/components/common/AppLoading'
+import MultiSelect from '~/components/ui/multiple-select'
 import { Select, SelectItem } from '~/components/ui/select'
 import { useSpacesById, useUpdateSpace } from '~/features/space/hooks/useSpaceQueries'
 import { LANGUAGE_LABELS, LEVEL_LABELS, TARGET_LABELS, TOPIC_LABELS } from '~/features/space/space.constants'
@@ -37,7 +38,11 @@ const updateSpaceSchema = yup.object({
   currentLevel: yup.mixed<LevelCode>().oneOf(Object.values(LevelCode)).required('Please select the current level'),
   targetLevel: yup.mixed<LevelCode>().oneOf(Object.values(LevelCode)).required('Please select the target level'),
   target: yup.mixed<TargetCode>().oneOf(Object.values(TargetCode)).required('Please select a learning purpose'),
-  topic: yup.mixed<TopicCode>().oneOf(Object.values(TopicCode)).required('Please select a topic of interest')
+  topics: yup
+    .array()
+    .of(yup.mixed<TopicCode>().oneOf(Object.values(TopicCode)))
+    .min(1, 'Please select at least one topic of interest')
+    .required('Please select topics of interest')
 })
 
 type UpdateSpaceFormData = yup.InferType<typeof updateSpaceSchema>
@@ -70,7 +75,7 @@ function UpdateSpaceModal({ idSpace, onClose }: UpdateSpaceModalProps) {
         currentLevel: data.space.currentLevel as NonNullable<LevelCode>,
         targetLevel: data.space.targetLevel as NonNullable<LevelCode>,
         target: data.space.target as NonNullable<TargetCode>,
-        topic: data.space.topic as NonNullable<TopicCode>
+        topics: data.space.topics as TopicCode[]
       })
     }
   }, [data, reset])
@@ -79,7 +84,7 @@ function UpdateSpaceModal({ idSpace, onClose }: UpdateSpaceModalProps) {
     const fieldsToValidate = {
       0: ['name', 'description'] as const,
       1: ['language', 'currentLevel', 'targetLevel', 'target'] as const,
-      2: ['topic'] as const
+      2: ['topics'] as const
     }[activeStep]
 
     const isStepValid = await trigger(fieldsToValidate)
@@ -97,7 +102,13 @@ function UpdateSpaceModal({ idSpace, onClose }: UpdateSpaceModalProps) {
     }
 
     try {
-      await mutate.mutateAsync({ id: idSpace, data: formData })
+      await mutate.mutateAsync({
+        id: idSpace,
+        data: {
+          ...formData,
+          topics: formData.topics.filter((topic): topic is TopicCode => topic !== undefined)
+        }
+      })
       toast.success('Space updated successfully')
       onClose()
     } catch (error) {
@@ -261,24 +272,17 @@ function UpdateSpaceModal({ idSpace, onClose }: UpdateSpaceModalProps) {
             <Typography variant='body1' color='text.secondary' gutterBottom>
               Update your topic of interest
             </Typography>
-            <Controller
-              name='topic'
+            <MultiSelect
+              name='topics'
               control={control}
-              render={({ field }) => (
-                <Select {...field} placeholder='Select a topic'>
-                  {Object.entries(TOPIC_LABELS).map(([value, label]) => (
-                    <SelectItem key={value} value={value}>
-                      {label}
-                    </SelectItem>
-                  ))}
-                </Select>
-              )}
+              placeholder='Please select a topic'
+              options={Object.entries(TOPIC_LABELS).map(([value, label]) => ({
+                value,
+                label
+              }))}
+              error={errors.topics?.message}
+              fullWidth
             />
-            {errors.topic && (
-              <Typography color='error' variant='caption' sx={{ mt: 1 }}>
-                {errors.topic.message}
-              </Typography>
-            )}
           </Box>
         )
 

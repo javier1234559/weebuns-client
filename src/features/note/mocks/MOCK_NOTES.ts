@@ -8,7 +8,7 @@ export const MOCK_NOTES: Note[] = [
     title: 'JavaScript Event Loop',
     content:
       '<p>The <strong>event loop</strong> is a programming construct that waits for and dispatches events in a program.</p>',
-    tags: { javascript: true, async: true },
+    tags: ['JavaScript', 'Event Loop'],
     isBookmarked: true,
     createdBy: '351d1a37-09a6-4f94-88ae-70db051049ef',
     createdAt: '2024-11-21T18:46:38.118Z',
