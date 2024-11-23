@@ -3,19 +3,66 @@ import Chip from '@mui/material/Chip'
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
-import { Book, ClipboardList, Clock, Crown, GraduationCap, Sparkles, Target } from 'lucide-react'
+import { ArrowRight, Book, ClipboardList, Clock, Crown, GraduationCap, Sparkles, Target } from 'lucide-react'
+import { useState } from 'react'
+import toast from 'react-hot-toast'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
+import AppButton from '~/components/common/AppButton'
+import { useCheckCourseJoined, useJoinCourse } from '~/features/course/hooks/useCourseQueries'
 import { LANGUAGE_LABELS, LEVEL_LABELS, TOPIC_LABELS } from '~/features/space/space.constants'
+import { RouteNames } from '~/router/route-name'
 import { Course } from '~/services/api/api-axios'
 import { LanguageCode, LevelCode, TopicCode } from '~/services/graphql/graphql'
+import { RootState } from '~/store/store'
 import { convertToRelativeTime } from '~/utils/format-date'
+import { replacePathId } from '~/utils/replace-path'
 
 interface CourseIntroductionProps {
   data: Course
 }
 
 const CourseIntroduction = ({ data }: CourseIntroductionProps) => {
-  if (!data) return null
+  const navigate = useNavigate()
+  const spaceId = useSelector((state: RootState) => state.space.currentSpace?.id)
+  const [isJoining, setIsJoining] = useState(false)
+
+  const { data: joinedData } = useCheckCourseJoined(data.id, spaceId || '')
+  const joinCourseMutation = useJoinCourse()
+
+  const handleJoinCourse = async () => {
+    if (!spaceId) return
+    setIsJoining(true)
+    if (joinedData?.check) {
+      const { currentUnitId, currentUnitContentId } = joinedData.progress || {}
+
+      if (currentUnitId) {
+        navigate(
+          `${replacePathId(RouteNames.CourseLearn, data.id)}?unitId=${currentUnitId}${
+            currentUnitContentId ? `&unitContentId=${currentUnitContentId}` : ''
+          }`
+        )
+      }
+    } else {
+      const result = await joinCourseMutation.mutateAsync({
+        id: data.id,
+        data: { spaceId }
+      })
+
+      if (result.joinedAt) {
+        toast.success('Successfully joined course')
+      }
+    }
+
+    setIsJoining(false)
+  }
+
+  const progress = joinedData?.progress ? (joinedData.progress.completedWeight / data.totalWeight) * 100 : 0
+
+  const hasStarted = progress > 0
+
+  const buttonText = joinedData?.check ? (hasStarted ? 'Continue Learning' : 'Start Learning') : 'Join Course'
 
   const totalPremiumUnits = data.units?.filter((unit) => unit.isPremium).length || 0
   const totalFreeUnits = (data.units?.length || 0) - totalPremiumUnits
@@ -78,6 +125,24 @@ const CourseIntroduction = ({ data }: CourseIntroductionProps) => {
                 <Chip key={topic} label={TOPIC_LABELS[topic as TopicCode]} size='small' />
               ))}
             </Box>
+          </Box>
+
+          <Box sx={{ mt: 'auto', pt: 2 }}>
+            <AppButton
+              fullWidth
+              variant={joinedData?.check ? 'outlined' : 'contained'}
+              color='primary'
+              onClick={handleJoinCourse}
+              disabled={isJoining}
+              endIcon={<ArrowRight size={20} />}
+              sx={{
+                mb: 'auto',
+                height: 48,
+                borderRadius: '24px'
+              }}
+            >
+              {isJoining ? 'Processing...' : buttonText}
+            </AppButton>
           </Box>
         </Grid>
 

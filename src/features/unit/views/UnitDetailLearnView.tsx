@@ -15,7 +15,6 @@ interface UnitDetailLearnViewProps {
 
 const UnitDetailLearnView = ({ unitId }: UnitDetailLearnViewProps) => {
   const { data, isLoading, error } = useLearnUnit(unitId)
-
   if (isLoading) return <AppLoading />
   if (!data || error) return <AppError message={error?.message || 'No data found'} />
 

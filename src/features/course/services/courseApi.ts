@@ -66,6 +66,15 @@ const courseApi = {
       })
   },
 
+  checkJoined(courseId: string, spaceId: string) {
+    return api
+      .courseControllerCheckJoin(courseId, spaceId)
+      .then((res) => res.data)
+      .catch((err) => {
+        throw err.response.data
+      })
+  },
+
   create(data: CreateCourseDto) {
     return api
       .courseControllerCreateCourse(data)

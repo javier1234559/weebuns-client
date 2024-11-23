@@ -48,7 +48,7 @@ const unitApi = {
       .unitControllerLearnUnit(id)
       .then((res) => res.data)
       .catch((err) => {
-        handleApiError(err)
+        // handleApiError(err)
         throw err.response.data
       })
   },

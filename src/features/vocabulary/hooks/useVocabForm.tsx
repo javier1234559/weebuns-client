@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
-import { useDispatch, useSelector } from 'react-redux'
 
 import { useImageSearch } from '~/features/vocabulary/hooks/useImageSearch'
-import { addVocabItem, deleteVocabItem, setCurrentItem, updateVocabItem } from '~/features/vocabulary/vocabSlice'
-import { RootState } from '~/store/store'
 
 interface VocabItem {
   id: number
@@ -17,9 +14,6 @@ interface VocabItem {
 }
 
 export const useVocabForm = () => {
-  const dispatch = useDispatch()
-  const vocabItems = useSelector((state: RootState) => state.vocab.items)
-  const currentItem = useSelector((state: RootState) => state.vocab.currentItem)
   const [searchTerm, setSearchTerm] = useState('')
   const [localCurrentItem, setLocalCurrentItem] = useState<VocabItem>({
     id: 0,
@@ -66,25 +60,18 @@ export const useVocabForm = () => {
   const handleSave = () => {
     if (localCurrentItem.id === 0) {
       const newItem = { ...localCurrentItem, id: Date.now() }
-      dispatch(addVocabItem(newItem))
-    } else {
-      dispatch(updateVocabItem(localCurrentItem))
     }
     handleClear()
   }
 
   const handleClear = () => {
     setLocalCurrentItem({ id: 0, word: '', phonetics: '', definition: '', example: '', picture: '', sourceLink: '' })
-    dispatch(setCurrentItem(null))
     setSearchTerm('') // Clear the search term as well
   }
 
-  const handleDelete = (id: number) => {
-    dispatch(deleteVocabItem(id))
-  }
+  const handleDelete = (id: number) => {}
 
   const handleEdit = (item: VocabItem) => {
-    dispatch(setCurrentItem(item))
     setSearchTerm(item.word) // Set the search term when editing an item
   }
 

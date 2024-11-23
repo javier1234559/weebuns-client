@@ -116,6 +116,11 @@ export const useJoinCourse = () => {
         queryKey: COURSE_KEY_FACTORY.explore(),
         exact: false
       })
+
+      queryClient.invalidateQueries({
+        queryKey: COURSE_KEY_FACTORY.join(),
+        exact: false
+      })
     }
   })
 }
@@ -150,6 +155,15 @@ export const useCourseLearn = (courseId: string, options?: unknown) => {
   return useQuery({
     queryKey: COURSE_KEY_FACTORY.learn(courseId),
     queryFn: () => courseApi.learn(courseId),
+    staleTime: 1000 * 60 * 5,
+    ...(typeof options === 'object' ? options : {})
+  })
+}
+
+export const useCheckCourseJoined = (courseId: string, spaceId: string, options?: unknown) => {
+  return useQuery({
+    queryKey: COURSE_KEY_FACTORY.checkJoin(courseId),
+    queryFn: () => courseApi.checkJoined(courseId, spaceId),
     staleTime: 1000 * 60 * 5,
     ...(typeof options === 'object' ? options : {})
   })

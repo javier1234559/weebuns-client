@@ -101,6 +101,7 @@ export const useLearnUnit = (unitId: string, options?: unknown) => {
   return useQuery({
     queryKey: UNIT_KEY_FACTORY.learn(unitId),
     queryFn: () => unitApi.learn(unitId),
+    retry: false, // Disable retries
     staleTime: 1000 * 60 * 5,
     ...(typeof options === 'object' ? options : {})
   })

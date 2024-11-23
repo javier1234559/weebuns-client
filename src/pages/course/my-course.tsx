@@ -5,6 +5,7 @@ import Typography from '@mui/material/Typography'
 import AppBreadcrumb from '~/components/common/AppBreadcrumbs'
 import JoinCourseButton from '~/features/course/components/JoinCourseButton'
 import MyCourseListView from '~/features/course/view/MyCourseListView'
+import FloatingVocabButton from '~/features/vocabulary/components/FloatingVocabButton'
 import { RouteNames } from '~/router/route-name'
 
 function MyCourse() {
@@ -21,6 +22,7 @@ function MyCourse() {
         <JoinCourseButton />
       </Box>
       <MyCourseListView />
+      <FloatingVocabButton />
     </Container>
   )
 }

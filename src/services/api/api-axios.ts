@@ -256,12 +256,12 @@ export interface CorrectionSentence {
   rating: number
   /**
    * @format date-time
-   * @example "2024-11-22T15:14:14.782Z"
+   * @example "2024-11-22T18:28:00.626Z"
    */
   createdAt: string
   /**
    * @format date-time
-   * @example "2024-11-22T15:14:14.782Z"
+   * @example "2024-11-22T18:28:00.626Z"
    */
   updatedAt: string
 }
@@ -1009,6 +1009,11 @@ export interface JoinCourseResponseDto {
 
 export interface CourseLearnResponseDto {
   course: Course
+}
+
+export interface CheckJoinedCourseResponseDto {
+  check: boolean
+  progress?: CourseProgress
 }
 
 export interface CourseProgressResponseDto {
@@ -2330,6 +2335,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     courseControllerLearnCourse: (id: string, params: RequestParams = {}) =>
       this.request<CourseLearnResponseDto, any>({
         path: `/api/courses/${id}/learn`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Courses
+     * @name CourseControllerCheckJoin
+     * @request GET:/api/courses/{id}/check-join/{spaceId}
+     */
+    courseControllerCheckJoin: (id: string, spaceId: string, params: RequestParams = {}) =>
+      this.request<CheckJoinedCourseResponseDto, any>({
+        path: `/api/courses/${id}/check-join/${spaceId}`,
         method: 'GET',
         format: 'json',
         ...params

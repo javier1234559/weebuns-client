@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import { AppButton } from '~/components/common/AppButton'
 import CreateEssayForm from '~/features/essay/components/CreateEssayForm'
 import EssayPreview from '~/features/essay/view/EssayPreview'
-import VocabTabView from '~/features/vocabulary/views/VocabTabView'
+import FloatingVocabButton from '~/features/vocabulary/components/FloatingVocabButton'
 import { RootState } from '~/store/store'
 
 enum ViewMode {
@@ -18,7 +18,7 @@ enum ViewMode {
 
 const EssayCreateView: React.FC = () => {
   const { essayFormData } = useSelector((state: RootState) => state.essay)
-  const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.EDIT_AND_SHOW_SIDEBAR)
+  const [viewMode, setViewMode] = useState<ViewMode>(ViewMode.EDIT_AND_HIDE_SIDEBAR)
 
   const togglePreview = () => {
     setViewMode((currentMode) => {
@@ -73,7 +73,7 @@ const EssayCreateView: React.FC = () => {
       case ViewMode.PREVIEW_AND_SHOW_SIDEBAR:
         return (
           <Grid item xs={12} md={4}>
-            <VocabTabView />
+            {/* <VocabTabView /> */}
           </Grid>
         )
       default:
@@ -101,7 +101,7 @@ const EssayCreateView: React.FC = () => {
         return (
           <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mt: 2 }}>
             <AppButton onClick={toggleSidebar}>
-              {viewMode === ViewMode.PREVIEW_AND_HIDE_SIDEBAR ? 'Show Vocab Tab' : 'Hide Vocab Tab'}
+              {viewMode === ViewMode.PREVIEW_AND_HIDE_SIDEBAR ? 'Show sidebar' : 'Hide sidebar'}
             </AppButton>
             <AppButton onClick={togglePreview}>Back to Edit</AppButton>
           </Box>
@@ -111,7 +111,7 @@ const EssayCreateView: React.FC = () => {
         return (
           <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end', mt: 2 }}>
             <AppButton onClick={toggleSidebar}>
-              {viewMode === ViewMode.EDIT_AND_HIDE_SIDEBAR ? 'Show Vocab Tab' : 'Hide Vocab Tab'}
+              {viewMode === ViewMode.EDIT_AND_HIDE_SIDEBAR ? 'Show sidebar' : 'Hide sidebar'}
             </AppButton>
             <AppButton onClick={togglePreview}>Preview</AppButton>
           </Box>
@@ -130,6 +130,7 @@ const EssayCreateView: React.FC = () => {
         {renderSidebar()}
       </Grid>
       {renderActionButtons()}
+      <FloatingVocabButton />
     </Box>
   )
 }

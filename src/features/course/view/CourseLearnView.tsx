@@ -1,7 +1,7 @@
 import { useMediaQuery } from '@mui/material'
 import Box from '@mui/material/Box'
 import Drawer from '@mui/material/Drawer'
-import IconButton from '@mui/material/IconButton'
+import Fab from '@mui/material/Fab'
 import Paper from '@mui/material/Paper'
 import { styled, useTheme } from '@mui/material/styles'
 import Tooltip from '@mui/material/Tooltip'
@@ -43,11 +43,13 @@ const CourseContainer = styled(Box)(() => ({
   maxWidth: 'calc(100% - 48px)'
 }))
 
-const MenuButton = styled(IconButton)(({ theme }) => ({
+const MenuFab = styled(Fab)(({ theme }) => ({
   position: 'fixed',
-  bottom: theme.spacing(2),
-  right: theme.spacing(2),
-  zIndex: theme.zIndex.drawer + 1
+  bottom: 100,
+  right: 20,
+  borderRadius: '50% !important',
+  zIndex: theme.zIndex.drawer + 1,
+  boxShadow: theme.shadows[3]
 }))
 
 const CourseLearnView = () => {
@@ -55,7 +57,6 @@ const CourseLearnView = () => {
   const [searchParams] = useSearchParams()
   const { id } = useParams<{ id: string }>()
   const unitId = searchParams.get('unitId')
-
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -97,9 +98,9 @@ const CourseLearnView = () => {
             {sidebarContent}
           </Drawer>
           <Tooltip title={mobileOpen ? 'Close menu' : 'Open menu'} placement='left'>
-            <MenuButton onClick={handleDrawerToggle} color='primary' className='shadow-lg'>
+            <MenuFab onClick={handleDrawerToggle} color='secondary'>
               {mobileOpen ? <X size={28} /> : <ClipboardList size={28} />}
-            </MenuButton>
+            </MenuFab>
           </Tooltip>
         </>
       ) : (

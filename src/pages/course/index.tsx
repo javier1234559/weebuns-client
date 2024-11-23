@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography'
 
 import AppBreadcrumb from '~/components/common/AppBreadcrumbs'
 import CourseExploreView from '~/features/course/view/CourseExploreView'
+import FloatingVocabButton from '~/features/vocabulary/components/FloatingVocabButton'
 import { RouteNames } from '~/router/route-name'
 
 function Note() {
@@ -20,6 +21,7 @@ function Note() {
         <Typography variant='h4'>Explore Course</Typography>
       </Box>
       <CourseExploreView />
+      <FloatingVocabButton />
     </Container>
   )
 }

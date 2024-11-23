@@ -8,6 +8,7 @@ export const useVocabularies = (params: VocabularyQueryParams, options?: unknown
   return useQuery({
     queryKey: VOCABULARY_KEY_FACTORY.list(params),
     queryFn: () => vocabularyApi.findAll(params),
+    retry: false,
     staleTime: 1000 * 60 * 5, // 5 minutes
     ...(typeof options === 'object' ? options : {})
   })

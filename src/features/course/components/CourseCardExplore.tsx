@@ -59,14 +59,40 @@ interface CourseCardExploreProps {
   data?: CourseWithJoinStatus
 }
 const CourseCardExplore = ({ data }: CourseCardExploreProps) => {
-  const spaceId = useSelector((state: RootState) => state.space.currentSpace?.id) || ''
   const theme = useTheme()
-  const mutate = useJoinCourse()
   const navigator = useNavigate()
 
   if (!data) return null
 
-  const handleJoinCourse = async () => {
+  // const handleJoinCourse = async () => {
+  //   if (data.isJoined) {
+  //     const { currentUnitId, currentUnitContentId } = data.progress || {}
+  //     const courseId = data.id
+
+  //     if (currentUnitId) {
+  //       navigator(
+  //         `${replacePathId(RouteNames.CourseLearn, courseId)}?unitId=${currentUnitId}&unitContentId=${currentUnitContentId}`
+  //       )
+  //     } else {
+  //       toast.error('Failed to navigate to unit detail')
+  //     }
+  //     return
+  //   }
+
+  //   try {
+  //     const result = await mutate.mutateAsync({ id: data.id, data: { spaceId } })
+  //     if (result.joinedAt) {
+  //       toast.success(result.message)
+  //     } else {
+  //       toast.error('Failed to join course')
+  //     }
+  //   } catch (error) {
+  //     toast.error('Failed to join course')
+  //     console.error(error)
+  //   }
+  // }
+
+  const handleViewDetailCourseOrContinueLearn = () => {
     if (data.isJoined) {
       const { currentUnitId, currentUnitContentId } = data.progress || {}
       const courseId = data.id
@@ -78,19 +104,8 @@ const CourseCardExplore = ({ data }: CourseCardExploreProps) => {
       } else {
         toast.error('Failed to navigate to unit detail')
       }
-      return
-    }
-
-    try {
-      const result = await mutate.mutateAsync({ id: data.id, data: { spaceId } })
-      if (result.joinedAt) {
-        toast.success(result.message)
-      } else {
-        toast.error('Failed to join course')
-      }
-    } catch (error) {
-      toast.error('Failed to join course')
-      console.error(error)
+    } else {
+      navigator(replacePathId(RouteNames.CourseDetail, data.id))
     }
   }
 
@@ -213,7 +228,7 @@ const CourseCardExplore = ({ data }: CourseCardExploreProps) => {
                 fullWidth
                 variant={data.isJoined ? 'outlined' : 'contained'}
                 color='primary'
-                onClick={handleJoinCourse}
+                onClick={handleViewDetailCourseOrContinueLearn}
                 endIcon={<ArrowRight size={20} />}
                 sx={{
                   mb: 'auto',
