@@ -49,6 +49,7 @@
     "react-router-dom": "^6.26.2",
     "react-transition-group": "^4.4.5",
     "reactjs-tiptap-editor": "^0.1.2",
+    "recharts": "^2.13.3",
     "redux-persist": "^6.0.0",
     "sass": "^1.68.0",
     "swagger-typescript-api-es": "^0.0.11",
