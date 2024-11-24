@@ -85,7 +85,9 @@ const CourseExploreView = () => {
   }
 
   if (isLoading) return <CourseExploreLoadingState count={perPage} />
-  if (!courses || error) return <AppError message={error?.message || 'Error occur'} />
+  if (!courses || error) {
+    return <AppError error={error} />
+  }
 
   return (
     <Container maxWidth='lg' sx={{ py: 4 }}>

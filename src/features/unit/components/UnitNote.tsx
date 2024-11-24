@@ -20,7 +20,7 @@ function UnitNote({ id }: UnitNoteProps) {
   const [isShowForm, setIsShowForm] = useState(false)
 
   if (isLoading) return <AppLoading />
-  if (error) return <AppError message={error.message} />
+  if (error) return <AppError error={error} />
 
   const defaultData = {
     title: '',

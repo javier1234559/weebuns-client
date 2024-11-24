@@ -9,7 +9,7 @@ function CourseCreateView() {
   const navigate = useNavigate()
   const mutation = useCreateCourse()
 
-  const handleCourse = async (data: CourseFormData) => {
+  const handleCreateCourse = async (data: CourseFormData) => {
     const loadingId = toast.loading('Creating course...')
 
     const result = await mutation.mutateAsync({
@@ -25,7 +25,7 @@ function CourseCreateView() {
     }
   }
 
-  return <CourseForm onSubmit={handleCourse} isLoading={mutation.isPending} />
+  return <CourseForm onSubmit={handleCreateCourse} isLoading={mutation.isPending} />
 }
 
 CourseCreateView.displayName = 'CourseCreateView'

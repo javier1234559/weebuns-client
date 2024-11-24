@@ -61,7 +61,7 @@ function VocabularyManager() {
   ) // Only re-create when data.data changes
 
   if (isLoading) return <AppLoading />
-  if (!data || error) return <AppError message={error?.message || 'No data found'} />
+  if (!data || error) return <AppError error={error} />
 
   return (
     <Box sx={{ width: '100%' }}>

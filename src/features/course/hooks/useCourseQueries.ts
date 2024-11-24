@@ -57,6 +57,7 @@ export const useGetCourseById = (id: string, options?: unknown) => {
   return useQuery({
     queryKey: COURSE_KEY_FACTORY.detail(id),
     queryFn: () => courseApi.getById(id),
+    retry: false,
     staleTime: 1000 * 60 * 5,
     ...(typeof options === 'object' ? options : {})
   })

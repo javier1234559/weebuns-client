@@ -120,8 +120,7 @@ const courseApi = {
       .courseControllerGetCourseById(id)
       .then((res) => res.data)
       .catch((err) => {
-        handleApiError(err)
-        throw err.response.data
+        throw err
       })
   },
 

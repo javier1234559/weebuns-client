@@ -99,8 +99,8 @@ function TableEssay() {
       </Grid>
     )
 
-  if (!data || isError) {
-    return <AppError message={error?.message || 'Something went wrong'} />
+  if (!data || error) {
+    return <AppError error={error} />
   }
 
   return (

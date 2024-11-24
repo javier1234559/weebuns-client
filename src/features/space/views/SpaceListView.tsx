@@ -34,7 +34,7 @@ function SpaceListView() {
     )
 
   if (!listSpaceData || error) {
-    return <AppError message={error?.message || 'Something went wrong'} />
+    return <AppError error={error} />
   }
 
   return (

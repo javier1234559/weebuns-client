@@ -15,7 +15,7 @@ function StreakLearningCalendar() {
   const { data, error, isLoading } = useStatsActivityStreak()
 
   if (isLoading) return <AppLoading />
-  if (!data || error) return <AppError message={error?.message || 'An error occurred'} />
+  if (!data || error) return <AppError error={error} />
 
   return (
     <>

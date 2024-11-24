@@ -48,8 +48,7 @@ function EssayDetailView() {
   }
 
   if (isLoading) return <AppLoading />
-  if (isError) return <AppError message={error?.message || 'Something went wrong'} />
-  if (!data) return <AppError message='Data not found' />
+  if (!data || isError) return <AppError error={error} />
 
   const renderContent = () => {
     switch (correctionMode) {

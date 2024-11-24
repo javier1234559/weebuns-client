@@ -37,7 +37,7 @@ function EssayCorrectionHistory({ idEssay }: EssayCorrectionHistoryProps) {
     )
 
   if (!correctionList || error) {
-    return <AppError message={error?.message || 'Something went wrong'} />
+    return <AppError error={error} />
   }
   const isEmpty = correctionList.data.length === 0
 

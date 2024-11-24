@@ -48,7 +48,7 @@ export const RecommendInput = ({ value, onChange }: RecommendInputProps) => {
     <Fade in={!value}>
       <Box sx={{ mt: 2 }}>
         {error ? (
-          <AppError message={error} />
+          <AppError error={error} />
         ) : (
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1 }}>
             {loading ? (

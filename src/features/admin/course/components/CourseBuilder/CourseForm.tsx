@@ -255,7 +255,7 @@ const CourseForm = ({ onSubmit, isLoading, initialData }: CourseFormProps) => {
     <form onSubmit={handleSubmit(handleFormSubmit)}>
       <Card>
         <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-          <CardTitle>Create New Course</CardTitle>
+          <CardTitle>{initialData ? 'Update Course' : 'Create New Course'}</CardTitle>
 
           {renderBasicInfo()}
 
@@ -291,7 +291,7 @@ const CourseForm = ({ onSubmit, isLoading, initialData }: CourseFormProps) => {
               Cancel
             </AppButton>
             <AppButton type='submit' variant='contained' color='primary' disabled={isLoading}>
-              {isLoading ? 'Creating...' : 'Create Course'}
+              {isLoading ? 'Submitting...' : initialData ? 'Update Course' : 'Create Course'}
             </AppButton>
           </Box>
         </CardContent>
