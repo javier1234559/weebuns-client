@@ -7,7 +7,7 @@ import { PaletteOptions, SimplePaletteColorOptions } from '@mui/material'
 //   contrastText: '#FFFFFF'
 // }
 
-const COLOR_PRIMARY: SimplePaletteColorOptions = {
+export const COLOR_PRIMARY: SimplePaletteColorOptions = {
   main: '#22C55D',
   light: '#86EFAC',
   dark: '#16A34A',

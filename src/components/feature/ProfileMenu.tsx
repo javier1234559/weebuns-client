@@ -5,6 +5,7 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import Tooltip from '@mui/material/Tooltip'
 import Typography from '@mui/material/Typography'
+import { LayoutDashboard, LogOut, User } from 'lucide-react'
 import { MouseEvent, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -20,18 +21,17 @@ import { RootState } from '~/store/store'
 const menuLinks = [
   {
     name: 'Profile',
-    link: RouteNames.ME
-  },
-  {
-    name: 'Account',
+    icon: <User size={18} />,
     link: RouteNames.ME
   },
   {
     name: 'Dashboard',
+    icon: <LayoutDashboard size={18} />,
     link: RouteNames.Dashboard
   },
   {
     name: 'Logout',
+    icon: <LogOut size={18} />,
     link: RouteNames.Logout
   }
 ]
@@ -60,16 +60,12 @@ function ProfileMenu() {
   }
 
   const handleLogout = () => {
-    // Dispatch logout action
     dispatch(logout())
-    //Clear all data
     dispatch(clearCurrentSpace())
     dispatch(clearAllEssayData())
     dispatch(clearAllCourseData())
     dispatch(clearAllVocabData())
     localStorage.clear()
-
-    // Navigate to home or login page after logout
     navigate(RouteNames.Home)
   }
 
@@ -101,8 +97,40 @@ function ProfileMenu() {
         onClose={handleCloseUserMenu}
       >
         {menuLinks.map((item) => (
-          <MenuItem key={item.name} onClick={() => handleMenuItemClick(item.link, item.name)}>
-            <Typography textAlign='center'>{item.name}</Typography>
+          <MenuItem
+            key={item.name}
+            onClick={() => handleMenuItemClick(item.link, item.name)}
+            sx={{
+              gap: 1.5,
+              minWidth: 140,
+              '&:hover': {
+                '& .icon': {
+                  color: 'primary.main'
+                },
+                '& .text': {
+                  color: 'primary.main'
+                }
+              }
+            }}
+          >
+            <Box
+              className='icon'
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                color: 'text.secondary'
+              }}
+            >
+              {item.icon}
+            </Box>
+            <Typography
+              className='text'
+              sx={{
+                color: 'text.primary'
+              }}
+            >
+              {item.name}
+            </Typography>
           </MenuItem>
         ))}
       </Menu>

@@ -2,14 +2,23 @@ import './Login.scss'
 
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import { useNavigate } from 'react-router-dom'
 
+import { AuthResponse } from '~/features/auth/auth.type'
 import FaceBookForm from '~/features/auth/components/FacebookForm/FaceBookForm'
 import GoogleForm from '~/features/auth/components/GoogleForm/GoogleForm'
 import LoginForm from '~/features/auth/components/LoginForm/LoginForm'
 import useLogin from '~/features/auth/hooks/useLogin'
+import { RouteNames } from '~/router/route-name'
 
 function LoginView() {
+  const navigate = useNavigate()
   const { handleLogin } = useLogin()
+
+  const onSubmitLogin = async (data: AuthResponse) => {
+    handleLogin(data)
+    navigate(RouteNames.Dashboard)
+  }
 
   return (
     <Box className='login-page'>
@@ -31,10 +40,10 @@ function LoginView() {
             Hi there , let’s improve languages together
           </Typography>
           <Box display='flex' flexDirection='column' my={2} gap={2}>
-            <GoogleForm onSubmit={handleLogin} />
-            <FaceBookForm onSubmit={handleLogin} />
+            <GoogleForm onSubmit={onSubmitLogin} />
+            <FaceBookForm onSubmit={onSubmitLogin} />
           </Box>
-          <LoginForm onSubmit={handleLogin} />
+          <LoginForm onSubmit={onSubmitLogin} />
         </Box>
       </Box>
     </Box>

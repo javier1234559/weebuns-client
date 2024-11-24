@@ -1,4 +1,3 @@
-import { FunctionComponent, PropsWithChildren } from 'react'
 import { useSelector } from 'react-redux'
 
 import TopBarAndSideBarLayout from '~/components/layout/PrivateLayout/TopBarAndSideBarLayout'
@@ -13,7 +12,7 @@ const TITLE_PRIVATE = 'Weebuns - English Learning'
  * Renders "Private Layout" composition
  * @layout PrivateLayout
  */
-const PrivateLayout: FunctionComponent<PropsWithChildren> = ({ children }) => {
+const PrivateLayout = () => {
   const title = TITLE_PRIVATE
   document.title = title
 
@@ -37,7 +36,7 @@ const PrivateLayout: FunctionComponent<PropsWithChildren> = ({ children }) => {
       title={title}
       variant='sidebarPersistentOnDesktop'
     >
-      {children}
+      {/* <Outlet /> */}
     </TopBarAndSideBarLayout>
   )
 }

@@ -3,14 +3,23 @@ import './Register.scss'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
+import { useNavigate } from 'react-router-dom'
 
+import { AuthResponse } from '~/features/auth/auth.type'
 import FaceBookForm from '~/features/auth/components/FacebookForm/FaceBookForm'
 import GoogleForm from '~/features/auth/components/GoogleForm/GoogleForm'
 import RegisterForm from '~/features/auth/components/RegisterForm/RegisterForm'
 import useRegister from '~/features/auth/hooks/useRegister'
+import { RouteNames } from '~/router/route-name'
 
 function Register() {
+  const navigate = useNavigate()
   const { handleRegister } = useRegister()
+
+  const onSubmitRegister = async (data: AuthResponse) => {
+    handleRegister(data)
+    navigate(RouteNames.Dashboard)
+  }
 
   return (
     <Container>
@@ -33,10 +42,10 @@ function Register() {
               Hi there , let’s improve languages together
             </Typography>
             <Box display='flex' flexDirection='column' my={2} gap={2}>
-              <GoogleForm onSubmit={handleRegister} />
-              <FaceBookForm onSubmit={handleRegister} />
+              <GoogleForm onSubmit={onSubmitRegister} />
+              <FaceBookForm onSubmit={onSubmitRegister} />
             </Box>
-            <RegisterForm onSubmit={handleRegister} />
+            <RegisterForm onSubmit={onSubmitRegister} />
           </Box>
         </Box>
       </Box>

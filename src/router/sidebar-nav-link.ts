@@ -45,6 +45,24 @@ export const SIDEBAR_NAV_LINKS_USER: Array<LinkToPage> = [
   }
 ]
 
+export const SIDEBAR_NAV_LINKS_ADMIN: Array<LinkToPage> = [
+  {
+    title: 'Home',
+    path: RouteNames.AdminDashboard,
+    icon: 'home'
+  },
+  {
+    title: 'User Manager',
+    path: RouteNames.AdminUserManager,
+    icon: 'user'
+  },
+  {
+    title: 'Course Manager',
+    path: RouteNames.AdminCourseManager,
+    icon: 'course'
+  }
+]
+
 // Add debug links
 // if (globalConfig.IS_DEBUG) {
 //   SIDEBAR_NAV_LINKS_USER_DEFAULT.push({

@@ -1,5 +1,7 @@
 import { yupResolver } from '@hookform/resolvers/yup'
+import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
+import MenuItem from '@mui/material/MenuItem'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { Controller, useForm } from 'react-hook-form'
@@ -118,19 +120,29 @@ function RegisterForm({ onSubmit }: RegisterFormProps) {
         error={!!errors.email}
         helperText={errors.email?.message}
       />
-      <Controller
-        name='nativeLanguage'
-        control={control}
-        render={({ field }) => (
-          <Select {...field} placeholder='Choose your native language'>
-            {Object.entries(LANGUAGE_LABELS).map(([value, label]) => (
-              <SelectItem key={value} value={value}>
-                {label}
-              </SelectItem>
-            ))}
-          </Select>
-        )}
-      />
+
+      <Box py={1}>
+        <Controller
+          name='nativeLanguage'
+          control={control}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              select
+              fullWidth
+              label='Choose your native language'
+              error={!!errors.nativeLanguage}
+              helperText={errors.nativeLanguage?.message}
+            >
+              {Object.entries(LANGUAGE_LABELS).map(([value, label]) => (
+                <MenuItem key={value} value={value}>
+                  {label}
+                </MenuItem>
+              ))}
+            </TextField>
+          )}
+        />
+      </Box>
       {errors.nativeLanguage && (
         <Typography color='error' variant='caption' sx={{ mt: 1 }}>
           {errors.nativeLanguage.message}

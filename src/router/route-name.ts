@@ -2,6 +2,7 @@ export enum RouteNames {
   EMPTY = '',
   Home = '/',
   Dashboard = '/app',
+  About = '/about',
 
   Auth = '/auth',
   Register = '/register',
@@ -35,6 +36,14 @@ export enum RouteNames {
   UnitCreate = '/unit/admin/create',
 
   Setting = '/setting',
+
+  // Admin
+  AdminLogin = '/admin',
+  AdminDashboard = '/admin/dashboard',
+  AdminUserManager = '/admin/user-manager',
+  AdminCourseManager = '/admin/course-manager',
+  AdminCourseManagerDetail = '/admin/course-manager/:id',
+  AdminUnitManager = '/admin/unit-manager/:id',
 
   ForgotPassword = '/forgot-password',
   UNAUTHORIZED = '/401',

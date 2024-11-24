@@ -36,6 +36,7 @@ import Remove from '~/components/common/AppIcon/icons/Remove'
 import Save from '~/components/common/AppIcon/icons/Save'
 import SearchCorrect from '~/components/common/AppIcon/icons/SearchCorrect'
 import Switch from '~/components/common/AppIcon/icons/Switch'
+import User from '~/components/common/AppIcon/icons/User'
 import Vocabulary from '~/components/common/AppIcon/icons/Vocabulary'
 
 export type IconName = keyof typeof ICONS
@@ -85,5 +86,6 @@ export const ICONS /* Note: Setting type disables property autocomplete :( was -
   remove: Remove,
   save: Save,
   note: Note,
-  course: Course
+  course: Course,
+  user: User
 }

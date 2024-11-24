@@ -1,7 +1,9 @@
 import { lazy, Suspense } from 'react'
+import { Outlet } from 'react-router-dom'
 
 import AppLoading from '~/components/common/AppLoading'
 import { PrivateLayout, PublicLayout } from '~/components/layout'
+import NavLayout from '~/components/layout/NavLayout'
 import { globalConfig } from '~/config'
 import Register from '~/pages/(auth)/register'
 import AuthWrapper from '~/router/components/AuthRedirect'
@@ -10,6 +12,7 @@ import { RouteNames } from '~/router/route-name'
 
 // Lazy load your components
 const Landing = lazy(() => import('~/pages'))
+const AdminLogin = lazy(() => import('~/pages/(admin)'))
 const App = lazy(() => import('~/pages/app'))
 const AuthView = lazy(() => import('~/pages/(auth)/Auth'))
 const Login = lazy(() => import('~/pages/(auth)/login'))
@@ -41,41 +44,52 @@ const USER_ROUTES = [
           </Suspense>
         )
       },
+      // Nhóm các routes cần NavLayout
       {
-        path: RouteNames.Home,
         element: (
           <Suspense fallback={<AppLoading />}>
-            <Landing />
+            <NavLayout>
+              <Outlet />
+            </NavLayout>
           </Suspense>
-        )
+        ),
+        children: [
+          {
+            path: RouteNames.Home,
+            element: <Landing />
+          },
+          {
+            path: RouteNames.Auth,
+            element: (
+              <PrivateRoute>
+                <AuthView />
+              </PrivateRoute>
+            )
+          },
+          {
+            path: RouteNames.Login,
+            element: (
+              <AuthWrapper>
+                <Login />
+              </AuthWrapper>
+            )
+          },
+          {
+            path: RouteNames.Register,
+            element: (
+              <AuthWrapper>
+                <Register />
+              </AuthWrapper>
+            )
+          }
+        ]
       },
+      // Routes không cần NavLayout
       {
-        path: RouteNames.Auth,
+        path: RouteNames.AdminLogin,
         element: (
           <Suspense fallback={<AppLoading />}>
-            <PrivateRoute>
-              <AuthView />
-            </PrivateRoute>
-          </Suspense>
-        )
-      },
-      {
-        path: RouteNames.Login,
-        element: (
-          <Suspense fallback={<AppLoading />}>
-            <AuthWrapper>
-              <Login />
-            </AuthWrapper>
-          </Suspense>
-        )
-      },
-      {
-        path: RouteNames.Register,
-        element: (
-          <Suspense fallback={<AppLoading />}>
-            <AuthWrapper>
-              <Register />
-            </AuthWrapper>
+            <AdminLogin />
           </Suspense>
         )
       }
