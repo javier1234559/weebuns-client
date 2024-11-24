@@ -11,11 +11,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import { logout } from '~/features/auth/authSlice'
-import { clearAllCourseData } from '~/features/course/courseSlice'
-import { clearAllEssayData } from '~/features/essay/essaySlice'
-import { clearCurrentSpace } from '~/features/space/spaceSlice'
-import { clearAllVocabData } from '~/features/vocabulary/vocabSlice'
 import { RouteNames } from '~/router/route-name'
+import { resetAllState } from '~/store/resetSlice'
 import { RootState } from '~/store/store'
 
 const menuLinks = [
@@ -61,12 +58,9 @@ function ProfileMenu() {
 
   const handleLogout = () => {
     dispatch(logout())
-    dispatch(clearCurrentSpace())
-    dispatch(clearAllEssayData())
-    dispatch(clearAllCourseData())
-    dispatch(clearAllVocabData())
+    dispatch(resetAllState())
     localStorage.clear()
-    navigate(RouteNames.Home)
+    window.location.replace(RouteNames.Home)
   }
 
   return (

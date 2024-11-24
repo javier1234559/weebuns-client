@@ -12,6 +12,7 @@ const AdminLogin = lazy(() => import('~/pages/(admin)'))
 const AppLoading = lazy(() => import('~/components/common/AppLoading'))
 const CourseManager = lazy(() => import('~/pages/(admin)/course-manager'))
 const CourseManagerDetail = lazy(() => import('~/pages/(admin)/course-manager/[id]'))
+const CourseManagerCreate = lazy(() => import('~/pages/(admin)/course-manager/create'))
 const AdminDashboard = lazy(() => import('~/pages/(admin)/dashboard'))
 const UnitManager = lazy(() => import('~/pages/(admin)/unit-manager/[id]'))
 const AdminUserManager = lazy(() => import('~/pages/(admin)/user-manager'))
@@ -84,6 +85,14 @@ const ADMIN_ROUTES = [
         element: (
           <Suspense fallback={<AppLoading />}>
             <CourseManager />
+          </Suspense>
+        )
+      },
+      {
+        path: RouteNames.AdminCourseManagerCreate,
+        element: (
+          <Suspense fallback={<AppLoading />}>
+            <CourseManagerCreate />
           </Suspense>
         )
       },

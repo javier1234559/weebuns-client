@@ -30,8 +30,6 @@ export enum RouteNames {
   CourseDetail = '/course/:id',
   CourseLearn = '/course/:id/learn',
 
-  CourseCreate = '/course/admin/create',
-
   UnitDetail = '/unit/:id',
   UnitCreate = '/unit/admin/create',
 
@@ -43,6 +41,7 @@ export enum RouteNames {
   AdminUserManager = '/admin/user-manager',
   AdminCourseManager = '/admin/course-manager',
   AdminCourseManagerDetail = '/admin/course-manager/:id',
+  AdminCourseManagerCreate = '/admin/course-manager/create',
   AdminUnitManager = '/admin/unit-manager/:id',
 
   ForgotPassword = '/forgot-password',
