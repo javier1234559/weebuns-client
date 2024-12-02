@@ -66,7 +66,7 @@ function NoteCard({ data }: NoteCardProps) {
     mutate.mutateAsync({
       id: data.id,
       data: {
-        unitId: data.unitId,
+        lessonId: data.lessonId,
         isBookmarked: !data.isBookmarked
       }
     })
@@ -78,10 +78,10 @@ function NoteCard({ data }: NoteCardProps) {
         <Box sx={{ mb: 2 }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
             <Typography color='text.secondary' variant='body2'>
-              {data.unit?.title}
+              {data.lesson?.title}
             </Typography>
             <IconButton
-              href={`/course/${data?.unit?.courseId}/learn?unitId=${data.unitId}`}
+              href={`/course/${data.courseId}/learn?unitId=${data.unitId}&lessonId=${data.lessonId}`}
               size='small'
               sx={{ color: 'text.secondary', '&:hover': { color: 'primary.main' } }}
             >

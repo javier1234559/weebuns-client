@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
-import { styled, useTheme } from '@mui/material/styles'
+import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import { useCallback } from 'react'
 
@@ -30,7 +30,6 @@ interface StatsCardProps {
 }
 
 const StatsCard = ({ data }: StatsCardProps) => {
-  const theme = useTheme()
   const config = STATS_CONFIG[data.type]
   const Icon = config.icon
 

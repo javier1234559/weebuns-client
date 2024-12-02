@@ -8,15 +8,16 @@ import AppError from '~/components/common/AppError'
 import AppLoading from '~/components/common/AppLoading'
 import NoteCard from '~/features/note/components/NoteCard'
 import NoteForm from '~/features/note/components/NoteForm'
-import { useGetUnitNote } from '~/features/unit/hooks/useUnitQueries'
+import { useGetLessonNote } from '~/features/unit/hooks/useUnitQueries'
 import { Note } from '~/services/api/api-axios'
 
 interface UnitNoteProps {
-  id: string
+  unitId: string
+  lessonId: string
 }
 
-function UnitNote({ id }: UnitNoteProps) {
-  const { data, isLoading, error } = useGetUnitNote(id)
+function UnitNote({ unitId, lessonId }: UnitNoteProps) {
+  const { data, isLoading, error } = useGetLessonNote(unitId, lessonId)
   const [isShowForm, setIsShowForm] = useState(false)
 
   if (isLoading) return <AppLoading />
@@ -26,7 +27,7 @@ function UnitNote({ id }: UnitNoteProps) {
     title: '',
     content: '',
     tags: [],
-    unitId: id
+    lessonId: lessonId
   }
 
   return (

@@ -1,7 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
+import { COURSE_KEY_FACTORY } from '~/features/course/hooks/course-key-factory'
 import { UNIT_KEY_FACTORY } from '~/features/unit/hooks/unit-key-factory'
-import { CreateUnitContentDto, CreateUnitDto, UpdateUnitContentDto, UpdateUnitDto } from '~/services/api/api-axios'
+import {
+  BulkUpdateUnitsDto,
+  CreateLessonDto,
+  CreateUnitDto,
+  UpdateLessonDto,
+  UpdateUnitDto
+} from '~/services/api/api-axios'
 
 import unitApi from '../services/unitApi'
 
@@ -14,6 +21,17 @@ export const useGetUnitById = (id: string, options?: unknown) => {
   })
 }
 
+export const useLearnUnit = (unitId: string, options?: unknown) => {
+  return useQuery({
+    queryKey: UNIT_KEY_FACTORY.learn(unitId),
+    queryFn: () => unitApi.learn(unitId),
+    retry: false,
+    staleTime: 1000 * 60 * 5,
+    ...(typeof options === 'object' ? options : {})
+  })
+}
+
+// Unit Mutation Hooks
 export const useCreateUnit = () => {
   const queryClient = useQueryClient()
   return useMutation({
@@ -45,77 +63,84 @@ export const useDeleteUnit = () => {
   })
 }
 
-export const useGetUnitContents = (unitId: string, options?: unknown) => {
+// Lesson Query Hooks
+export const useGetLesson = (unitId: string, lessonId: string, options?: unknown) => {
   return useQuery({
-    queryKey: UNIT_KEY_FACTORY.contents(unitId),
-    queryFn: () => unitApi.getUnitContents(unitId),
+    queryKey: UNIT_KEY_FACTORY.lesson(lessonId),
+    queryFn: () => unitApi.getLesson(unitId, lessonId),
     staleTime: 1000 * 60 * 5,
     ...(typeof options === 'object' ? options : {})
   })
 }
 
-export const useGetUnitContent = (unitId: string, contentId: string, options?: unknown) => {
+export const useGetLessonNote = (unitId: string, lessonId: string, options?: unknown) => {
   return useQuery({
-    queryKey: UNIT_KEY_FACTORY.content(unitId, contentId),
-    queryFn: () => unitApi.getUnitContent(unitId, contentId),
+    queryKey: UNIT_KEY_FACTORY.lessonNote(lessonId),
+    queryFn: () => unitApi.getLessonNote(unitId, lessonId),
     staleTime: 1000 * 60 * 5,
+    retry: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
     ...(typeof options === 'object' ? options : {})
   })
 }
 
-export const useCreateUnitContent = () => {
+// Lesson Mutation Hooks
+export const useCreateLesson = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ unitId, data }: { unitId: string; data: CreateUnitContentDto }) =>
-      unitApi.createUnitContent(unitId, data),
+    mutationFn: ({ unitId, data }: { unitId: string; data: CreateLessonDto }) => unitApi.createLesson(unitId, data),
     onSuccess: (_data, { unitId }) => {
-      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.contents(unitId) })
+      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.lessons(unitId) })
+      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.detail(unitId) })
     }
   })
 }
 
-export const useUpdateUnitContent = () => {
+export const useUpdateLesson = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ unitId, contentId, data }: { unitId: string; contentId: string; data: UpdateUnitContentDto }) =>
-      unitApi.updateUnitContent(unitId, contentId, data),
-    onSuccess: (_data, { unitId, contentId }) => {
-      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.content(unitId, contentId) })
-      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.contents(unitId) })
+    mutationFn: ({ unitId, lessonId, data }: { unitId: string; lessonId: string; data: UpdateLessonDto }) =>
+      unitApi.updateLesson(unitId, lessonId, data),
+    onSuccess: (_data, { unitId, lessonId }) => {
+      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.lesson(lessonId) })
+      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.lessons(unitId) })
     }
   })
 }
 
-export const useDeleteUnitContent = () => {
+export const useDeleteLesson = () => {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: ({ unitId, contentId }: { unitId: string; contentId: string }) =>
-      unitApi.deleteUnitContent(unitId, contentId),
+    mutationFn: ({ unitId, lessonId }: { unitId: string; lessonId: string }) => unitApi.deleteLesson(unitId, lessonId),
     onSuccess: (_data, { unitId }) => {
-      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.contents(unitId) })
+      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.lessons(unitId) })
+      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.detail(unitId) })
     }
   })
 }
 
-export const useLearnUnit = (unitId: string, options?: unknown) => {
+export const useLearnLesson = (unitId: string, lessonId: string, options?: unknown) => {
   return useQuery({
-    queryKey: UNIT_KEY_FACTORY.learn(unitId),
-    queryFn: () => unitApi.learn(unitId),
-    retry: false, // Disable retries
-    staleTime: 1000 * 60 * 5,
+    queryKey: UNIT_KEY_FACTORY.learnLesson(lessonId),
+    queryFn: () => unitApi.learnLesson(unitId, lessonId),
+    retry: false, // Disable retries like in useLearnUnit
+    staleTime: 1000 * 60 * 5, // 5 minutes stale time
     ...(typeof options === 'object' ? options : {})
   })
 }
 
-export const useGetUnitNote = (unitId: string, options?: unknown) => {
-  return useQuery({
-    queryKey: UNIT_KEY_FACTORY.note(unitId),
-    queryFn: () => unitApi.getUnitNote(unitId),
-    staleTime: 1000 * 60 * 5,
-    retry: false, // Disable retries
-    refetchOnWindowFocus: false, // Turn off refetch on window focus
-    refetchOnReconnect: false, // Turn off refetch on reconnect
-    refetchOnMount: false, // Turn off refetch on mount
-    ...(typeof options === 'object' ? options : {})
+export const useBulkUpdateLesson = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: { data: BulkUpdateUnitsDto }) => unitApi.bulkUpdateUnit(data.data),
+    onSuccess: (_data, variables) => {
+      // Only invalidate after successful update
+      queryClient.invalidateQueries({
+        queryKey: COURSE_KEY_FACTORY.units(variables.data.courseId)
+      })
+    }
   })
 }

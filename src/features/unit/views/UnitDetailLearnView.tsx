@@ -5,16 +5,19 @@ import { memo } from 'react'
 
 import AppError from '~/components/common/AppError'
 import AppLoading from '~/components/common/AppLoading'
-import UnitContentTab from '~/features/unit/components/UnitContentTab'
+import LessonContentViewer from '~/features/lesson/components/LessonContentViewer'
+import { LessonContent } from '~/features/lesson/lesson.type'
 import UnitNote from '~/features/unit/components/UnitNote'
-import { useLearnUnit } from '~/features/unit/hooks/useUnitQueries'
+import { useLearnLesson } from '~/features/unit/hooks/useUnitQueries'
 
 interface UnitDetailLearnViewProps {
   unitId: string
+  lessonId: string
 }
 
-const UnitDetailLearnView = ({ unitId }: UnitDetailLearnViewProps) => {
-  const { data, isLoading, error } = useLearnUnit(unitId)
+const UnitDetailLearnView = ({ unitId, lessonId }: UnitDetailLearnViewProps) => {
+  const { data, isLoading, error } = useLearnLesson(unitId, lessonId)
+
   if (isLoading) return <AppLoading />
   if (!data || error) return <AppError error={error} />
 
@@ -23,16 +26,15 @@ const UnitDetailLearnView = ({ unitId }: UnitDetailLearnViewProps) => {
       {/* Unit Header */}
       <Box sx={{ mb: 4 }}>
         <Typography variant='h4' component='h1' gutterBottom>
-          {data.unit.title}
+          {data.lesson.title}
         </Typography>
-        <Typography variant='body1' color='text.secondary' gutterBottom>
-          {data.unit.description}
-        </Typography>
+        <div dangerouslySetInnerHTML={{ __html: data.lesson.summary || '' }}></div>
       </Box>
 
       {/* Content Tabs */}
       <Box sx={{ mb: 4 }}>
-        <UnitContentTab contents={data.unit.contents || []} />
+        <LessonContentViewer content={data.lesson.content as LessonContent} />
+        {/* <UnitContentTab contents={data.lesson.contents || []} /> */}
       </Box>
 
       {/* Notes Section */}
@@ -40,7 +42,7 @@ const UnitDetailLearnView = ({ unitId }: UnitDetailLearnViewProps) => {
         <Typography variant='h6' gutterBottom>
           Notes
         </Typography>
-        <UnitNote id={unitId} />
+        <UnitNote unitId={unitId} lessonId={lessonId} />
       </Paper>
 
       {/* Comments Section */}

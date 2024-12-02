@@ -15,6 +15,7 @@ import PaginationUrl from '~/components/feature/PaginationUrl'
 import NoteCard from '~/features/note/components/NoteCard'
 import { useNotes } from '~/features/note/hooks/useNoteQueries'
 import usePagination from '~/hooks/usePagination'
+import { Note } from '~/services/api/api-axios'
 
 const MasonryGrid = styled(Box)(({ theme }) => ({
   columnCount: 1,
@@ -94,7 +95,7 @@ export default function NoteGridView() {
 
       <MasonryGrid>
         {data.data.map((note) => (
-          <NoteCard key={note.id} data={note} />
+          <NoteCard key={note.id} data={note as unknown as Note} />
         ))}
       </MasonryGrid>
 

@@ -8,49 +8,6 @@
 
 export type DeleteResponseDto = object
 
-export interface CourseProgress {
-  id: string
-  userId: string
-  courseId: string
-  currentUnitId: string | null
-  currentUnitContentId: string | null
-  nextUnitId: string | null
-  nextUnitContentId: string | null
-  /** @format int32 */
-  completedWeight: number
-  /** @format date-time */
-  lastAccessedAt: string | null
-  completedUnits: string[]
-  completedContents: string[]
-  user?: User
-  course?: Course
-  currentUnit?: Unit | null
-  nextUnit?: Unit | null
-  currentContent?: UnitContent | null
-  nextContent?: UnitContent | null
-}
-
-export interface UnitContent {
-  id: string
-  unitId: string
-  title: string
-  contentType: string
-  content: object
-  /** @format int32 */
-  orderIndex: number
-  isPremium: boolean
-  isRequired: boolean
-  /** @format int32 */
-  contentWeight: number
-  /** @format date-time */
-  createdAt: string
-  /** @format date-time */
-  updatedAt: string
-  unit?: Unit
-  currentInProgress?: CourseProgress[]
-  nextInProgress?: CourseProgress[]
-}
-
 export interface SpaceCount {
   /** @example 0 */
   essays: number
@@ -121,10 +78,11 @@ export interface Space {
 export interface Note {
   id: string
   spaceId: string | null
-  unitId: string
+  lessonId: string
+  courseId: string | null
+  unitId: string | null
   title: string
   content: string
-  /** @example ["grammar","important","review","vocabulary"] */
   tags: string[]
   isBookmarked: boolean
   createdBy: string
@@ -134,43 +92,90 @@ export interface Note {
   updatedAt: string
   /** @format date-time */
   deletedAt: string | null
-  unit?: Unit
+  lesson?: Lesson
   creator?: User
   space?: Space | null
+  Course?: Course | null
+  Unit?: Unit | null
 }
 
-export interface UnitComment {
+export interface LessonComment {
   id: string
-  unitId: string
+  lessonId: string
   createdBy: string
   content: string
   /** @format date-time */
   createdAt: string
   /** @format date-time */
   updatedAt: string
+  lesson?: Lesson
+  creator?: User
+}
+
+export interface CourseProgress {
+  /** @format int32 */
+  completedWeight: number
+  id: string
+  userId: string
+  courseId: string
+  currentUnitId: string | null
+  currentLessonId: string | null
+  nextUnitId: string | null
+  nextLessonId: string | null
+  /** @format date-time */
+  lastAccessedAt: string | null
+  completedUnits: string[]
+  completedLessons: string[]
+  user?: User
+  course?: Course
+  currentUnit?: Unit | null
+  nextUnit?: Unit | null
+  currentLesson?: Lesson | null
+  nextLesson?: Lesson | null
+}
+
+export interface Lesson {
+  /** @default 0 */
+  lessonWeight: number
+  id: string
+  unitId: string
+  title: string
+  summary: string | null
+  content: object
+  /** @format int32 */
+  orderIndex: number
+  isPremium: boolean
+  isRequired: boolean
+  status: 'draft' | 'published' | 'private' | 'deleted'
+  createdBy: string
+  /** @format date-time */
+  createdAt: string
+  /** @format date-time */
+  updatedAt: string
   unit?: Unit
   creator?: User
+  notes?: Note[]
+  comments?: LessonComment[]
+  currentInProgress?: CourseProgress[]
+  nextInProgress?: CourseProgress[]
 }
 
 export interface Unit {
   id: string
   courseId: string
   title: string
-  description: string | null
   /** @format int32 */
   orderIndex: number
+  /** @default false */
   isPremium: boolean
-  /** @format int32 */
-  unitWeight: number
   createdBy: string
   /** @format date-time */
   createdAt: string
   /** @format date-time */
   updatedAt: string
   course?: Course
-  contents?: UnitContent[]
-  notes?: Note[]
-  comments?: UnitComment[]
+  creator?: User
+  lessons?: Lesson[]
   courseProgress?: CourseProgress[]
   nextUnits?: CourseProgress[]
 }
@@ -186,6 +191,8 @@ export interface SpaceCourse {
 }
 
 export interface Course {
+  /** @default 0 */
+  totalWeight: number
   id: string
   title: string
   description: string | null
@@ -195,10 +202,10 @@ export interface Course {
   maxLevel: string
   topics: string[]
   courseType: string
-  /** @format int32 */
-  totalWeight: number
+  /** @default false */
   isPremium: boolean
-  isPublished: boolean
+  /** @default "draft" */
+  status: 'draft' | 'published' | 'private' | 'deleted'
   createdBy: string
   /** @format date-time */
   createdAt: string
@@ -256,12 +263,12 @@ export interface CorrectionSentence {
   rating: number
   /**
    * @format date-time
-   * @example "2024-11-23T06:06:00.982Z"
+   * @example "2024-12-02T19:55:45.769Z"
    */
   createdAt: string
   /**
    * @format date-time
-   * @example "2024-11-23T06:06:00.983Z"
+   * @example "2024-12-02T19:55:45.769Z"
    */
   updatedAt: string
 }
@@ -380,32 +387,32 @@ export interface EssayHashtag {
 }
 
 export interface Essay {
-  /** @example 1 */
+  /** @example "uuid" */
   id: string
-  /** @example 1 */
+  /** @example "1" */
   spaceId: string
   /** @example "My First Essay" */
   title: string
+  /** @example 0 */
+  upvoteCount: number
   /** @example "A brief summary" */
   summary: string | null
   /** @example "Essay content..." */
   content: string
-  /** @example 0 */
-  upvoteCount: number
   /** @example "https://example.com/cover.jpg" */
   coverUrl: string | null
   /** @example "draft" */
-  status: 'draft' | 'public' | 'private' | 'deleted'
+  status: 'draft' | 'published' | 'private' | 'deleted'
   /** @example "en" */
   language: string
-  /** @example 1 */
+  /** @example "1" */
   createdBy: string
   /** @format date-time */
   createdAt: string
   /** @format date-time */
   updatedAt: string
   /** @format date-time */
-  deletedAt: string
+  deletedAt: string | null
   space: Space | null
   author: User | null
   corrections: Correction[] | null
@@ -514,8 +521,7 @@ export interface User {
   corrections: Correction[] | null
   /** Replies to corrections */
   correctionReplies: CorrectionReply[] | null
-  /** Comments made on course units */
-  unitComments: UnitComment[] | null
+  lessonComments?: LessonComment[]
   /** User subscriptions */
   subscriptions: Subscription[] | null
   /** Correction credits owned by the user */
@@ -696,6 +702,8 @@ export interface DeleteSpaceResponseDto {
 }
 
 export interface CourseJoinedDto {
+  /** @default 0 */
+  totalWeight: number
   id: string
   title: string
   description: string | null
@@ -705,10 +713,10 @@ export interface CourseJoinedDto {
   maxLevel: string
   topics: string[]
   courseType: string
-  /** @format int32 */
-  totalWeight: number
+  /** @default false */
   isPremium: boolean
-  isPublished: boolean
+  /** @default "draft" */
+  status: 'draft' | 'published' | 'private' | 'deleted'
   createdBy: string
   /** @format date-time */
   createdAt: string
@@ -766,9 +774,9 @@ export interface FindOneEssayResponseDto {
   essay: Essay
 }
 
-export enum EssayStatus {
+export enum ContentStatus {
   Draft = 'draft',
-  Public = 'public',
+  Published = 'published',
   Private = 'private',
   Deleted = 'deleted'
 }
@@ -784,8 +792,8 @@ export interface CreateEssayDto {
    * @example "https://example.com/images/cover-123.jpg"
    */
   cover_url?: string | null
-  /** @example "public" */
-  status: EssayStatus
+  /** @example "published" */
+  status: ContentStatus
   /**
    * @minLength 2
    * @maxLength 5
@@ -822,7 +830,7 @@ export interface CreateEssayResponseDto {
    * @example "https://example.com/images/updated-cover-123.jpg"
    */
   cover_url?: string | null
-  /** @example "public" */
+  /** @example "published" */
   status?: string
   /**
    * @minLength 2
@@ -859,8 +867,8 @@ export interface UpdateEssayDto {
    * @example "https://example.com/images/updated-cover-123.jpg"
    */
   cover_url?: string | null
-  /** @example "public" */
-  status?: EssayStatus
+  /** @example "published" */
+  status?: ContentStatus
   /**
    * @minLength 2
    * @maxLength 5
@@ -966,8 +974,12 @@ export interface CreateCourseDto {
   maxLevel: string
   topics: string[]
   courseType: string
-  totalWeight: number
-  isPublished: boolean
+  /** @default 0 */
+  totalWeight?: number
+  /** @default "draft" */
+  status?: 'draft' | 'published' | 'private' | 'deleted'
+  /** @default false */
+  isPremium?: boolean
 }
 
 export interface CourseResponseDto {
@@ -983,8 +995,12 @@ export interface UpdateCourseDto {
   maxLevel?: string
   topics?: string[]
   courseType?: string
+  /** @default 0 */
   totalWeight?: number
-  isPublished?: boolean
+  /** @default "draft" */
+  status?: 'draft' | 'published' | 'private' | 'deleted'
+  /** @default false */
+  isPremium?: boolean
 }
 
 export interface CourseListResponseDto {
@@ -992,8 +1008,47 @@ export interface CourseListResponseDto {
   pagination: PaginationOutputDto
 }
 
+export interface LessonWithoutContent {
+  /** @default 0 */
+  lessonWeight: number
+  id: string
+  unitId: string
+  title: string
+  summary: string | null
+  /** @format int32 */
+  orderIndex: number
+  isPremium: boolean
+  isRequired: boolean
+  status: 'draft' | 'published' | 'private' | 'deleted'
+  createdBy: string
+  /** @format date-time */
+  createdAt: string
+  /** @format date-time */
+  updatedAt: string
+  unit?: Unit
+  creator?: User
+  notes?: Note[]
+  comments?: LessonComment[]
+  currentInProgress?: CourseProgress[]
+  nextInProgress?: CourseProgress[]
+}
+
+export interface UnitWithLessonsDto {
+  id: string
+  courseId: string
+  title: string
+  orderIndex: number
+  isPremium: boolean
+  createdBy: string
+  /** @format date-time */
+  createdAt: string
+  /** @format date-time */
+  updatedAt: string
+  lessons: LessonWithoutContent[]
+}
+
 export interface CourseUnitResponseDto {
-  data: Unit[]
+  data: UnitWithLessonsDto[]
   pagination: PaginationOutputDto
 }
 
@@ -1007,8 +1062,47 @@ export interface JoinCourseResponseDto {
   progress: CourseProgress
 }
 
+export interface LessonLearnDto {
+  id: string
+  title: string
+  orderIndex: number
+  isPremium: boolean
+  isRequired: boolean
+  status: 'draft' | 'published' | 'private' | 'deleted'
+  lessonWeight: number
+}
+
+export interface UnitLearnDto {
+  id: string
+  title: string
+  orderIndex: number
+  isPremium: boolean
+  lessons: LessonLearnDto[]
+}
+
+export interface CourseLearnDto {
+  id: string
+  title: string
+  description?: string
+  thumbnailUrl?: string
+  language: string
+  minLevel: string
+  maxLevel: string
+  topics: string[]
+  courseType: string
+  isPremium: boolean
+  totalWeight: number
+  status: 'draft' | 'published' | 'private' | 'deleted'
+  createdBy: string
+  /** @format date-time */
+  createdAt: string
+  /** @format date-time */
+  updatedAt: string
+  units: UnitLearnDto[]
+}
+
 export interface CourseLearnResponseDto {
-  course: Course
+  course: CourseLearnDto
 }
 
 export interface CheckJoinedCourseResponseDto {
@@ -1022,23 +1116,21 @@ export interface CourseProgressResponseDto {
 
 export interface UpdateCourseProgressDto {
   currentUnitId?: string
-  currentUnitContentId?: string
+  currentLessonId?: string
   nextUnitId?: string
-  nextUnitContentId?: string
+  nextLessonId?: string
   completedWeight?: number
   completedUnits?: string[]
-  completedContents?: string[]
+  completedLessons?: string[]
 }
 
 export interface CreateUnitDto {
-  title?: string
-  description?: string | null
+  title: string
   /** @format int32 */
-  orderIndex?: number
-  isPremium?: boolean
+  orderIndex: number
+  /** @default false */
+  isPremium: boolean
   courseId: string
-  /** @format int32 */
-  unitWeight?: number
 }
 
 export interface GetUnitResponseDto {
@@ -1049,70 +1141,107 @@ export interface UnitLearnResponseDto {
   unit: Unit
 }
 
+export interface LessonResponseDto {
+  lesson: Lesson
+}
+
+export interface BulkUpdateUnitsDto {
+  courseId: string
+  units: UnitWithLessonsDto[]
+}
+
+export interface BulkUpdateUnitsResponseDto {
+  data: UnitWithLessonsDto[]
+}
+
 export interface UpdateUnitDto {
   title?: string
-  description?: string | null
   /** @format int32 */
   orderIndex?: number
+  /** @default false */
   isPremium?: boolean
   courseId?: string
-  /** @format int32 */
-  unitWeight?: number
 }
 
 export interface FindOneNoteResponseDto {
   note: Note | null
 }
 
-export interface GetUnitContentsResponseDto {
-  unitContents: UnitContent[]
-}
-
-export interface UnitContentResponseDto {
-  unitContent: UnitContent
-}
-
-export interface CreateUnitContentDto {
+export interface CreateLessonDto {
   title: string
-  contentType: string
+  summary: string | null
   content: object
   /** @format int32 */
   orderIndex: number
+  /** @default false */
   isPremium: boolean
+  /** @default true */
   isRequired: boolean
-  /** @format int32 */
-  completeWeight: number
+  /**
+   * @format int32
+   * @default 0
+   */
+  lessonWeight: number
+  /** @default "draft" */
+  status: 'draft' | 'published' | 'private' | 'deleted'
 }
 
-export interface UpdateUnitContentDto {
+export interface UpdateLessonDto {
   title?: string
-  contentType?: string
+  summary?: string | null
   content?: object
   /** @format int32 */
   orderIndex?: number
+  /** @default false */
   isPremium?: boolean
+  /** @default true */
   isRequired?: boolean
-  /** @format int32 */
-  completeWeight?: number
+  /**
+   * @format int32
+   * @default 0
+   */
+  lessonWeight?: number
+  /** @default "draft" */
+  status?: 'draft' | 'published' | 'private' | 'deleted'
 }
 
 export interface CreateNoteDto {
   spaceId: string
-  unitId: string
+  lessonId: string
+  courseId: string | null
+  unitId: string | null
   title: string
   content: string
   tags: string[]
   isBookmarked?: boolean
 }
 
+export interface SimplifiedNoteDto {
+  id: string
+  spaceId: string | null
+  lessonId: string
+  courseId: string
+  unitId: string
+  content: string
+  title: string
+  tags: string[]
+  isBookmarked: boolean
+  lesson: LessonWithoutContent
+  course: Course
+  /** @format date-time */
+  createdAt: string
+}
+
 export interface NotesResponse {
-  data: Note[]
+  data: SimplifiedNoteDto[]
   pagination: PaginationOutputDto
 }
 
 export interface UpdateNoteDto {
   spaceId?: string
-  unitId?: string
+  lessonId?: string
+  courseId?: string | null
+  unitId?: string | null
   title?: string
   content?: string
   tags?: string[]
@@ -1178,6 +1307,25 @@ export interface RecommendTopicsResponseDto {
   topics: string[]
   category: string
   count: number
+}
+
+export interface VoiceSettingDto {
+  stability: number
+  similarity_boost: number
+  style: number
+  use_speaker_boost: boolean
+}
+
+export interface TextToSpeechDto {
+  text: string
+  voiceId?: string
+  voiceSettings?: VoiceSettingDto
+}
+
+export interface TextToSpeechResponseDto {
+  audioUrl: string
+  text: string
+  voiceId: string
 }
 
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from 'axios'
@@ -1806,6 +1954,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         maxLevel?: string
         topics?: string[]
         courseType?: string
+        status?: 'draft' | 'published' | 'private' | 'deleted'
       },
       params: RequestParams = {}
     ) =>
@@ -1831,8 +1980,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /** @default 10 */
         perPage?: number
         search?: string
-        /** @example "public" */
-        status?: 'draft' | 'public' | 'private' | 'deleted'
+        /** @example "published" */
+        status?: 'draft' | 'published' | 'private' | 'deleted'
       },
       params: RequestParams = {}
     ) =>
@@ -1875,8 +2024,8 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         /** @default 10 */
         perPage?: number
         search?: string
-        /** @example "public" */
-        status?: 'draft' | 'public' | 'private' | 'deleted'
+        /** @example "published" */
+        status?: 'draft' | 'published' | 'private' | 'deleted'
       },
       params: RequestParams = {}
     ) =>
@@ -2196,7 +2345,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Courses
+     * @tags courses
      * @name CourseControllerCreateCourse
      * @request POST:/api/courses
      */
@@ -2213,7 +2362,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Courses
+     * @tags courses
      * @name CourseControllerGetCourses
      * @request GET:/api/courses
      */
@@ -2238,7 +2387,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Courses
+     * @tags courses
      * @name CourseControllerUpdate
      * @request PATCH:/api/courses/{id}
      */
@@ -2255,7 +2404,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Courses
+     * @tags courses
      * @name CourseControllerDelete
      * @request DELETE:/api/courses/{id}
      */
@@ -2270,7 +2419,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Courses
+     * @tags courses
      * @name CourseControllerGetCourseById
      * @request GET:/api/courses/{id}
      */
@@ -2285,7 +2434,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Courses
+     * @tags courses
      * @name CourseControllerGetCourseUnits
      * @request GET:/api/courses/{id}/units
      */
@@ -2311,7 +2460,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Courses
+     * @tags courses
      * @name CourseControllerJoinCourse
      * @request PATCH:/api/courses/{id}/join
      */
@@ -2328,7 +2477,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Courses
+     * @tags courses
      * @name CourseControllerLearnCourse
      * @request GET:/api/courses/{id}/learn
      */
@@ -2343,7 +2492,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Courses
+     * @tags courses
      * @name CourseControllerCheckJoin
      * @request GET:/api/courses/{id}/check-join/{spaceId}
      */
@@ -2358,7 +2507,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Courses
+     * @tags courses
      * @name CourseControllerGetCourseProgress
      * @request GET:/api/courses/{id}/progress
      */
@@ -2373,7 +2522,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Courses
+     * @tags courses
      * @name CourseControllerUpdateCourseProgress
      * @request PATCH:/api/courses/{id}/progress
      */
@@ -2390,7 +2539,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Units
+     * @tags units
      * @name UnitControllerCreateUnit
      * @request POST:/api/units
      */
@@ -2407,7 +2556,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Units
+     * @tags units
      * @name UnitControllerGetUnit
      * @request GET:/api/units/{id}
      */
@@ -2422,7 +2571,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Units
+     * @tags units
      * @name UnitControllerDeleteUnit
      * @request DELETE:/api/units/{id}
      */
@@ -2436,7 +2585,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Units
+     * @tags units
      * @name UnitControllerUpdateUnit
      * @request PATCH:/api/units/{id}
      */
@@ -2453,7 +2602,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Units
+     * @tags units
      * @name UnitControllerLearnUnit
      * @request GET:/api/units/{id}/learn
      */
@@ -2468,13 +2617,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Units
-     * @name UnitControllerGetUnitNote
-     * @request GET:/api/units/{id}/note
+     * @tags units
+     * @name UnitControllerLearnLesson
+     * @request GET:/api/units/{id}/lessons/{lessonId}/learn
      */
-    unitControllerGetUnitNote: (id: string, params: RequestParams = {}) =>
-      this.request<FindOneNoteResponseDto, any>({
-        path: `/api/units/${id}/note`,
+    unitControllerLearnLesson: (id: string, lessonId: string, params: RequestParams = {}) =>
+      this.request<LessonResponseDto, any>({
+        path: `/api/units/${id}/lessons/${lessonId}/learn`,
         method: 'GET',
         format: 'json',
         ...params
@@ -2483,29 +2632,14 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Units
-     * @name UnitControllerGetUnitContents
-     * @request GET:/api/units/{id}/unit-contents
+     * @tags units
+     * @name UnitControllerBulkUpdateUnits
+     * @request PUT:/api/units/bulk-update
      */
-    unitControllerGetUnitContents: (id: string, params: RequestParams = {}) =>
-      this.request<GetUnitContentsResponseDto[], any>({
-        path: `/api/units/${id}/unit-contents`,
-        method: 'GET',
-        format: 'json',
-        ...params
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Units
-     * @name UnitControllerCreateUnitContent
-     * @request POST:/api/units/{id}/unit-contents
-     */
-    unitControllerCreateUnitContent: (id: string, data: CreateUnitContentDto, params: RequestParams = {}) =>
-      this.request<UnitContentResponseDto, any>({
-        path: `/api/units/${id}/unit-contents`,
-        method: 'POST',
+    unitControllerBulkUpdateUnits: (data: BulkUpdateUnitsDto, params: RequestParams = {}) =>
+      this.request<BulkUpdateUnitsResponseDto[], any>({
+        path: `/api/units/bulk-update`,
+        method: 'PUT',
         body: data,
         type: ContentType.Json,
         format: 'json',
@@ -2515,13 +2649,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Units
-     * @name UnitControllerGetUnitContent
-     * @request GET:/api/units/{id}/unit-contents/{unitContentId}
+     * @tags units
+     * @name UnitControllerGetLessonNote
+     * @request GET:/api/units/{id}/lessons/{lessonId}/note
      */
-    unitControllerGetUnitContent: (id: string, unitContentId: string, params: RequestParams = {}) =>
-      this.request<UnitContentResponseDto, any>({
-        path: `/api/units/${id}/unit-contents/${unitContentId}`,
+    unitControllerGetLessonNote: (id: string, lessonId: string, params: RequestParams = {}) =>
+      this.request<FindOneNoteResponseDto, any>({
+        path: `/api/units/${id}/lessons/${lessonId}/note`,
         method: 'GET',
         format: 'json',
         ...params
@@ -2530,18 +2664,28 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Units
-     * @name UnitControllerUpdateUnitContent
-     * @request PATCH:/api/units/{id}/unit-contents/{unitContentId}
+     * @tags units
+     * @name UnitControllerGetLesson
+     * @request GET:/api/units/{id}/lessons/{lessonId}
      */
-    unitControllerUpdateUnitContent: (
-      id: string,
-      unitContentId: string,
-      data: UpdateUnitContentDto,
-      params: RequestParams = {}
-    ) =>
-      this.request<UnitContentResponseDto, any>({
-        path: `/api/units/${id}/unit-contents/${unitContentId}`,
+    unitControllerGetLesson: (id: string, lessonId: string, params: RequestParams = {}) =>
+      this.request<LessonResponseDto, any>({
+        path: `/api/units/${id}/lessons/${lessonId}`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags units
+     * @name UnitControllerUpdateLesson
+     * @request PATCH:/api/units/{id}/lessons/{lessonId}
+     */
+    unitControllerUpdateLesson: (id: string, lessonId: string, data: UpdateLessonDto, params: RequestParams = {}) =>
+      this.request<LessonResponseDto, any>({
+        path: `/api/units/${id}/lessons/${lessonId}`,
         method: 'PATCH',
         body: data,
         type: ContentType.Json,
@@ -2552,14 +2696,46 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     /**
      * No description
      *
-     * @tags Units
-     * @name UnitControllerDeleteUnitContent
-     * @request DELETE:/api/units/{id}/unit-contents/{unitContentId}
+     * @tags units
+     * @name UnitControllerDeleteLesson
+     * @request DELETE:/api/units/{id}/lessons/{lessonId}
      */
-    unitControllerDeleteUnitContent: (id: string, unitContentId: string, params: RequestParams = {}) =>
+    unitControllerDeleteLesson: (id: string, lessonId: string, params: RequestParams = {}) =>
       this.request<void, any>({
-        path: `/api/units/${id}/unit-contents/${unitContentId}`,
+        path: `/api/units/${id}/lessons/${lessonId}`,
         method: 'DELETE',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags units
+     * @name UnitControllerCreateLesson
+     * @request POST:/api/units/{id}/lessons
+     */
+    unitControllerCreateLesson: (id: string, data: CreateLessonDto, params: RequestParams = {}) =>
+      this.request<LessonResponseDto, any>({
+        path: `/api/units/${id}/lessons`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags lessons
+     * @name LessonControllerGetLesson
+     * @request GET:/api/lessons/{id}
+     */
+    lessonControllerGetLesson: (id: string, params: RequestParams = {}) =>
+      this.request<LessonResponseDto, any>({
+        path: `/api/lessons/${id}`,
+        method: 'GET',
+        format: 'json',
         ...params
       }),
 
@@ -2726,6 +2902,51 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         method: 'GET',
         query: query,
         format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags ai
+     * @name AiControllerTextToSpeechTest
+     * @request GET:/api/ai/tts/test
+     */
+    aiControllerTextToSpeechTest: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/ai/tts/test`,
+        method: 'GET',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags ai
+     * @name AiControllerTextToSpeech
+     * @request POST:/api/ai/tts/convert
+     */
+    aiControllerTextToSpeech: (data: TextToSpeechDto, params: RequestParams = {}) =>
+      this.request<TextToSpeechResponseDto, any>({
+        path: `/api/ai/tts/convert`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags ai
+     * @name AiControllerTextToSpeechAll
+     * @request GET:/api/ai/tts/all
+     */
+    aiControllerTextToSpeechAll: (params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/api/ai/tts/all`,
+        method: 'GET',
         ...params
       })
   }

@@ -11,7 +11,7 @@ import toast from 'react-hot-toast'
 
 import { AppButton } from '~/components/common/AppButton'
 import { useUpdateEssay } from '~/features/essay/hooks/useEssayQueries'
-import { EssayStatus } from '~/services/api/api-axios'
+import { ContentStatus } from '~/services/api/api-axios'
 
 interface EssayUpdateStatusModalProps {
   essayId: string
@@ -34,7 +34,7 @@ function EssayUpdateStatusModal({ essayId, currentStatus, onConfirm, onClose }: 
       await mutation.mutateAsync({
         id: essayId,
         data: {
-          status: status as EssayStatus
+          status: status as ContentStatus
         }
       })
 

@@ -10,9 +10,11 @@ interface CourseProgress {
 
 export const useSetupCourseProgress = ({ courseId }: CourseProgress) => {
   const dispatch = useDispatch()
+
   const { data: courseProgress, error } = useGetCourseProgress(courseId)
 
   useEffect(() => {
+    console.log('courseProgress', courseProgress)
     if (courseProgress) {
       dispatch(setCourseProgress(courseProgress.courseProgress))
     }

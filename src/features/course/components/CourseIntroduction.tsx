@@ -3,24 +3,25 @@ import Chip from '@mui/material/Chip'
 import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
-import { ArrowRight, Book, ClipboardList, Clock, Crown, GraduationCap, Sparkles, Target } from 'lucide-react'
-import { useState } from 'react'
+import { ArrowRight, Book, ClipboardList, Clock, Crown, Sparkles, Target } from 'lucide-react'
+import { memo, useState } from 'react'
 import toast from 'react-hot-toast'
 import { useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 
 import AppButton from '~/components/common/AppButton'
+import UnitListIntroduction from '~/features/course/components/UnitListIntroduction'
 import { useCheckCourseJoined, useJoinCourse } from '~/features/course/hooks/useCourseQueries'
 import { LANGUAGE_LABELS, LEVEL_LABELS, TOPIC_LABELS } from '~/features/space/space.constants'
 import { RouteNames } from '~/router/route-name'
-import { Course } from '~/services/api/api-axios'
+import { CourseLearnDto, Unit } from '~/services/api/api-axios'
 import { LanguageCode, LevelCode, TopicCode } from '~/services/graphql/graphql'
 import { RootState } from '~/store/store'
 import { convertToRelativeTime } from '~/utils/format-date'
 import { replacePathId } from '~/utils/replace-path'
 
 interface CourseIntroductionProps {
-  data: Course
+  data: CourseLearnDto
 }
 
 const CourseIntroduction = ({ data }: CourseIntroductionProps) => {
@@ -33,14 +34,19 @@ const CourseIntroduction = ({ data }: CourseIntroductionProps) => {
 
   const handleJoinCourse = async () => {
     if (!spaceId) return
+
     setIsJoining(true)
+
     if (joinedData?.check) {
-      const { currentUnitId, currentUnitContentId } = joinedData.progress || {}
+      const { currentUnitId, currentLessonId } = joinedData.progress || {}
+
+      console.log('currentUnitId', currentUnitId)
+      console.log('currentLessonId', currentLessonId)
 
       if (currentUnitId) {
         navigate(
           `${replacePathId(RouteNames.CourseLearn, data.id)}?unitId=${currentUnitId}${
-            currentUnitContentId ? `&unitContentId=${currentUnitContentId}` : ''
+            currentLessonId ? `&lessonId=${currentLessonId}` : ''
           }`
         )
       }
@@ -77,9 +83,11 @@ const CourseIntroduction = ({ data }: CourseIntroductionProps) => {
             {data.title}
           </Typography>
 
-          <Typography variant='subtitle1' color='text.secondary' paragraph>
-            {data.description}
-          </Typography>
+          <Typography
+            variant='subtitle1'
+            color='text.secondary'
+            dangerouslySetInnerHTML={{ __html: data.description || '' }}
+          />
 
           {/* Course Stats */}
           <Box sx={{ display: 'flex', gap: 3, mb: 3, flexWrap: 'wrap' }}>
@@ -171,69 +179,11 @@ const CourseIntroduction = ({ data }: CourseIntroductionProps) => {
         </Typography>
 
         {/* Units List */}
-        <Grid container spacing={2}>
-          {data.units?.map((unit, index) => (
-            <Grid item xs={12} key={unit.id}>
-              <Paper
-                sx={{
-                  p: 2,
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: 2,
-                  position: 'relative',
-                  overflow: 'hidden'
-                }}
-              >
-                {unit.isPremium && (
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      top: 0,
-                      right: 0,
-                      bgcolor: 'primary.main',
-                      color: 'white',
-                      px: 1,
-                      py: 0.5,
-                      borderBottomLeftRadius: 8
-                    }}
-                  >
-                    <Typography variant='caption'>Premium</Typography>
-                  </Box>
-                )}
-
-                <Box
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: '50%',
-                    bgcolor: 'primary.light',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center'
-                  }}
-                >
-                  <Typography variant='h6'>{index + 1}</Typography>
-                </Box>
-
-                <Box sx={{ flex: 1 }}>
-                  <Typography variant='h6'>{unit.title}</Typography>
-                  <Typography variant='body2' color='text.secondary'>
-                    {unit.description}
-                  </Typography>
-                </Box>
-
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <GraduationCap size={16} />
-                  <Typography variant='body2'>{unit.unitWeight} points</Typography>
-                </Box>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
+        <UnitListIntroduction units={(data.units as Unit[]) || []} />
       </Box>
     </Box>
   )
 }
 
 CourseIntroduction.displayName = 'CourseIntroduction'
-export default CourseIntroduction
+export default memo(CourseIntroduction)

@@ -16,6 +16,7 @@ const CourseManagerCreate = lazy(() => import('~/pages/(admin)/course-manager/cr
 const AdminDashboard = lazy(() => import('~/pages/(admin)/dashboard'))
 const UnitManager = lazy(() => import('~/pages/(admin)/unit-manager/[id]'))
 const AdminUserManager = lazy(() => import('~/pages/(admin)/user-manager'))
+const AdminLessonDetail = lazy(() => import('~/pages/(admin)/lessons/[id]'))
 const NotFoundView = lazy(() => import('~/pages/not-found'))
 
 const ADMIN_ROUTES = [
@@ -109,6 +110,14 @@ const ADMIN_ROUTES = [
         element: (
           <Suspense fallback={<AppLoading />}>
             <UnitManager />
+          </Suspense>
+        )
+      },
+      {
+        path: RouteNames.AdminLessonDetail,
+        element: (
+          <Suspense fallback={<AppLoading />}>
+            <AdminLessonDetail />
           </Suspense>
         )
       }

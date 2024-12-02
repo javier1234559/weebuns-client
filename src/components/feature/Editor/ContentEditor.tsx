@@ -19,13 +19,9 @@ import RichTextEditor, {
   SlashCommand,
   TextAlign,
   TextDirection,
-  Underline,
-  useEditorState
-  // ImportWord,
-  // HorizontalRule,
+  Underline
 } from 'reactjs-tiptap-editor'
 
-import BubbleMenuAction from '~/components/feature/BubbleMenuAction'
 import { globalConfig } from '~/config'
 
 interface ContentEditorProps {
@@ -58,7 +54,6 @@ const extensions = [
   TextAlign.configure({ types: ['heading', 'paragraph'] }),
   Clear,
   // insert and feature plugins
-  // ImportWord,
   SlashCommand,
   Link,
   Emoji,
@@ -71,20 +66,15 @@ const extensions = [
 ]
 
 function ContentEditor({ isDark, content, onChangeContent }: ContentEditorProps) {
-  const { isReady, editor, editorRef } = useEditorState()
-
   return (
     <div>
       <RichTextEditor
-        ref={editorRef}
         output='html'
         dark={isDark}
         content={content}
         onChangeContent={onChangeContent}
         extensions={extensions}
-        hideBubble
       />
-      {isReady && editor && <BubbleMenuAction editor={editor} />}
     </div>
   )
 }

@@ -1,20 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
+import { CourseFormData } from '~/features/admin/course/components/CourseBuilder/CourseForm'
 import { LanguageCode, LevelCode, TargetCode, TopicCode } from '~/features/space/space.type'
-
-export interface CourseFormData {
-  title: string
-  description: string
-  thumbnailUrl: string | null
-  language: LanguageCode
-  minLevel: LevelCode
-  maxLevel: LevelCode
-  topics: TopicCode[]
-  courseType: TargetCode
-  isPremium: boolean
-  isPublished: boolean
-  totalWeight: number
-}
+import { ContentStatus } from '~/services/api/api-axios'
 
 interface AdminCourseState {
   courseFormData: CourseFormData
@@ -31,8 +19,8 @@ const initialState: AdminCourseState = {
     topics: [TopicCode.BUSINESS],
     courseType: TargetCode.OTHER,
     isPremium: false,
-    isPublished: false,
-    totalWeight: 0
+    totalWeight: 0,
+    status: ContentStatus.Draft
   }
 }
 

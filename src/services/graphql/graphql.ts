@@ -25,6 +25,14 @@ export enum AuthProvider {
   Local = 'local'
 }
 
+/** Status of the content */
+export enum ContentStatus {
+  Deleted = 'deleted',
+  Draft = 'draft',
+  Private = 'private',
+  Published = 'published'
+}
+
 export type Correction = {
   __typename?: 'Correction'
   createdAt: Scalars['DateTime']['output']
@@ -109,13 +117,13 @@ export type Essay = {
   coverUrl?: Maybe<Scalars['String']['output']>
   createdAt: Scalars['DateTime']['output']
   createdBy: Scalars['String']['output']
-  deletedAt: Scalars['DateTime']['output']
+  deletedAt?: Maybe<Scalars['DateTime']['output']>
   hashtags?: Maybe<Array<EssayHashtag>>
   id: Scalars['ID']['output']
   language: Scalars['String']['output']
   space?: Maybe<Space>
   spaceId: Scalars['String']['output']
-  status: EssayStatus
+  status: ContentStatus
   summary?: Maybe<Scalars['String']['output']>
   title: Scalars['String']['output']
   updatedAt: Scalars['DateTime']['output']
@@ -130,14 +138,6 @@ export type EssayHashtag = {
   hashtag?: Maybe<Hashtag>
   hashtagId: Scalars['ID']['output']
   id: Scalars['ID']['output']
-}
-
-/** The status of an essay */
-export enum EssayStatus {
-  Deleted = 'deleted',
-  Draft = 'draft',
-  Private = 'private',
-  Public = 'public'
 }
 
 export type GetCorrectionsByEssayDto = {

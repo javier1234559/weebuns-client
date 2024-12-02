@@ -22,7 +22,7 @@ import { useCreateEssay } from '~/features/essay/hooks/useEssayQueries'
 import { CONTENT_MOCK_2 } from '~/features/essay/mocks/ESSAY_CONTENT'
 import { useEventSwitchDarkMode } from '~/hooks/event'
 import { RouteNames } from '~/router/route-name'
-import { EssayStatus } from '~/services/api/api-axios'
+import { ContentStatus } from '~/services/api/api-axios'
 import { RootState } from '~/store/store'
 import { replacePathId } from '~/utils/replace-path'
 import { textUtils } from '~/utils/text-utils'
@@ -93,7 +93,7 @@ function CreateEssayForm() {
         cover_url: data.cover_url,
         language: data.language,
         hashtag_names: data.hashtags.filter((tag): tag is string => !!tag),
-        status: status as EssayStatus,
+        status: status as ContentStatus,
         spaceId: idSpace as string,
         summary: summary
       })
@@ -238,7 +238,7 @@ function CreateEssayForm() {
               <Select
                 name={status}
                 value={status}
-                onChange={(e) => setStatus(e.target.value as EssayStatus)}
+                onChange={(e) => setStatus(e.target.value as ContentStatus)}
                 placeholder='Select language'
               >
                 {ESSAY_OPTIONS.map((option) => (

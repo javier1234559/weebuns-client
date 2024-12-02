@@ -36,7 +36,7 @@ import { replacePathId } from '~/utils/replace-path'
 const STATUS_OPTIONS = [
   { value: '', label: 'All Status' },
   { value: 'draft', label: 'Draft' },
-  { value: 'public', label: 'Public' },
+  { value: 'published', label: 'Public' },
   { value: 'private', label: 'Private' }
 ]
 
@@ -49,7 +49,7 @@ function TableEssay() {
     defaultStatus: ''
   })
 
-  const { data, isLoading, isError, error } = useListEssayByUser({
+  const { data, isLoading, error } = useListEssayByUser({
     page,
     perPage,
     ...(status && { status: status as StatusParams })

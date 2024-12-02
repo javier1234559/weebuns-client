@@ -4,6 +4,7 @@ import { useEffect } from 'react'
 import { ESSAY_KEY_FACTORY } from '~/features/essay/services/essay-key-factory'
 import essayApi from '~/features/essay/services/essayApi'
 import useElementOnScreen from '~/hooks/useElementOnScreen'
+import { StatusParams } from '~/types/enum'
 
 export const ITEMS_PER_PAGE_FEED = 3
 
@@ -13,7 +14,11 @@ const useInfiniteFeed = () => {
   const { isPending, data, isFetchingNextPage, fetchNextPage, hasNextPage, isError, error } = useInfiniteQuery({
     queryKey: ESSAY_KEY_FACTORY.infinity,
     queryFn: async ({ pageParam = 1 }) => {
-      const response = await essayApi.getAll({ page: pageParam, perPage: ITEMS_PER_PAGE_FEED, status: 'public' })
+      const response = await essayApi.getAll({
+        page: pageParam,
+        perPage: ITEMS_PER_PAGE_FEED,
+        status: StatusParams.published
+      })
       return response.data
     },
     getNextPageParam: (lastPage, allPages) => {

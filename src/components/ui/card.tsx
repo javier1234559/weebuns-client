@@ -67,7 +67,7 @@ export const CardHeader = React.forwardRef<HTMLDivElement, CardHeaderProps>(({ c
 CardHeader.displayName = 'CardHeader'
 
 export const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(({ children, ...props }, ref) => (
-  <Typography ref={ref} variant='h6' component='h3' {...props}>
+  <Typography ref={ref} variant='h5' mb={1} component='h4' {...props}>
     {children}
   </Typography>
 ))

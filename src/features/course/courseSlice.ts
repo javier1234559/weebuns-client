@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
-import { CourseProgress, Unit, UnitContent } from '~/services/api/api-axios'
+import { CourseProgress, LessonLearnDto, UnitLearnDto } from '~/services/api/api-axios'
 
 interface NavigationState {
-  currentUnit: Unit | null
-  currentContent: UnitContent | null
-  nextUnit: Unit | null
-  nextContent: UnitContent | null
-  isLastContent: boolean
+  currentUnit: UnitLearnDto | null
+  currentLesson: LessonLearnDto | null
+  nextUnit: UnitLearnDto | null
+  nextLesson: LessonLearnDto | null
+  isLastLesson: boolean
 }
 
 interface CourseState {
@@ -21,20 +21,20 @@ const initialState: CourseState = {
     userId: '',
     courseId: '',
     currentUnitId: '',
-    currentUnitContentId: '',
+    currentLessonId: '',
     nextUnitId: '',
-    nextUnitContentId: '',
+    nextLessonId: '',
     completedWeight: 0,
     lastAccessedAt: '',
     completedUnits: [''],
-    completedContents: ['']
+    completedLessons: ['']
   },
   navigation: {
     currentUnit: null,
-    currentContent: null,
+    currentLesson: null,
     nextUnit: null,
-    nextContent: null,
-    isLastContent: false
+    nextLesson: null,
+    isLastLesson: false
   }
 }
 

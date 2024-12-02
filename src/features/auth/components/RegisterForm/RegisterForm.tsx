@@ -8,7 +8,6 @@ import { Controller, useForm } from 'react-hook-form'
 import * as yup from 'yup'
 
 import { AppButton } from '~/components/common/AppButton'
-import { Select, SelectItem } from '~/components/ui/select'
 import { AuthResponse } from '~/features/auth/auth.type'
 import authApi from '~/features/auth/services/authApi'
 import { LANGUAGE_LABELS } from '~/features/space/space.constants'

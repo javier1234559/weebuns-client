@@ -7,18 +7,18 @@ import { useParams, useSearchParams } from 'react-router-dom'
 import { AppButton } from '~/components/common/AppButton'
 import { setCourseProgress } from '~/features/course/courseSlice'
 import { useUpdateCourseProgress } from '~/features/course/hooks/useCourseQueries'
-import { Unit, UnitContent } from '~/services/api/api-axios'
+import { Lesson, Unit } from '~/services/api/api-axios'
 import { RootState } from '~/store/store'
 import logOnDev from '~/utils/log-on-dev'
 
 interface CompleteProgressButtonProps {
-  content: UnitContent
-  nextContent?: UnitContent | null
-  isLastContent?: boolean
+  lesson: Lesson
+  nextLesson?: Lesson | null
+  isLastLesson?: boolean
   nextUnit?: Unit | null
 }
 
-function CompleteProgressButton({ content, nextContent, isLastContent, nextUnit }: CompleteProgressButtonProps) {
+function CompleteProgressButton({ lesson, nextLesson, isLastLesson, nextUnit }: CompleteProgressButtonProps) {
   const { id: courseId } = useParams()
   const [, setSearchParams] = useSearchParams()
   const dispatch = useDispatch()
@@ -26,22 +26,22 @@ function CompleteProgressButton({ content, nextContent, isLastContent, nextUnit 
   const navigation = useSelector((state: RootState) => state.course.navigation)
   const { mutate: updateProgress } = useUpdateCourseProgress()
 
-  const isCompleted = currentProgress?.completedContents?.includes(content.id)
+  const isCompleted = currentProgress?.completedLessons?.includes(lesson.id)
 
   const handleNext = () => {
-    if (isLastContent && nextUnit) {
-      // If last content in unit, go to first content of next unit
+    if (isLastLesson && nextUnit) {
+      // If last lesson in unit, go to first lesson of next unit
       setSearchParams((prev) => {
         prev.set('unitId', nextUnit.id)
-        if (nextUnit.contents) {
-          prev.set('unitContentId', nextUnit.contents[0].id)
+        if (nextUnit.lessons) {
+          prev.set('lessonId', nextUnit.lessons[0].id)
         }
         return prev
       })
-    } else if (nextContent) {
-      // Go to next content in same unit
+    } else if (nextLesson) {
+      // Go to next lesson in same unit
       setSearchParams((prev) => {
-        prev.set('unitContentId', nextContent.id)
+        prev.set('lessonId', nextLesson.id)
         return prev
       })
     }
@@ -51,34 +51,34 @@ function CompleteProgressButton({ content, nextContent, isLastContent, nextUnit 
     if (!courseId || !navigation.currentUnit) return
 
     const newCompletedContents = isCompleted
-      ? currentProgress.completedContents.filter((id) => id !== content.id)
-      : [...currentProgress.completedContents, content.id]
+      ? currentProgress.completedLessons.filter((id) => id !== lesson.id)
+      : [...currentProgress.completedLessons, lesson.id]
 
     let newCompletedUnits = [...currentProgress.completedUnits]
 
-    if (isLastContent && !isCompleted) {
-      // Check if all contents in current unit are completed
-      const currentUnitContents = navigation.currentUnit.contents || []
-      const allContentsCompleted = currentUnitContents.every(
-        (c) => c.id === content.id || newCompletedContents.includes(c.id)
+    if (isLastLesson && !isCompleted) {
+      // Check if all lessons in current unit are completed
+      const currentLessons = navigation.currentUnit.lessons || []
+      const allContentsCompleted = currentLessons.every(
+        (c) => c.id === lesson.id || newCompletedContents.includes(c.id)
       )
 
       if (allContentsCompleted && !newCompletedUnits.includes(navigation.currentUnit.id)) {
         newCompletedUnits.push(navigation.currentUnit.id)
       }
-    } else if (isLastContent && isCompleted) {
+    } else if (isLastLesson && isCompleted) {
       newCompletedUnits = newCompletedUnits.filter((id) => id !== navigation?.currentUnit?.id)
     }
 
     const newWeight = isCompleted
-      ? currentProgress.completedWeight - content.contentWeight
-      : currentProgress.completedWeight + content.contentWeight
+      ? currentProgress.completedWeight - lesson.lessonWeight
+      : currentProgress.completedWeight + lesson.lessonWeight
 
     logOnDev('CompleteProgressButton', {
       newCompletedUnits,
       newCompletedContents,
       currentUnit: navigation.currentUnit,
-      isLastContent,
+      isLastLesson,
       isCompleted
     })
 
@@ -87,13 +87,13 @@ function CompleteProgressButton({ content, nextContent, isLastContent, nextUnit 
         courseId,
         data: {
           ...currentProgress,
-          completedContents: newCompletedContents,
+          completedLessons: newCompletedContents,
           completedUnits: newCompletedUnits,
           completedWeight: newWeight,
-          currentUnitId: content.unitId,
-          currentUnitContentId: content.id,
-          nextUnitId: isLastContent ? nextUnit?.id : content.unitId,
-          nextUnitContentId: nextContent?.id
+          currentUnitId: lesson.unitId,
+          currentLessonId: lesson.id,
+          nextUnitId: isLastLesson ? nextUnit?.id : lesson.unitId,
+          nextLessonId: nextLesson?.id
         }
       },
       {
@@ -114,7 +114,7 @@ function CompleteProgressButton({ content, nextContent, isLastContent, nextUnit 
         {isCompleted ? 'Completed' : 'Mark as Complete'}
       </AppButton>
 
-      {isCompleted && (nextContent || (isLastContent && nextUnit)) && (
+      {isCompleted && (nextLesson || (isLastLesson && nextUnit)) && (
         <AppButton onClick={handleNext} variant='contained' endIcon={<ArrowRight size={20} />}>
           Next Lesson
         </AppButton>

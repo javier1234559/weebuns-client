@@ -1,8 +1,15 @@
-import { CreateUnitContentDto, CreateUnitDto, UpdateUnitContentDto, UpdateUnitDto } from '~/services/api/api-axios'
+import {
+  BulkUpdateUnitsDto,
+  CreateLessonDto,
+  CreateUnitDto,
+  UpdateLessonDto,
+  UpdateUnitDto
+} from '~/services/api/api-axios'
 import api from '~/services/api/axiosInstance'
 import { handleApiError } from '~/utils/handle-api-error'
 
 const unitApi = {
+  // Unit operations
   create(data: CreateUnitDto) {
     return api
       .unitControllerCreateUnit(data)
@@ -16,6 +23,16 @@ const unitApi = {
   getById(id: string) {
     return api
       .unitControllerGetUnit(id)
+      .then((res) => res.data)
+      .catch((err) => {
+        handleApiError(err)
+        throw err.response.data
+      })
+  },
+
+  learn(id: string) {
+    return api
+      .unitControllerLearnUnit(id)
       .then((res) => res.data)
       .catch((err) => {
         handleApiError(err)
@@ -43,28 +60,11 @@ const unitApi = {
       })
   },
 
-  learn(id: string) {
-    return api
-      .unitControllerLearnUnit(id)
-      .then((res) => res.data)
-      .catch((err) => {
-        // handleApiError(err)
-        throw err.response.data
-      })
-  },
+  // Lesson operations
 
-  getUnitNote(id: string) {
+  getLesson(unitId: string, lessonId: string) {
     return api
-      .unitControllerGetUnitNote(id)
-      .then((res) => res.data)
-      .catch((err) => {
-        throw err.response.data
-      })
-  },
-
-  getUnitContents(id: string) {
-    return api
-      .unitControllerGetUnitContents(id)
+      .unitControllerGetLesson(unitId, lessonId)
       .then((res) => res.data)
       .catch((err) => {
         handleApiError(err)
@@ -72,9 +72,9 @@ const unitApi = {
       })
   },
 
-  getUnitContent(id: string, contentId: string) {
+  learnLesson(unitId: string, lessonId: string) {
     return api
-      .unitControllerGetUnitContent(id, contentId)
+      .unitControllerLearnLesson(unitId, lessonId)
       .then((res) => res.data)
       .catch((err) => {
         handleApiError(err)
@@ -82,9 +82,9 @@ const unitApi = {
       })
   },
 
-  createUnitContent(id: string, data: CreateUnitContentDto) {
+  getLessonNote(unitId: string, lessonId: string) {
     return api
-      .unitControllerCreateUnitContent(id, data)
+      .unitControllerGetLessonNote(unitId, lessonId)
       .then((res) => res.data)
       .catch((err) => {
         handleApiError(err)
@@ -92,9 +92,9 @@ const unitApi = {
       })
   },
 
-  updateUnitContent(id: string, contentId: string, data: UpdateUnitContentDto) {
+  createLesson(unitId: string, data: CreateLessonDto) {
     return api
-      .unitControllerUpdateUnitContent(id, contentId, data)
+      .unitControllerCreateLesson(unitId, data)
       .then((res) => res.data)
       .catch((err) => {
         handleApiError(err)
@@ -102,9 +102,29 @@ const unitApi = {
       })
   },
 
-  deleteUnitContent(id: string, contentId: string) {
+  updateLesson(unitId: string, lessonId: string, data: UpdateLessonDto) {
     return api
-      .unitControllerDeleteUnitContent(id, contentId)
+      .unitControllerUpdateLesson(unitId, lessonId, data)
+      .then((res) => res.data)
+      .catch((err) => {
+        handleApiError(err)
+        throw err.response.data
+      })
+  },
+
+  deleteLesson(unitId: string, lessonId: string) {
+    return api
+      .unitControllerDeleteLesson(unitId, lessonId)
+      .then((res) => res.data)
+      .catch((err) => {
+        handleApiError(err)
+        throw err.response.data
+      })
+  },
+
+  bulkUpdateUnit(data: BulkUpdateUnitsDto) {
+    return api
+      .unitControllerBulkUpdateUnits(data)
       .then((res) => res.data)
       .catch((err) => {
         handleApiError(err)

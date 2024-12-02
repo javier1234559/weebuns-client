@@ -7,7 +7,6 @@ import { styled, useTheme } from '@mui/material/styles'
 import Tooltip from '@mui/material/Tooltip'
 import { ClipboardList, X } from 'lucide-react'
 import { useState } from 'react'
-import { useParams, useSearchParams } from 'react-router-dom'
 
 import AppError from '~/components/common/AppError'
 import AppLoading from '~/components/common/AppLoading'
@@ -16,6 +15,7 @@ import { useContentNavigation } from '~/features/course/hooks/useContentNavigati
 import { useCourseLearn } from '~/features/course/hooks/useCourseQueries'
 import { useSetupCourseProgress } from '~/features/course/hooks/useSetupCourseProgress'
 import UnitSidebar from '~/features/unit/components/UnitSideBar'
+import useLearnParams from '~/features/unit/hooks/useLearnParams'
 import UnitDetailLearnView from '~/features/unit/views/UnitDetailLearnView'
 
 const DRAWER_WIDTH = 320
@@ -53,16 +53,15 @@ const MenuFab = styled(Fab)(({ theme }) => ({
 }))
 
 const CourseLearnView = () => {
-  useContentNavigation()
-  const [searchParams] = useSearchParams()
-  const { id } = useParams<{ id: string }>()
-  const unitId = searchParams.get('unitId')
   const theme = useTheme()
+  const { courseId, unitId, lessonId } = useLearnParams()
   const isMobile = useMediaQuery(theme.breakpoints.down('md'))
   const [mobileOpen, setMobileOpen] = useState(false)
 
-  const { data, isLoading, error } = useCourseLearn(id || '')
-  useSetupCourseProgress({ courseId: id || '' })
+  useContentNavigation()
+  useSetupCourseProgress({ courseId: courseId || '' })
+
+  const { data, isLoading, error } = useCourseLearn(courseId)
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
@@ -75,9 +74,7 @@ const CourseLearnView = () => {
   )
 
   if (isLoading) return <AppLoading />
-  if (!data || error) {
-    return <AppError error={error} />
-  }
+  if (!data || error) return <AppError error={error} />
 
   return (
     <CourseContainer>
@@ -110,7 +107,13 @@ const CourseLearnView = () => {
       )}
 
       <MainContentWrapper>
-        <Box>{unitId ? <UnitDetailLearnView unitId={unitId} /> : <CourseIntroduction data={data.course} />}</Box>
+        <Box>
+          {unitId && lessonId ? (
+            <UnitDetailLearnView unitId={unitId} lessonId={lessonId} />
+          ) : (
+            <CourseIntroduction data={data.course} />
+          )}
+        </Box>
       </MainContentWrapper>
     </CourseContainer>
   )

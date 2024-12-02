@@ -10,3 +10,32 @@
   border: none !important;
   outline: none !important;
 }
+
+.reactjs-tiptap-editor,
+.richtext-dialog-content,
+div[data-radix-popper-content-wrapper],
+div[data-tippy-root] {
+  & button,
+  & input,
+  & textarea {
+    cursor: pointer;
+    color: inherit;
+  }
+}
+.reactjs-tiptap-editor,
+.richtext-dialog-content,
+div[data-radix-popper-content-wrapper],
+div[data-tippy-root] {
+  & *,
+  & ::before,
+  & ::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: hsl(var(--richtext-border));
+  }
+}
+
+.richtext-relative .ProseMirror-focused {
+  outline: none;
+}

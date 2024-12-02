@@ -8,7 +8,6 @@ import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgr
 import Typography from '@mui/material/Typography'
 import { Clock, Globe, Target, TreePalm } from 'lucide-react'
 import { ArrowRight } from 'lucide-react'
-import React from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 
@@ -19,10 +18,7 @@ import { CourseJoinedDto } from '~/services/api/api-axios'
 import { LanguageCode, LevelCode, TargetCode } from '~/services/graphql/graphql'
 import { convertToRelativeTime } from '~/utils/format-date'
 import { replacePathId } from '~/utils/replace-path'
-
-interface CourseCardProps {
-  data?: CourseJoinedDto
-}
+import { textUtils } from '~/utils/text-utils'
 
 const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -56,7 +52,11 @@ const TruncatedTypography = styled(Typography)({
   WebkitBoxOrient: 'vertical'
 })
 
-const CourseCard: React.FC<CourseCardProps> = ({ data }) => {
+interface CourseCardProps {
+  data?: CourseJoinedDto
+}
+
+const CourseCard = ({ data }: CourseCardProps) => {
   const theme = useTheme()
   const navigator = useNavigate()
 
@@ -66,14 +66,11 @@ const CourseCard: React.FC<CourseCardProps> = ({ data }) => {
 
   const handleStartLearnCourse = async () => {
     if (data.progress) {
-      const currentUnitId = data.progress?.currentUnitId
       const courseId = data.id
-      const currentContentId = data.progress?.currentUnitContentId
+      const currentLessonId = data.progress?.currentLessonId
 
-      if (currentUnitId) {
-        navigator(
-          `${replacePathId(RouteNames.CourseLearn, courseId)}?unitId=${currentUnitId}&unitContentId=${currentContentId}`
-        )
+      if (currentLessonId) {
+        navigator(`${replacePathId(RouteNames.CourseLearn, courseId)}?lessonId=${currentLessonId}`)
       } else {
         toast.error('Failed to navigate to unit detail')
       }
@@ -118,7 +115,7 @@ const CourseCard: React.FC<CourseCardProps> = ({ data }) => {
             </Typography>
 
             <TruncatedTypography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
-              {data.description || 'No description available'}
+              {textUtils.truncate(textUtils.sanitize(data.description || ''), 200)}
             </TruncatedTypography>
 
             {data.progress && (

@@ -1,4 +1,4 @@
-import { TranslateDto } from '~/services/api/api-axios'
+import { TextToSpeechDto, TranslateDto } from '~/services/api/api-axios'
 import api from '~/services/api/axiosInstance'
 import { handleApiError } from '~/utils/handle-api-error'
 
@@ -20,6 +20,15 @@ const aiApi = {
   translateAi(form: TranslateDto) {
     return api
       .aiControllerTranslate(form)
+      .then((res) => res.data)
+      .catch((err) => {
+        handleApiError(err)
+        throw err.response.data
+      })
+  },
+  textToSpeech(form: TextToSpeechDto) {
+    return api
+      .aiControllerTextToSpeech(form)
       .then((res) => res.data)
       .catch((err) => {
         handleApiError(err)

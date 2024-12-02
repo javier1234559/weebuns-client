@@ -75,11 +75,11 @@ export const useCreateOrUpdateNote = () => {
         if (!old?.data) return old
         return {
           ...old,
-          data: old.data.map((note: Note) => (note.unitId === data.unitId ? { ...note, ...data } : note))
+          data: old.data.map((note: Note) => (note.lessonId === data.lessonId ? { ...note, ...data } : note))
         }
       })
 
-      const previousUnit = queryClient.getQueryData(UNIT_KEY_FACTORY.note(data.unitId))
+      const previousUnit = queryClient.getQueryData(UNIT_KEY_FACTORY.note(data.lessonId))
 
       return { previousLists, previousUnit }
     },
@@ -91,9 +91,9 @@ export const useCreateOrUpdateNote = () => {
       })
 
       // Invalidate unit notes if note exists
-      if (_data && _data.note?.unitId) {
+      if (_data && _data.note?.lessonId) {
         queryClient.invalidateQueries({
-          queryKey: UNIT_KEY_FACTORY.note(_data.note.unitId)
+          queryKey: UNIT_KEY_FACTORY.lessonNote(_data.note?.lessonId)
         })
       }
     }
@@ -149,10 +149,11 @@ export const useUpdateNote = () => {
     },
 
     onSettled: (_data, _error, { data }) => {
-      // If we have unitId in the data
-      if (data.unitId) {
+      // If we have lessonId in the data
+      console.log(data.lessonId)
+      if (data.lessonId) {
         queryClient.invalidateQueries({
-          queryKey: UNIT_KEY_FACTORY.note(data.unitId)
+          queryKey: UNIT_KEY_FACTORY.note(data.lessonId)
         })
       }
 

@@ -1,19 +1,21 @@
+import Grid from '@mui/material/Grid'
 import { useCallback } from 'react'
 import toast from 'react-hot-toast'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 import AppError from '~/components/common/AppError'
 import AppLoading from '~/components/common/AppLoading'
+import { ModalProvider } from '~/contexts/ModalContext'
 import CourseForm, { CourseFormData } from '~/features/admin/course/components/CourseBuilder/CourseForm'
+import { UnitBuilderView } from '~/features/admin/course/components/CourseBuilder/UnitBuilderView'
 import { useGetCourseById, useUpdateCourse } from '~/features/course/hooks/useCourseQueries'
 import { RouteNames } from '~/router/route-name'
-import { getErrorMessage } from '~/utils/error'
 
 function CourseDetailManagerView() {
   const { id } = useParams<{ id: string }>()
-  const navigate = useNavigate()
+  const courseId = id || ''
 
-  const { data, isLoading, error, isError } = useGetCourseById(id || '')
+  const { data, isLoading, error, isError } = useGetCourseById(courseId)
 
   const updateMutation = useUpdateCourse()
 
@@ -21,42 +23,33 @@ function CourseDetailManagerView() {
     async (formData: CourseFormData) => {
       const loadingId = toast.loading('Updating course...')
 
-      try {
-        const updateData = {
-          title: formData.title,
-          description: formData.description,
-          thumbnailUrl: formData.thumbnailUrl,
-          language: formData.language,
-          minLevel: formData.minLevel,
-          maxLevel: formData.maxLevel,
-          topics: formData.topics.filter((topic) => topic !== undefined),
-          courseType: formData.courseType,
-          isPremium: formData.isPremium,
-          isPublished: formData.isPublished,
-          totalWeight: formData.totalWeight
-        }
-
-        if (!id) {
-          toast.error('Course ID is required')
-          return
-        }
-
-        console.log(JSON.stringify(updateData, null, 2))
-
-        await updateMutation.mutateAsync({
-          id,
-          data: updateData
-        })
-
-        toast.success('Course updated successfully', { id: loadingId })
-        setTimeout(() => {
-          navigate(RouteNames.AdminCourseManager)
-        }, 1000)
-      } catch (error) {
-        toast.error(getErrorMessage(error), { id: loadingId })
+      const updateData = {
+        title: formData.title,
+        description: formData.description,
+        thumbnailUrl: formData.thumbnailUrl,
+        language: formData.language,
+        minLevel: formData.minLevel,
+        maxLevel: formData.maxLevel,
+        topics: formData.topics.filter((topic) => topic !== undefined),
+        courseType: formData.courseType,
+        totalWeight: formData.totalWeight,
+        status: formData.status,
+        isPremium: formData.isPremium
       }
+
+      if (!id) {
+        toast.error('Course ID is required')
+        return
+      }
+
+      await updateMutation.mutateAsync({
+        id,
+        data: updateData
+      })
+
+      toast.success('Course updated successfully', { id: loadingId })
     },
-    [id, navigate, updateMutation]
+    [id, updateMutation]
   )
 
   if (isLoading) {
@@ -78,11 +71,20 @@ function CourseDetailManagerView() {
   }
 
   return (
-    <CourseForm
-      initialData={data?.course as CourseFormData}
-      onSubmit={handleUpdateCourse}
-      isLoading={updateMutation.isPending}
-    />
+    <ModalProvider>
+      <Grid container spacing={4}>
+        <Grid item xs={12} md={6}>
+          <CourseForm
+            initialData={data?.course as CourseFormData}
+            onSubmit={handleUpdateCourse}
+            isLoading={updateMutation.isPending}
+          />
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <UnitBuilderView courseId={courseId} />
+        </Grid>
+      </Grid>
+    </ModalProvider>
   )
 }
 

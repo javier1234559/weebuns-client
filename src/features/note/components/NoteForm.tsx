@@ -4,14 +4,16 @@ import Chip from '@mui/material/Chip'
 import IconButton from '@mui/material/IconButton'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
-import { Save, Undo2, X } from 'lucide-react'
+import { Save, Trash2, Undo2, X } from 'lucide-react'
 import { Controller, useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
 import { useSelector } from 'react-redux'
+import { useParams, useSearchParams } from 'react-router-dom'
 import * as yup from 'yup'
 
 import AppInput from '~/components/common/AppInput'
 import ContentEditor from '~/components/feature/Editor/ContentEditor'
-import { useCreateOrUpdateNote } from '~/features/note/hooks/useNoteQueries'
+import { useCreateOrUpdateNote, useDeleteNote } from '~/features/note/hooks/useNoteQueries'
 import { useEventSwitchDarkMode } from '~/hooks/event'
 import { Note } from '~/services/api/api-axios'
 import { RootState } from '~/store/store'
@@ -33,6 +35,12 @@ interface NoteFormProps {
 const NoteForm = ({ data, onCancel, onSave }: NoteFormProps) => {
   const spaceId = useSelector((state: RootState) => state.space.currentSpace?.id)
   const { isDarkMode } = useEventSwitchDarkMode()
+
+  const [searchParams] = useSearchParams()
+  const { id } = useParams<{ id: string }>()
+  const courseId = id
+  const unitId = searchParams.get('unitId')
+
   const {
     control,
     handleSubmit,
@@ -46,17 +54,37 @@ const NoteForm = ({ data, onCancel, onSave }: NoteFormProps) => {
     }
   })
 
-  const mutate = useCreateOrUpdateNote()
+  const createOrUpdateNote = useCreateOrUpdateNote()
+  const deleteNote = useDeleteNote()
 
   const onSubmit = async (formData: FormData) => {
-    await mutate.mutateAsync({
+    const payload: any = {
       spaceId: spaceId as string,
       title: formData.title,
       content: formData.content,
       tags: formData.hashtags.filter((tag): tag is string => tag !== undefined),
-      unitId: data.unitId
-    })
-    onSave()
+      lessonId: data.lessonId
+    }
+
+    if (courseId) {
+      payload.courseId = courseId
+    }
+
+    if (unitId) {
+      payload.unitId = unitId
+    }
+
+    console.log('payload', payload)
+
+    await createOrUpdateNote.mutateAsync(payload)
+    onSave?.()
+    toast.success('Note saved successfully')
+  }
+
+  const handleDelete = async () => {
+    await deleteNote.mutateAsync(data.id)
+    onCancel?.()
+    toast.success('Note deleted successfully')
   }
 
   return (
@@ -138,6 +166,9 @@ const NoteForm = ({ data, onCancel, onSave }: NoteFormProps) => {
       <Box sx={{ mt: 2, display: 'flex', gap: 1, justifyContent: 'flex-end' }}>
         <IconButton onClick={onCancel}>
           <Undo2 size={20} />
+        </IconButton>
+        <IconButton onClick={handleDelete}>
+          <Trash2 size={20} />
         </IconButton>
         <IconButton type='submit'>
           <Save size={20} />

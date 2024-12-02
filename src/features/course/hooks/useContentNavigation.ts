@@ -4,51 +4,53 @@ import { useParams, useSearchParams } from 'react-router-dom'
 
 import { setNavigation } from '~/features/course/courseSlice'
 import { useCourseLearn } from '~/features/course/hooks/useCourseQueries'
-import { useLearnUnit } from '~/features/unit/hooks/useUnitQueries'
 import { RootState } from '~/store/store'
 import logOnDev from '~/utils/log-on-dev'
 
 export const useContentNavigation = () => {
-  const dispatch = useDispatch()
-  const [searchParams] = useSearchParams()
   const { id: courseId } = useParams<{ id: string }>()
+
+  const [searchParams] = useSearchParams()
   const unitId = searchParams.get('unitId')
-  const contentId = searchParams.get('unitContentId')
+  const lessonId = searchParams.get('lessonId')
+
+  const dispatch = useDispatch()
+  const { data: courseData } = useCourseLearn(courseId || '')
+
   const { navigation } = useSelector((state: RootState) => state.course)
 
-  const { data: courseData } = useCourseLearn(courseId || '')
-  const { data: unitData } = useLearnUnit(unitId || '')
-
   useEffect(() => {
-    if (!courseData || !unitData) return
+    if (!courseData) return
 
     const { course } = courseData
     const units = course.units || []
     const currentUnitIndex = units.findIndex((u) => u.id === unitId)
     const currentUnit = units[currentUnitIndex]
 
-    if (!currentUnit || !unitData.unit.contents) return
+    if (!currentUnit) return
 
-    const contentIndex = unitData.unit.contents.findIndex((c) => c.id === contentId)
-    const currentContent = unitData.unit.contents[contentIndex]
-    const nextContent = unitData.unit.contents[contentIndex + 1]
+    const lessons = currentUnit.lessons || []
+    const lessonIndex = lessons.findIndex((l) => l.id === lessonId)
+    const currentLesson = lessons[lessonIndex]
+    const nextLesson = lessons[lessonIndex + 1]
     const nextUnit = units[currentUnitIndex + 1]
-    const isLastContent = contentIndex === unitData.unit.contents.length - 1
+    const isLastLesson = lessonIndex === lessons.length - 1
 
     logOnDev(
       'CURRENT_PROGRESS',
-      JSON.stringify({ currentUnit, currentContent, nextUnit, nextContent, isLastContent }, null, 2)
+      JSON.stringify({ currentUnit, currentLesson, nextUnit, nextLesson, isLastLesson }, null, 2)
     )
+
     dispatch(
       setNavigation({
         currentUnit,
-        currentContent,
-        nextUnit: isLastContent ? nextUnit : null,
-        nextContent: !isLastContent ? nextContent : null,
-        isLastContent
+        currentLesson,
+        nextUnit: isLastLesson ? nextUnit : null,
+        nextLesson: !isLastLesson ? nextLesson : null,
+        isLastLesson
       })
     )
-  }, [courseData, unitData, unitId, contentId, dispatch])
+  }, [courseData, unitId, lessonId, dispatch])
 
   return navigation
 }

@@ -43,6 +43,7 @@ export enum RouteNames {
   AdminCourseManagerDetail = '/admin/course-manager/:id',
   AdminCourseManagerCreate = '/admin/course-manager/create',
   AdminUnitManager = '/admin/unit-manager/:id',
+  AdminLessonDetail = '/admin/unit/:id/lesson',
 
   ForgotPassword = '/forgot-password',
   UNAUTHORIZED = '/401',

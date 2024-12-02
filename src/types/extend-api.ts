@@ -1,4 +1,4 @@
-export type StatusParams = 'draft' | 'public' | 'private' | 'deleted'
+export type StatusParams = 'draft' | 'published' | 'private' | 'deleted'
 
 export interface PaginationParams {
   page?: number
