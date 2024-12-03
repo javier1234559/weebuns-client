@@ -2,7 +2,7 @@ import Alert from '@mui/material/Alert'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 
-import { ComparisonResult } from './DictationPractice'
+import { ComparisonResult } from '~/utils/text-utils'
 
 interface ComparisonResultViewProps {
   result: ComparisonResult

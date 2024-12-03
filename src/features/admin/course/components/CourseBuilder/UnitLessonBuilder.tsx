@@ -15,7 +15,7 @@ import { memo, useCallback } from 'react'
 
 import AppButton from '~/components/common/AppButton'
 import { LessonWithoutContent, UnitWithLessonsDto } from '~/services/api/api-axios'
-import { textUtils } from '~/utils/text-utils'
+import { sanitize, truncate } from '~/utils/text-utils'
 
 export interface DragEndEvent {
   type: 'unit' | 'lesson'
@@ -213,7 +213,7 @@ const UnitLessonBuilder = ({
                                             </Box>
                                             {lesson.summary && (
                                               <Typography variant='body2' color='text.secondary' sx={{ mt: 0.5 }}>
-                                                {textUtils.truncate(textUtils.sanitize(lesson.summary), 200)}
+                                                {truncate(sanitize(lesson.summary || ''), 200)}
                                               </Typography>
                                             )}
                                           </Box>

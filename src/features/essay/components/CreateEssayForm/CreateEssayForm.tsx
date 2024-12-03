@@ -25,7 +25,7 @@ import { RouteNames } from '~/router/route-name'
 import { ContentStatus } from '~/services/api/api-axios'
 import { RootState } from '~/store/store'
 import { replacePathId } from '~/utils/replace-path'
-import { textUtils } from '~/utils/text-utils'
+import { sanitize, truncate } from '~/utils/text-utils'
 
 const schema = yup.object().shape({
   title: yup.string().required('Title is required').min(10, 'Title must be at least 10 characters'),
@@ -85,7 +85,7 @@ function CreateEssayForm() {
 
   const onSubmit = async (data: EssayFormData) => {
     const essayId = toast.loading('Create essay...')
-    const summary = textUtils.truncate(textUtils.sanitize(data.content), 100)
+    const summary = truncate(sanitize(data.content), 100)
     try {
       const result = await mutation.mutateAsync({
         title: data.title,

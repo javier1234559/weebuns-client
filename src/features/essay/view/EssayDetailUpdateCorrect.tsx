@@ -15,7 +15,7 @@ import { useUpdateCorrectionEssay } from '~/features/essay/hooks/useCorrectQueri
 import { useScrollToTop } from '~/hooks/useScrollToTop'
 import { FindOneEssayResponseDto } from '~/services/api/api-axios'
 import { CorrectionResponseOneDto, CreateCorrectionDto } from '~/services/graphql/graphql'
-import { textUtils } from '~/utils/text-utils'
+import { splitIntoSentences } from '~/utils/text-utils'
 
 interface EssayDetailUpdateCorrectProps {
   essayData: FindOneEssayResponseDto
@@ -28,7 +28,7 @@ export type CorrectionSentenceFormData = CreateCorrectionDto['sentences'][0]
 
 const EssayDetailUpdateCorrect = ({ essayData, data, onSubmit, onExit }: EssayDetailUpdateCorrectProps) => {
   const sentences = useMemo(
-    () => textUtils.splitIntoSentences(`${essayData.essay.title}. ${essayData.essay.content}`),
+    () => splitIntoSentences(`${essayData.essay.title}. ${essayData.essay.content}`),
     [essayData.essay.content, essayData.essay.title]
   )
   const [overallComment, setOverallComment] = useState(data.overall_comment)

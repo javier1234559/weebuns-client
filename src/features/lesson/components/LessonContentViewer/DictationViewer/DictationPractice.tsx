@@ -2,38 +2,11 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
-import { Change, diffWords } from 'diff'
 import { useState } from 'react'
 
+import { compareTexts, ComparisonResult } from '~/utils/text-utils'
+
 import ComparisonResultView from './ComparisonResultView'
-
-export interface ComparisonResult {
-  differences: {
-    text: string
-    type: 'correct' | 'added' | 'removed'
-  }[]
-  totalErrors: number
-  accuracy: number
-}
-
-export const compareTexts = (originalText: string, inputText: string): ComparisonResult => {
-  const differences = diffWords(originalText, inputText)
-
-  const formattedDifferences = differences.map((part: Change) => ({
-    text: part.value,
-    type: part.added ? ('added' as const) : part.removed ? ('removed' as const) : ('correct' as const)
-  }))
-
-  const totalWords = originalText.split(/\s+/).length
-  const errors = differences.filter((part) => part.added || part.removed).length
-  const accuracy = ((totalWords - errors) / totalWords) * 100
-
-  return {
-    differences: formattedDifferences,
-    totalErrors: errors,
-    accuracy: Math.max(0, accuracy)
-  }
-}
 
 interface DictationPracticeProps {
   originalText: string

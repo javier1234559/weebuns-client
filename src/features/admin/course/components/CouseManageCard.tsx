@@ -13,7 +13,7 @@ import AppButton from '~/components/common/AppButton'
 import { RouteNames } from '~/router/route-name'
 import { Course } from '~/services/api/api-axios'
 import { replacePathId } from '~/utils/replace-path'
-import { textUtils } from '~/utils/text-utils'
+import { sanitize, truncate } from '~/utils/text-utils'
 
 interface CourseManageCardProps {
   data: Course
@@ -92,7 +92,7 @@ const CourseManageCard: React.FC<CourseManageCardProps> = ({ data }) => {
             </Typography>
 
             <TruncatedTypography variant='body2' color='text.secondary' sx={{ mb: 3 }}>
-              {textUtils.truncate(textUtils.sanitize(data.description || ''), 1000)}
+              {truncate(sanitize(data.description || ''), 1000)}
             </TruncatedTypography>
           </Box>
 

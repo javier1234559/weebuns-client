@@ -16,7 +16,7 @@ import { RouteNames } from '~/router/route-name'
 import { Essay } from '~/services/api/api-axios'
 import { convertToRelativeTime } from '~/utils/format-date'
 import { replacePathId } from '~/utils/replace-path'
-import { textUtils } from '~/utils/text-utils'
+import { sanitize, truncate } from '~/utils/text-utils'
 
 interface EssayCardProps {
   item: Essay
@@ -135,7 +135,7 @@ function EssayCard({ item }: EssayCardProps) {
               title={item.title}
               aria-label={`Read more about ${item.title}`}
             >
-              {textUtils.truncate(textUtils.sanitize(item.title), 200)}
+              {truncate(sanitize(item.title || ''), 200)}
             </Typography>
 
             <Typography
@@ -162,7 +162,7 @@ function EssayCard({ item }: EssayCardProps) {
                 }
               }}
             >
-              {textUtils.truncate(textUtils.sanitize(item.content), 1000)}
+              {truncate(sanitize(item.content), 1000)}
             </Typography>
           </Box>
           {/* Optional Image */}

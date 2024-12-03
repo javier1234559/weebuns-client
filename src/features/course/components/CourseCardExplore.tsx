@@ -19,7 +19,7 @@ import { CourseWithJoinStatus } from '~/services/api/api-axios'
 import { LanguageCode, LevelCode, TargetCode } from '~/services/graphql/graphql'
 import { convertToRelativeTime } from '~/utils/format-date'
 import { replacePathId } from '~/utils/replace-path'
-import { textUtils } from '~/utils/text-utils'
+import { sanitize, truncate } from '~/utils/text-utils'
 
 const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -114,7 +114,7 @@ const CourseCardExplore = ({ data }: CourseCardExploreProps) => {
           </Typography>
 
           <TruncatedTypography variant='body2' color='text.secondary' sx={{ mb: 2 }}>
-            {textUtils.truncate(textUtils.sanitize(data.description || ''), 200)}
+            {truncate(sanitize(data.description || ''), 200)}
           </TruncatedTypography>
 
           <Box sx={{ mt: 'auto', pt: 1 }}>
