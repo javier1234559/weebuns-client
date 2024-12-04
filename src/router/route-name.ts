@@ -33,6 +33,9 @@ export enum RouteNames {
   UnitDetail = '/unit/:id',
   UnitCreate = '/unit/admin/create',
 
+  Thanks = '/thanks',
+  Pricing = '/pricing',
+
   Setting = '/setting',
 
   // Admin

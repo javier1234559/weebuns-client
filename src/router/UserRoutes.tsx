@@ -31,6 +31,8 @@ const EssayCreate = lazy(() => import('~/pages/essay/[id]/essay-create'))
 const Setting = lazy(() => import('~/pages/setting'))
 const EssayDetail = lazy(() => import('~/pages/essay/[id]/essay-detail'))
 const EssayUpdate = lazy(() => import('~/pages/essay/[id]/essay-update'))
+const Thanks = lazy(() => import('~/pages/thanks'))
+const Pricing = lazy(() => import('~/pages/pricing'))
 
 const USER_ROUTES = [
   {
@@ -80,6 +82,22 @@ const USER_ROUTES = [
               <AuthWrapper>
                 <Register />
               </AuthWrapper>
+            )
+          },
+          {
+            path: RouteNames.Thanks,
+            element: (
+              <Suspense fallback={<AppLoading />}>
+                <Thanks />
+              </Suspense>
+            )
+          },
+          {
+            path: RouteNames.Pricing,
+            element: (
+              <Suspense fallback={<AppLoading />}>
+                <Pricing />
+              </Suspense>
             )
           }
         ]

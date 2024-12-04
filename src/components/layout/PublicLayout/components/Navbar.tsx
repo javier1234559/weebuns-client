@@ -19,7 +19,12 @@ import ThemSwitcher from '~/components/feature/ThemSwitcher'
 import { RouteNames } from '~/router/route-name'
 import { RootState } from '~/store/store'
 
-const pages = ['Home', 'Blog', 'About']
+const pages = [
+  { label: 'Home', href: '/' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'About', href: '/about' },
+  { label: 'Pricing', href: '/pricing' }
+]
 
 function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null)
@@ -74,8 +79,8 @@ function Header() {
               onClose={handleCloseNavMenu}
             >
               {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign='center'>{page}</Typography>
+                <MenuItem key={page.label} onClick={handleCloseNavMenu}>
+                  <Typography textAlign='center'>{page.label}</Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -84,11 +89,12 @@ function Header() {
           <Box sx={{ display: { xs: 'none', md: 'flex' }, alignItems: 'center', gap: 2, ml: 'auto', mr: 2 }}>
             {pages.map((page) => (
               <AppLink
-                key={page}
+                key={page.label}
+                href={page.href}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'text.primary', display: 'block', textDecoration: 'none' }}
               >
-                {page}
+                {page.label}
               </AppLink>
             ))}
           </Box>

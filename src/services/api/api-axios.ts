@@ -263,12 +263,12 @@ export interface CorrectionSentence {
   rating: number
   /**
    * @format date-time
-   * @example "2024-12-02T19:55:45.769Z"
+   * @example "2024-12-04T18:41:53.781Z"
    */
   createdAt: string
   /**
    * @format date-time
-   * @example "2024-12-02T19:55:45.769Z"
+   * @example "2024-12-04T18:41:53.781Z"
    */
   updatedAt: string
 }
@@ -425,7 +425,7 @@ export interface SubscriptionPayment {
   subscriptionId: string
   /** @format double */
   amount: number
-  paymentType: 'STRIPE' | 'MOMO' | 'ZALOPAY'
+  paymentType: 'stripe' | 'momo' | 'zalopay'
   /** @format date-time */
   paymentDate: string
   status: string
@@ -455,7 +455,7 @@ export interface CorrectionCredit {
   /** @format double */
   price: number
   paymentId: string | null
-  paymentType: 'STRIPE' | 'MOMO' | 'ZALOPAY'
+  paymentType: 'stripe' | 'momo' | 'zalopay'
   /** @format date-time */
   expireDate: string | null
   /** @format date-time */
@@ -1326,6 +1326,34 @@ export interface TextToSpeechResponseDto {
   audioUrl: string
   text: string
   voiceId: string
+}
+
+export interface FindSubscriptionStatusResponseDto {
+  isActive: boolean
+  type: 'FREE' | 'BASIC' | 'PREMIUM'
+  /** @format date-time */
+  expiresAt: string
+}
+
+export interface CreatePaymentDto {
+  planType: 'FREE' | 'BASIC' | 'PREMIUM'
+  amount: number
+  currency?: string
+}
+
+export interface CreatePaymentResponseDto {
+  paymentUrl: string
+  transactionId: string
+}
+
+export interface CheckPaymentStatusDto {
+  transactionId: string
+}
+
+export interface CheckPaymentStatusResponseDto {
+  success: boolean
+  status: string
+  message: string | null
 }
 
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from 'axios'
@@ -2947,6 +2975,78 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, any>({
         path: `/api/ai/tts/all`,
         method: 'GET',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags subscriptions
+     * @name SubscriptionControllerGetStatus
+     * @request GET:/api/subscriptions/status
+     */
+    subscriptionControllerGetStatus: (params: RequestParams = {}) =>
+      this.request<FindSubscriptionStatusResponseDto, any>({
+        path: `/api/subscriptions/status`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags subscriptions
+     * @name SubscriptionControllerCreatePayment
+     * @request POST:/api/subscriptions/payment/{provider}
+     */
+    subscriptionControllerCreatePayment: (
+      provider: 'stripe' | 'momo' | 'zalopay',
+      data: CreatePaymentDto,
+      params: RequestParams = {}
+    ) =>
+      this.request<CreatePaymentResponseDto, any>({
+        path: `/api/subscriptions/payment/${provider}`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags subscriptions
+     * @name SubscriptionControllerCheckPaymentStatus
+     * @request POST:/api/subscriptions/payment/{provider}/check-status
+     */
+    subscriptionControllerCheckPaymentStatus: (
+      provider: 'stripe' | 'momo' | 'zalopay',
+      data: CheckPaymentStatusDto,
+      params: RequestParams = {}
+    ) =>
+      this.request<CheckPaymentStatusResponseDto, any>({
+        path: `/api/subscriptions/payment/${provider}/check-status`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags subscriptions
+     * @name SubscriptionControllerPaymentCallback
+     * @request POST:/api/subscriptions/payment/{provider}/callback
+     */
+    subscriptionControllerPaymentCallback: (provider: 'stripe' | 'momo' | 'zalopay', params: RequestParams = {}) =>
+      this.request<CheckPaymentStatusResponseDto, any>({
+        path: `/api/subscriptions/payment/${provider}/callback`,
+        method: 'POST',
+        format: 'json',
         ...params
       })
   }
