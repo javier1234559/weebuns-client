@@ -12,7 +12,6 @@ import { PersistGate } from 'redux-persist/integration/react'
 
 import AppModal from '~/components/common/AppModal/AppModal.tsx'
 import { globalConfig } from '~/config.ts'
-import AdProvider from '~/contexts/AdContext.tsx'
 import { apolloClient } from '~/services/graphql/apoloClient.ts'
 import { persistor, store } from '~/store/store'
 
