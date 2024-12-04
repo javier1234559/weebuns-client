@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import { globalConfig } from '~/config'
 import { Api } from '~/services/api/api-axios'
-import { getToken } from '~/utils/token'
+import { store } from '~/store/store'
 
 export const axiosInstance = axios.create({
   baseURL: globalConfig.API_URL,
@@ -14,7 +14,9 @@ export const axiosInstance = axios.create({
 
 // Header injection for auth
 const injectHeaders = async (headers: Record<string, string | undefined>) => {
-  const token = getToken()
+  const state = store.getState()
+  const token = state.auth.accessToken
+  // const token = getToken()
 
   // Safe check for Content-Type
   const contentType = headers?.['Content-Type']
