@@ -7,7 +7,7 @@ export const CREATE_CORRECTION_MUTATION = gql`
       essayId
       createdBy
       createdAt
-      overall_comment
+      overallComment
       rating
       updatedAt
       sentences {
@@ -46,7 +46,7 @@ export const UPDATE_CORRECTION_MUTATION = gql`
       id
       essayId
       createdBy
-      overall_comment
+      overallComment
       rating
       createdAt
       updatedAt
@@ -72,7 +72,7 @@ export const GET_LIST_CORRECTION_BY_ESSAY_QUERY = gql`
         id
         essayId
         createdBy
-        overall_comment
+        overallComment
         rating
         createdAt
         updatedAt
@@ -123,7 +123,7 @@ export const CHECK_CORRECTION_EXIST_QUERY = gql`
       id # Thêm id vào đây
       essayId
       createdBy
-      overall_comment
+      overallComment
       rating
       createdAt
       updatedAt

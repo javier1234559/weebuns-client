@@ -12,6 +12,7 @@ import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useSearchParams } from 'react-router-dom'
 
+import { useSubscriptionStatus } from '~/features/subscription/hooks/useSubscriptionStatus'
 import useLearnParams from '~/features/unit/hooks/useLearnParams'
 import { UnitLearnDto } from '~/services/api/api-axios'
 import { RootState } from '~/store/store'
@@ -21,8 +22,22 @@ const StyledAccordion = styled(Accordion, {
 })<{ isCompleted?: boolean; isCurrentUnit?: boolean }>(({ theme, isCompleted }) => ({
   borderRadius: 0,
   backgroundColor: isCompleted ? theme.palette.success.light : undefined,
+  margin: 0,
   '&.Mui-disabled': {
     backgroundColor: theme.palette.action.disabledBackground
+  },
+  '&:before': {
+    display: 'none' // Remove the default divider
+  },
+  '& .MuiAccordionSummary-root': {
+    minHeight: 48,
+    margin: 0
+  },
+  '& + &': {
+    borderTop: `1px solid ${theme.palette.divider}` // Add a border between accordions
+  },
+  '&.Mui-expanded': {
+    margin: 0 // Override the default margin in expanded state
   }
 }))
 
@@ -39,18 +54,16 @@ interface UnitSidebarProps {
 const UnitSidebar = ({ units }: UnitSidebarProps) => {
   const [, setSearchParams] = useSearchParams()
   const { unitId, lessonId } = useLearnParams()
-
+  const { isActive, isLoading } = useSubscriptionStatus()
   const [expandedUnit, setExpandedUnit] = useState<string | null>(unitId)
 
   const courseState = useSelector((state: RootState) => state.course)
 
-  console.log('currentLessonId', lessonId)
-
   // const completedUnits = courseState.currentCourseProgress?.completedUnits ?? []
   const completedLessons = courseState.currentCourseProgress?.completedLessons ?? []
 
-  // TODO: Get this from user state/context
-  const isUserPremium = false
+  const isUserPremium = isActive && !isLoading
+  console.log('isActive', isActive)
 
   const handleLessonClick = (unitId: string, lessonId: string) => {
     setSearchParams((prev) => {
@@ -69,7 +82,7 @@ const UnitSidebar = ({ units }: UnitSidebarProps) => {
   }
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '100%', m: 0 }}>
       {units.map((unit) => {
         const isCompleted = isUnitCompleted(unit)
         const isCurrentUnit = unit.id === unitId
@@ -86,7 +99,7 @@ const UnitSidebar = ({ units }: UnitSidebarProps) => {
             isCurrentUnit={isCurrentUnit}
             disabled={isDisabled}
           >
-            <AccordionSummary expandIcon={<ChevronDown size={20} />} sx={{ minHeight: 48 }}>
+            <AccordionSummary expandIcon={<ChevronDown size={20} />} sx={{ minHeight: 48, m: 0 }}>
               <Box
                 sx={{
                   display: 'flex',

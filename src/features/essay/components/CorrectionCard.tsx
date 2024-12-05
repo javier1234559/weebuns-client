@@ -69,7 +69,7 @@ function CorrectionCard({ item }: CorrectionCardProps) {
           <Typography variant='h6' mb={1} fontWeight={500}>
             Overall Feedback
           </Typography>
-          <Typography variant='body2'>{item.overall_comment}</Typography>
+          <Typography variant='body2'>{item.overallComment}</Typography>
         </Box>
         <Box mb={2}>
           <AppInput placeholder='Write your response...' fullWidth />

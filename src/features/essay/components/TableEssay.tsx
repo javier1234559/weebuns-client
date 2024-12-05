@@ -13,7 +13,8 @@ import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
 import Typography from '@mui/material/Typography'
 import toast from 'react-hot-toast'
-import { Link, useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 import { AppError } from '~/components/common/AppError'
 import AppIcon from '~/components/common/AppIcon'
@@ -24,26 +25,21 @@ import DeleteModal from '~/components/modal/DeleteModal'
 import { Select, SelectItem } from '~/components/ui/select'
 import { useModal } from '~/contexts/ModalContext'
 import MoreActionButton from '~/features/essay/components/MoreActionButton'
+import { STATUS_OPTIONS } from '~/features/essay/essay.type'
 import { useDeleteEssayByUser, useListEssayByUser } from '~/features/essay/hooks/useEssayQueries'
 import EssayUpdateStatusModal from '~/features/essay/modal/EssayStatusModal'
 import useFilterParams from '~/hooks/useFilterParams'
 import usePagination from '~/hooks/usePagination'
 import { RouteNames } from '~/router/route-name'
+import { RootState } from '~/store/store'
 import { StatusParams } from '~/types/extend-api'
 import { convertToRelativeTime } from '~/utils/format-date'
 import { replacePathId } from '~/utils/replace-path'
 
-const STATUS_OPTIONS = [
-  { value: '', label: 'All Status' },
-  { value: 'draft', label: 'Draft' },
-  { value: 'published', label: 'Public' },
-  { value: 'private', label: 'Private' }
-]
-
 function TableEssay() {
   const theme = useTheme()
   const { openModal } = useModal()
-  const navigator = useNavigate()
+  const spaceId = useSelector((state: RootState) => state.space.currentSpace?.id)
   const { page, perPage, updateQueryParams } = usePagination({ defaultPage: 1, defaultPerPage: 2 })
   const { status, updateStatus, resetStatus } = useFilterParams({
     defaultStatus: ''
@@ -52,6 +48,7 @@ function TableEssay() {
   const { data, isLoading, error } = useListEssayByUser({
     page,
     perPage,
+    ...(spaceId && { spaceId }),
     ...(status && { status: status as StatusParams })
   })
   const mutation = useDeleteEssayByUser()
@@ -73,10 +70,6 @@ function TableEssay() {
 
   const handleChangeStatus = (essayId: string, currentStatus: string) => {
     openModal(EssayUpdateStatusModal, { essayId, currentStatus: currentStatus })
-  }
-
-  const handleView = (essayId: string) => {
-    navigator(RouteNames.EssayUpdate.replace(':id', essayId))
   }
 
   const handlePageChange = (newPage: number) => {
@@ -197,7 +190,6 @@ function TableEssay() {
                   </TableCell>
                   <TableCell align='right'>
                     <MoreActionButton
-                      onEdit={() => handleView(essay.id)}
                       onDelete={() => handleDelete(essay.id)}
                       onChangeStatus={() => handleChangeStatus(essay.id, essay.status)}
                     />

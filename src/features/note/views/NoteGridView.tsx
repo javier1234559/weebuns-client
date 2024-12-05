@@ -8,6 +8,7 @@ import Select from '@mui/material/Select'
 import TextField from '@mui/material/TextField'
 import { Search } from 'lucide-react'
 import { useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import AppError from '~/components/common/AppError'
 import AppLoading from '~/components/common/AppLoading'
@@ -16,6 +17,7 @@ import NoteCard from '~/features/note/components/NoteCard'
 import { useNotes } from '~/features/note/hooks/useNoteQueries'
 import usePagination from '~/hooks/usePagination'
 import { Note } from '~/services/api/api-axios'
+import { RootState } from '~/store/store'
 
 const MasonryGrid = styled(Box)(({ theme }) => ({
   columnCount: 1,
@@ -36,6 +38,7 @@ const MasonryGrid = styled(Box)(({ theme }) => ({
 
 export default function NoteGridView() {
   const [filter, setFilter] = useState<'all' | 'bookmarked'>('all')
+  const spaceId = useSelector((state: RootState) => state.space.currentSpace?.id)
 
   const { page, perPage, search, tags, searchParam, setSearch, updateQueryParams } = usePagination({
     defaultPage: 1,
@@ -47,7 +50,8 @@ export default function NoteGridView() {
     perPage,
     search: searchParam || undefined,
     tags: tags,
-    isBookmarked: filter === 'bookmarked' ? true : undefined
+    isBookmarked: filter === 'bookmarked' ? true : undefined,
+    ...(spaceId ? { spaceId } : {})
   })
 
   const handleFilterChange = (value: 'all' | 'bookmarked') => {

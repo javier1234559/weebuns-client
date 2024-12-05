@@ -10,12 +10,11 @@ import MenuItem from '@mui/material/MenuItem'
 import React, { memo, useState } from 'react'
 
 interface MoreActionButtonProps {
-  onEdit: () => void
   onDelete: () => void
   onChangeStatus: () => void
 }
 
-function MoreActionButton({ onEdit, onDelete, onChangeStatus }: MoreActionButtonProps) {
+function MoreActionButton({ onDelete, onChangeStatus }: MoreActionButtonProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
 
@@ -54,12 +53,12 @@ function MoreActionButton({ onEdit, onDelete, onChangeStatus }: MoreActionButton
         open={open}
         onClose={handleClose}
       >
-        <MenuItem onClick={() => handleMenuItemClick(onEdit)}>
+        {/* <MenuItem onClick={() => handleMenuItemClick(onEdit)}>
           <ListItemIcon>
             <EditIcon fontSize='small' />
           </ListItemIcon>
           <ListItemText>Detail</ListItemText>
-        </MenuItem>
+        </MenuItem> */}
         <MenuItem onClick={() => handleMenuItemClick(onDelete)}>
           <ListItemIcon>
             <DeleteIcon fontSize='small' />

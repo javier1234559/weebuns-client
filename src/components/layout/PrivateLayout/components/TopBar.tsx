@@ -3,8 +3,10 @@ import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Toolbar from '@mui/material/Toolbar'
 import { FunctionComponent, ReactNode } from 'react'
+import { useSelector } from 'react-redux'
 
 import SpaceSelect from '~/features/space/components/SpaceSelect'
+import { RootState } from '~/store/store'
 
 interface Props {
   endNode?: ReactNode
@@ -17,6 +19,8 @@ interface Props {
  * @component TopBar
  */
 const TopBar: FunctionComponent<Props> = ({ endNode, startNode, title = '', ...restOfProps }) => {
+  const role = useSelector((state: RootState) => state.auth.role)
+
   return (
     <AppBar
       component='div'
@@ -35,7 +39,7 @@ const TopBar: FunctionComponent<Props> = ({ endNode, startNode, title = '', ...r
           {startNode}
 
           <Box ml='auto' display='flex' gap={2}>
-            <SpaceSelect />
+            {role === 'user' && <SpaceSelect />}
             {endNode}
           </Box>
         </Toolbar>

@@ -2,14 +2,13 @@ import SwapHorizIcon from '@mui/icons-material/SwapHoriz'
 import { SelectChangeEvent } from '@mui/material'
 import Box from '@mui/material/Box'
 import FormControl from '@mui/material/FormControl'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
 
 import { AppButton } from '~/components/common/AppButton'
+import { Select, SelectItem } from '~/components/ui/select'
+import { STATUS_OPTIONS } from '~/features/essay/essay.type'
 import { useUpdateEssay } from '~/features/essay/hooks/useEssayQueries'
 import { ContentStatus } from '~/services/api/api-axios'
 
@@ -67,17 +66,12 @@ function EssayUpdateStatusModal({ essayId, currentStatus, onConfirm, onClose }: 
         Select the new status to change
       </Typography>
       <FormControl fullWidth sx={{ mt: 2, mb: 2 }}>
-        <InputLabel id='status-select-label'>Status</InputLabel>
-        <Select
-          labelId='status-select-label'
-          id='status-select'
-          value={status}
-          label='Status'
-          onChange={handleStatusChange}
-        >
-          <MenuItem value='public'>Public</MenuItem>
-          <MenuItem value='private'>Private</MenuItem>
-          <MenuItem value='draft'>Draft</MenuItem>
+        <Select name='' placeholder='Status' value={status} onChange={handleStatusChange}>
+          {STATUS_OPTIONS.map((option) => (
+            <SelectItem key={option.value} value={option.value}>
+              {option.label}
+            </SelectItem>
+          ))}
         </Select>
       </FormControl>
       <Box sx={{ mt: 2, display: 'flex', justifyContent: 'flex-end' }}>

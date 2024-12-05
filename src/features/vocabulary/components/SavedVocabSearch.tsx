@@ -7,10 +7,12 @@ import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { KeyboardEvent, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 import { AppInput } from '~/components/common/AppInput'
 import AudioButton from '~/features/vocabulary/components/AudioButton'
 import { useVocabularies } from '~/features/vocabulary/hooks/useVocabularyQueries'
+import { RootState } from '~/store/store'
 
 const ExampleText = styled(Box)(({ theme }) => ({
   borderLeft: `3px solid ${theme.palette.primary.main}`,
@@ -23,8 +25,9 @@ const ExampleText = styled(Box)(({ theme }) => ({
 const SavedVocabSearch = () => {
   const [inputValue, setInputValue] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
+  const spaceId = useSelector((state: RootState) => state.space.currentSpace?.id)
 
-  const { data: vocabularies, isLoading } = useVocabularies({ search: searchTerm })
+  const { data: vocabularies, isLoading } = useVocabularies({ search: searchTerm, ...(spaceId ? { spaceId } : {}) })
 
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {

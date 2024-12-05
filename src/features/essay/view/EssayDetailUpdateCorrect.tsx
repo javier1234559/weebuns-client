@@ -31,7 +31,7 @@ const EssayDetailUpdateCorrect = ({ essayData, data, onSubmit, onExit }: EssayDe
     () => splitIntoSentences(`${essayData.essay.title}. ${essayData.essay.content}`),
     [essayData.essay.content, essayData.essay.title]
   )
-  const [overallComment, setOverallComment] = useState(data.overall_comment)
+  const [overallComment, setOverallComment] = useState(data.overallComment)
   const [corrections, setCorrections] = useState<CorrectionSentenceFormData[]>([])
   const { scrollToTop } = useScrollToTop()
 
@@ -77,7 +77,7 @@ const EssayDetailUpdateCorrect = ({ essayData, data, onSubmit, onExit }: EssayDe
         input: {
           id: data.id,
           sentences: items,
-          overall_comment: overallComment
+          overallComment
         }
       },
       onCompleted: () => {

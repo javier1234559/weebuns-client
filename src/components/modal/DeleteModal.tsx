@@ -19,7 +19,7 @@ function DeleteModal({ itemName, onConfirm, onClose }: DeleteModalProps) {
   }
 
   return (
-    <Box sx={{ width: 300 }}>
+    <Box sx={{ width: 300, p: 2 }}>
       <Typography variant='h6' component='h2' id='modal-title'>
         Confirm Deletion
       </Typography>

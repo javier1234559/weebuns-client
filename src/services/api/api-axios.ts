@@ -263,12 +263,12 @@ export interface CorrectionSentence {
   rating: number
   /**
    * @format date-time
-   * @example "2024-12-04T18:41:53.781Z"
+   * @example "2024-12-05T05:34:32.735Z"
    */
   createdAt: string
   /**
    * @format date-time
-   * @example "2024-12-04T18:41:53.781Z"
+   * @example "2024-12-05T05:34:32.735Z"
    */
   updatedAt: string
 }
@@ -2010,6 +2010,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         search?: string
         /** @example "published" */
         status?: 'draft' | 'published' | 'private' | 'deleted'
+        spaceId?: string
       },
       params: RequestParams = {}
     ) =>
@@ -2054,6 +2055,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         search?: string
         /** @example "published" */
         status?: 'draft' | 'published' | 'private' | 'deleted'
+        spaceId?: string
       },
       params: RequestParams = {}
     ) =>

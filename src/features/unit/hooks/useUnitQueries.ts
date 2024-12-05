@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
+import { LESSON_KEY_FACTORY } from '~/features/admin/lesson/hooks/lesson-key-factory'
 import { COURSE_KEY_FACTORY } from '~/features/course/hooks/course-key-factory'
 import { UNIT_KEY_FACTORY } from '~/features/unit/hooks/unit-key-factory'
 import {
@@ -94,6 +95,8 @@ export const useCreateLesson = () => {
     onSuccess: (_data, { unitId }) => {
       queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.lessons(unitId) })
       queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.detail(unitId) })
+      queryClient.invalidateQueries({ queryKey: LESSON_KEY_FACTORY.detail(unitId) })
+      queryClient.invalidateQueries({ queryKey: COURSE_KEY_FACTORY.all, exact: false })
     }
   })
 }

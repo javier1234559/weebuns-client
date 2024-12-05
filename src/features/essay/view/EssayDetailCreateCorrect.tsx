@@ -58,7 +58,6 @@ const EssayDetailCreateCorrect = ({ data, onSubmit, onExit }: EssayDetailCreateC
 
   const handleSaveAll = async () => {
     const items = corrections.filter(Boolean)
-    const overall_comment = overallComment
     const loadingId = toast.loading('Creating correction...')
     try {
       await createCorrection({
@@ -66,7 +65,7 @@ const EssayDetailCreateCorrect = ({ data, onSubmit, onExit }: EssayDetailCreateC
           input: {
             essay_id: id,
             sentences: items,
-            overall_comment
+            overallComment
           }
         }
       })

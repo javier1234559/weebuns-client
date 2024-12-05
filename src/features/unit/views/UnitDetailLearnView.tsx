@@ -2,13 +2,16 @@ import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import { memo } from 'react'
+import { useSelector } from 'react-redux'
 
 import AppError from '~/components/common/AppError'
 import AppLoading from '~/components/common/AppLoading'
+import CompleteProgressButton from '~/features/course/components/CompleteProgressButton'
 import LessonContentViewer from '~/features/lesson/components/LessonContentViewer'
 import { LessonContent } from '~/features/lesson/lesson.type'
 import UnitNote from '~/features/unit/components/UnitNote'
 import { useLearnLesson } from '~/features/unit/hooks/useUnitQueries'
+import { RootState } from '~/store/store'
 
 interface UnitDetailLearnViewProps {
   unitId: string
@@ -17,6 +20,7 @@ interface UnitDetailLearnViewProps {
 
 const UnitDetailLearnView = ({ unitId, lessonId }: UnitDetailLearnViewProps) => {
   const { data, isLoading, error } = useLearnLesson(unitId, lessonId)
+  const currentCourseProgress = useSelector((state: RootState) => state.course.currentCourseProgress)
 
   if (isLoading) return <AppLoading />
   if (!data || error) return <AppError error={error} />
@@ -36,6 +40,16 @@ const UnitDetailLearnView = ({ unitId, lessonId }: UnitDetailLearnViewProps) => 
         <LessonContentViewer content={data.lesson.content as LessonContent} />
         {/* <UnitContentTab contents={data.lesson.contents || []} /> */}
       </Box>
+
+      {/* Progress Section */}
+      <Paper sx={{ p: 3, mb: 3 }}>
+        <CompleteProgressButton
+          lesson={data.lesson}
+          nextLesson={currentCourseProgress.nextLesson}
+          nextUnit={currentCourseProgress.nextUnit}
+          isLastLesson={false}
+        />
+      </Paper>
 
       {/* Notes Section */}
       <Paper sx={{ p: 3, mb: 3 }}>

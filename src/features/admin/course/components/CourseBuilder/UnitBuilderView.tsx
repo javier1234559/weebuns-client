@@ -3,7 +3,7 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import { useEffect, useRef, useState } from 'react'
 import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 import { AppError } from '~/components/common/AppError'
 import { AppLoading } from '~/components/common/AppLoading'
@@ -26,6 +26,7 @@ interface UnitBuilderViewProps {
 export const UnitBuilderView = ({ courseId }: UnitBuilderViewProps) => {
   const { openModal } = useModal()
   const navigate = useNavigate()
+  const location = useLocation()
   const { page, perPage, updateQueryParams } = usePagination({ defaultPage: 1, defaultPerPage: 5 })
   const [localUnits, setLocalUnits] = useState<UnitWithLessonsDto[]>([])
   const previousStateRef = useRef<UnitWithLessonsDto[]>([])
@@ -39,7 +40,7 @@ export const UnitBuilderView = ({ courseId }: UnitBuilderViewProps) => {
       // Update previous state with server data
       previousStateRef.current = data.data
     }
-  }, [data])
+  }, [data, location])
 
   const handleDragEnd = async (event: DragEndEvent) => {
     const { type, source, destination, item } = event
