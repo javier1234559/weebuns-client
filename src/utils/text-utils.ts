@@ -18,9 +18,11 @@ export const truncate = (text: string, maxLength: number): string => {
  * @param html - HTML string to sanitize
  */
 export const sanitize = (html: string): string => {
-  return html.replace(/<[^>]*>/g, '')
+  const sanitizedHtml = DOMPurify.sanitize(html)
+  const div = document.createElement('div')
+  div.innerHTML = sanitizedHtml
+  return div.textContent?.trim().replace(/\s+/g, ' ') || ''
 }
-
 /**
  * Processes HTML content into structured plain text
  * Handles images, paragraphs, blockquotes, and special characters

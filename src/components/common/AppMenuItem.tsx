@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import MenuItem from '@mui/material/MenuItem'
 import Typography from '@mui/material/Typography'
 
-import { MenuItem as MenuItemType } from '~/router/menuItems'
+import { MenuItem as MenuItemType } from '~/router/MenuItems'
 
 interface AppMenuItemProps {
   item: MenuItemType

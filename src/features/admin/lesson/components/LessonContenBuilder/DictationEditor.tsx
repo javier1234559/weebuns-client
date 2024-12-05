@@ -17,6 +17,7 @@ import aiApi from '~/features/ai/services/aiApi'
 import { DictationContent } from '~/features/lesson/lesson.type'
 import uploadApi from '~/features/upload/services/uploadApi'
 import { useEventSwitchDarkMode } from '~/hooks/event'
+import { sanitize } from '~/utils/text-utils'
 
 interface DictationEditorProps {
   content: DictationContent
@@ -95,13 +96,15 @@ function DictationEditor({ content, onChange }: DictationEditorProps) {
       return
     }
 
+    const cleanText = sanitize(content.text)
+
     try {
       setIsUploading(true)
       setError(null)
 
       // Generate audio using TTS API
       const response = await aiApi.textToSpeech({
-        text: content.text,
+        text: cleanText,
         voiceId: 'nPczCjzI2devNBz1zQrb' // id of the voice
       })
 

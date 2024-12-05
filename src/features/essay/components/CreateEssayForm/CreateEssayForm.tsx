@@ -43,9 +43,9 @@ const LANGUAGE_OPTIONS = [
 ]
 
 const ESSAY_OPTIONS = [
-  { value: 'public', label: 'Public' },
-  { value: 'private', label: 'Private' },
-  { value: 'draft', label: 'Draft' }
+  { value: 'draft', label: 'Draft' },
+  { value: 'published', label: 'Public' },
+  { value: 'private', label: 'Private' }
 ]
 
 function CreateEssayForm() {
