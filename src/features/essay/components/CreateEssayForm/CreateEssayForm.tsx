@@ -12,7 +12,7 @@ import * as yup from 'yup'
 
 import { AppButton } from '~/components/common/AppButton'
 import AppInput from '~/components/common/AppInput'
-import ContentEditor from '~/components/feature/Editor/ContentEditor'
+import EssayEditor from '~/components/feature/Editor/EssayEditor'
 import UploadImage from '~/components/feature/ImageUpload'
 import { Card, CardContent, CardTitle } from '~/components/ui/card'
 import { Select, SelectItem } from '~/components/ui/select'
@@ -167,7 +167,7 @@ function CreateEssayForm() {
       control={control}
       render={({ field, fieldState: { error } }) => (
         <Box>
-          <ContentEditor isDark={isDarkMode} content={field.value} onChangeContent={field.onChange} />
+          <EssayEditor isDark={isDarkMode} content={field.value} onChangeContent={field.onChange} />
           {error && (
             <Typography color='error' variant='caption' sx={{ mt: 1 }}>
               {error.message}

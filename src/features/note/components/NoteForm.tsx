@@ -12,7 +12,7 @@ import { useParams, useSearchParams } from 'react-router-dom'
 import * as yup from 'yup'
 
 import AppInput from '~/components/common/AppInput'
-import ContentEditor from '~/components/feature/Editor/ContentEditor'
+import EssayEditor from '~/components/feature/Editor/EssayEditor'
 import { useCreateOrUpdateNote, useDeleteNote } from '~/features/note/hooks/useNoteQueries'
 import { useEventSwitchDarkMode } from '~/hooks/event'
 import { Note } from '~/services/api/api-axios'
@@ -111,7 +111,7 @@ const NoteForm = ({ data, onCancel, onSave }: NoteFormProps) => {
           control={control}
           render={({ field }) => (
             <Box>
-              <ContentEditor isDark={isDarkMode} content={field.value} onChangeContent={field.onChange} />
+              <EssayEditor isDark={isDarkMode} content={field.value} onChangeContent={field.onChange} />
               {errors.content && (
                 <Typography color='error' variant='caption'>
                   {errors.content.message}
