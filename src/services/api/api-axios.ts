@@ -263,12 +263,12 @@ export interface CorrectionSentence {
   rating: number
   /**
    * @format date-time
-   * @example "2024-12-09T07:41:11.822Z"
+   * @example "2024-12-09T18:22:27.292Z"
    */
   createdAt: string
   /**
    * @format date-time
-   * @example "2024-12-09T07:41:11.822Z"
+   * @example "2024-12-09T18:22:27.292Z"
    */
   updatedAt: string
 }
@@ -599,6 +599,15 @@ export interface UpdateUserDto {
 
 export interface UpdateUserResponse {
   user: User
+}
+
+export interface UpdateProfileUserDto {
+  username: string
+  email: string
+  firstName: string
+  lastName: string
+  nativeLanguage: string
+  profilePicture: string
 }
 
 export interface DeleteUserResponse {
@@ -1482,6 +1491,24 @@ export interface UpdateSubscriptionPaymentDto {
   status?: string
 }
 
+export interface SentenceFieldsDto {
+  en: string
+  vi: string
+  tag?: string[]
+}
+
+export interface SentenceResponseDto {
+  _id: string
+  fields: SentenceFieldsDto
+}
+
+export interface SearchSentenceResponseDto {
+  language: string
+  sentences: SentenceResponseDto[]
+  suggestions: string[]
+  tratu: string[]
+}
+
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from 'axios'
 import axios from 'axios'
 
@@ -1806,6 +1833,25 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<UpdateUserResponse, any>({
         path: `/api/users/${id}`,
         method: 'PUT',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags users
+     * @name UserControllerUpdateProfile
+     * @request PATCH:/api/users/{id}
+     * @secure
+     */
+    userControllerUpdateProfile: (id: string, data: UpdateProfileUserDto, params: RequestParams = {}) =>
+      this.request<UpdateUserResponse, any>({
+        path: `/api/users/${id}`,
+        method: 'PATCH',
         body: data,
         secure: true,
         type: ContentType.Json,
@@ -3323,6 +3369,31 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags subscription-payments
+     * @name SubscriptionPaymentControllerFindAllMyHistory
+     * @request GET:/api/subscription-payments/history
+     */
+    subscriptionPaymentControllerFindAllMyHistory: (
+      query?: {
+        /** @default 1 */
+        page?: number
+        /** @default 10 */
+        perPage?: number
+        search?: string
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<SubscriptionPaymentResponse, any>({
+        path: `/api/subscription-payments/history`,
+        method: 'GET',
+        query: query,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags subscription-payments
      * @name SubscriptionPaymentControllerFindOne
      * @request GET:/api/subscription-payments/{id}
      */
@@ -3362,6 +3433,27 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<FindOneSubscriptionPaymentResponseDto, any>({
         path: `/api/subscription-payments/${id}`,
         method: 'DELETE',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags dictionary
+     * @name DictionaryControllerSearchSentences
+     * @request GET:/api/dictionary/search
+     */
+    dictionaryControllerSearchSentences: (
+      query: {
+        query: string
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<SearchSentenceResponseDto, any>({
+        path: `/api/dictionary/search`,
+        method: 'GET',
+        query: query,
         format: 'json',
         ...params
       })

@@ -14,7 +14,15 @@ const subscriptionApi = {
       .subscriptionControllerGetStatus()
       .then((res) => res.data)
       .catch((err) => {
-        handleApiError(err)
+        throw err.response.data
+      })
+  },
+
+  getHistory() {
+    return api
+      .subscriptionPaymentControllerFindAllMyHistory()
+      .then((res) => res.data)
+      .catch((err) => {
         throw err.response.data
       })
   },

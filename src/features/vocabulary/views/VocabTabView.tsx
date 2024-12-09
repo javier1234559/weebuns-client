@@ -3,13 +3,13 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Tab from '@mui/material/Tab'
 import Tabs from '@mui/material/Tabs'
-import Typography from '@mui/material/Typography'
 import { Sparkles } from 'lucide-react'
 import { SyntheticEvent, useState } from 'react'
 
 import { CardTitle } from '~/components/ui/card'
 import DictionarySearch from '~/features/vocabulary/components/DictionarySearch'
 import SavedVocabSearch from '~/features/vocabulary/components/SavedVocabSearch'
+import SentenceSearch from '~/features/vocabulary/components/SentenceSearch'
 
 function VocabTabView() {
   const [value, setValue] = useState(0)
@@ -28,9 +28,9 @@ function VocabTabView() {
       content: <SavedVocabSearch />
     },
     {
-      label: 'AI Chat',
+      label: 'Sentences',
       icon: <Sparkles size={12} />,
-      content: <Typography variant='h4'>Coming soon</Typography>
+      content: <SentenceSearch />
     }
   ]
 

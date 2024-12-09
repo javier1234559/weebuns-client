@@ -36,6 +36,7 @@ const Pricing = lazy(() => import('~/pages/pricing'))
 const Blog = lazy(() => import('~/pages/blog/index'))
 const About = lazy(() => import('~/pages/about'))
 const ForgotPassword = lazy(() => import('~/pages/(auth)/forgot-password'))
+const Profile = lazy(() => import('~/pages/profile/index'))
 
 const USER_ROUTES = [
   {
@@ -160,6 +161,14 @@ const USER_ROUTES = [
         element: (
           <Suspense fallback={<AppLoading />}>
             <App />
+          </Suspense>
+        )
+      },
+      {
+        path: RouteNames.ME,
+        element: (
+          <Suspense fallback={<AppLoading />}>
+            <Profile />
           </Suspense>
         )
       },

@@ -48,8 +48,7 @@ const authApi = {
   },
   getCurrentUser() {
     return api.authControllerMe().catch((err) => {
-      handleApiError(err)
-      return null
+      throw err.response.data
     })
   },
   logout() {
@@ -79,6 +78,16 @@ const authApi = {
   resetPassword(data: ResetPasswordDto) {
     return api
       .authControllerResetPassword(data)
+      .then((res) => res.data)
+      .catch((err) => {
+        handleApiError(err)
+        return null
+      })
+  },
+
+  updateProfile(id: string, data: any) {
+    return api
+      .userControllerUpdateProfile(id, data)
       .then((res) => res.data)
       .catch((err) => {
         handleApiError(err)
