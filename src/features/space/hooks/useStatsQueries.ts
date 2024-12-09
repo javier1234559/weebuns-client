@@ -20,3 +20,30 @@ export const useStatsOverview = (options?: unknown) => {
     ...(typeof options === 'object' ? options : {})
   })
 }
+
+export const useAdminStatsOverview = (options?: unknown) => {
+  return useQuery({
+    queryKey: STATS_KEY_FACTORY.adminOverview(),
+    queryFn: () => statsApi.adminStatsOverview(),
+    staleTime: 1000 * 60 * 5,
+    ...(typeof options === 'object' ? options : {})
+  })
+}
+
+export const useAdminUserGrowth = (options?: unknown) => {
+  return useQuery({
+    queryKey: STATS_KEY_FACTORY.adminUserGrowth(),
+    queryFn: () => statsApi.adminUserGrowth(),
+    staleTime: 1000 * 60 * 5,
+    ...(typeof options === 'object' ? options : {})
+  })
+}
+
+export const useAdminRevenueGrowth = (options?: unknown) => {
+  return useQuery({
+    queryKey: STATS_KEY_FACTORY.adminRevenueGrowth(),
+    queryFn: () => statsApi.adminRevenueGrowth(),
+    staleTime: 1000 * 60 * 5,
+    ...(typeof options === 'object' ? options : {})
+  })
+}

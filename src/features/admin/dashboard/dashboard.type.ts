@@ -16,7 +16,10 @@ export const STATS_CONFIG = {
     title: 'Total Users',
     icon: Users,
     color: 'warning',
-    format: (value: number) => `${(value / 1000).toFixed(1)}k+`
+    format: (value: number) => {
+      if (value < 1000) return value.toString()
+      return `${(value / 1000).toFixed(1)}k+`
+    }
   },
   currency: {
     title: 'Total Revenue',

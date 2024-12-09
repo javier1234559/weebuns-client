@@ -19,6 +19,34 @@ const statsApi = {
         handleApiError(err)
         throw err.response.data
       })
+  },
+
+  adminStatsOverview() {
+    return api
+      .statsControllerGetStatsOverview()
+      .then((data) => data.data)
+      .catch((err) => {
+        handleApiError(err)
+        throw err.response.data
+      })
+  },
+  adminUserGrowth() {
+    return api
+      .statsControllerGetUserGrowth()
+      .then((data) => data.data)
+      .catch((err) => {
+        handleApiError(err)
+        throw err.response.data
+      })
+  },
+  adminRevenueGrowth() {
+    return api
+      .statsControllerGetRevenueGrowth()
+      .then((data) => data.data)
+      .catch((err) => {
+        handleApiError(err)
+        throw err.response.data
+      })
   }
 }
 

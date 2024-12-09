@@ -53,7 +53,7 @@ function ForgotPasswordView() {
   const [searchParams] = useSearchParams()
   const [currentStep, setCurrentStep] = useState<ForgotPasswordStep>('email')
   const [email, setEmail] = useState(searchParams.get('email') || '')
-  const [isLoading, setIsLoading] = useState(false)
+  const [, setIsLoading] = useState(false)
   const [verificationCode, setVerificationCode] = useState('')
   const [canNavigateToStep, setCanNavigateToStep] = useState({
     email: true,
@@ -217,7 +217,7 @@ function ForgotPasswordView() {
                       width: 48,
                       height: 48,
                       borderRadius: '50%',
-                      bgcolor: (theme) =>
+                      bgcolor: () =>
                         currentStep === step
                           ? 'success.main'
                           : canNavigateToStep[step as ForgotPasswordStep]
@@ -232,7 +232,7 @@ function ForgotPasswordView() {
                       fontWeight: 500,
                       '&:hover': canNavigateToStep[step as ForgotPasswordStep]
                         ? {
-                            bgcolor: (theme) => (currentStep === step ? 'success.dark' : 'success.main')
+                            bgcolor: () => (currentStep === step ? 'success.dark' : 'success.main')
                           }
                         : {}
                     }}

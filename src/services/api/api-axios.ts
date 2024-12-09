@@ -263,12 +263,12 @@ export interface CorrectionSentence {
   rating: number
   /**
    * @format date-time
-   * @example "2024-12-09T05:19:40.749Z"
+   * @example "2024-12-09T07:41:11.822Z"
    */
   createdAt: string
   /**
    * @format date-time
-   * @example "2024-12-09T05:19:40.749Z"
+   * @example "2024-12-09T07:41:11.822Z"
    */
   updatedAt: string
 }
@@ -1026,6 +1026,32 @@ export interface UserOverviewDto {
   courseJoinedCount: number
   /** @example 15 */
   notesCount: number
+}
+
+export interface StatResponse {
+  /** Current value of the stat */
+  current: number
+  /** Previous value of the stat */
+  previous: number
+}
+
+export interface StatItemDto {
+  id: number
+  type: 'users' | 'currency' | 'course' | 'coursecomplete'
+  stats: StatResponse
+}
+
+export interface AdminStatsOverviewDto {
+  data: StatItemDto[]
+}
+
+export interface GrowthDataPoint {
+  date: string
+  value: number
+}
+
+export interface GrowthDataDto {
+  data: GrowthDataPoint[]
 }
 
 export interface CreateCourseDto {
@@ -2521,6 +2547,51 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     statsControllerGetUserOverview: (params: RequestParams = {}) =>
       this.request<UserOverviewDto, any>({
         path: `/api/stats/user/overview`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags stats
+     * @name StatsControllerGetStatsOverview
+     * @request GET:/api/stats/admin/overview
+     */
+    statsControllerGetStatsOverview: (params: RequestParams = {}) =>
+      this.request<AdminStatsOverviewDto, any>({
+        path: `/api/stats/admin/overview`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags stats
+     * @name StatsControllerGetUserGrowth
+     * @request GET:/api/stats/admin/users/growth
+     */
+    statsControllerGetUserGrowth: (params: RequestParams = {}) =>
+      this.request<GrowthDataDto, any>({
+        path: `/api/stats/admin/users/growth`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags stats
+     * @name StatsControllerGetRevenueGrowth
+     * @request GET:/api/stats/admin/revenue/growth
+     */
+    statsControllerGetRevenueGrowth: (params: RequestParams = {}) =>
+      this.request<GrowthDataDto, any>({
+        path: `/api/stats/admin/revenue/growth`,
         method: 'GET',
         format: 'json',
         ...params

@@ -4,8 +4,9 @@ import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import { useCallback } from 'react'
 
-import { StatData, STATS_CONFIG } from '~/features/admin/dashboard/dashboard.type'
+import { STATS_CONFIG } from '~/features/admin/dashboard/dashboard.type'
 import { useCounter } from '~/hooks/useCountUp'
+import { StatItemDto } from '~/services/api/api-axios'
 
 const StyledCard = styled(Card)(({ theme }) => ({
   padding: theme.spacing(3),
@@ -26,12 +27,16 @@ const IconWrapper = styled(Box)(({ theme }) => ({
 }))
 
 interface StatsCardProps {
-  data: StatData
+  data: StatItemDto
 }
 
 const StatsCard = ({ data }: StatsCardProps) => {
   const config = STATS_CONFIG[data.type]
   const Icon = config.icon
+
+  // Ensure stats values are numbers
+  const currentValue = Number(data.stats.current) || 0
+  const previousValue = Number(data.stats.previous) || 0
 
   const { count, elementRef } = useCounter({
     end: data.stats.current,
@@ -40,7 +45,18 @@ const StatsCard = ({ data }: StatsCardProps) => {
   })
 
   const calculateChange = useCallback((current: number, previous: number): string => {
+    // Handle cases where previous is 0 or undefined
+    if (!previous) {
+      return current > 0 ? '+100% from last month' : '0% from last month'
+    }
+
     const percentageChange = ((current - previous) / previous) * 100
+
+    // Handle Infinity or NaN
+    if (!isFinite(percentageChange)) {
+      return '0% from last month'
+    }
+
     return `${percentageChange >= 0 ? '+' : ''}${percentageChange.toFixed(1)}% from last month`
   }, [])
 
@@ -63,7 +79,7 @@ const StatsCard = ({ data }: StatsCardProps) => {
         </Typography>
       </Box>
       <Typography variant='body2' color='success.main' sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-        {calculateChange(data.stats.current, data.stats.previous)}
+        {calculateChange(currentValue, previousValue)}
       </Typography>
     </StyledCard>
   )

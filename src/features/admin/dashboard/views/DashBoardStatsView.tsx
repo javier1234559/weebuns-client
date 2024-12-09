@@ -1,10 +1,16 @@
 import Grid from '@mui/material/Grid'
 
+import AppError from '~/components/common/AppError'
+import AppLoading from '~/components/common/AppLoading'
 import StatsCard from '~/features/admin/dashboard/components/StatsCard'
-import { MOCK_STATS_DATA } from '~/features/admin/dashboard/mocks/MOCK_STATS_DATA'
+import { useAdminStatsOverview } from '~/features/space/hooks/useStatsQueries'
 
 function DashBoardStatsView() {
-  const stats = MOCK_STATS_DATA
+  const { data: overviewData, isLoading, error } = useAdminStatsOverview()
+  const stats = overviewData?.data
+
+  if (isLoading) return <AppLoading />
+  if (error || !stats) return <AppError error={error} />
 
   return (
     <Grid container spacing={3}>
@@ -17,6 +23,5 @@ function DashBoardStatsView() {
   )
 }
 
-DashBoardStatsView.propTypes = {}
-
+DashBoardStatsView.displayName = 'DashBoardStatsView'
 export default DashBoardStatsView
