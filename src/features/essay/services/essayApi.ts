@@ -19,7 +19,6 @@ const essayApi = {
       .essayControllerFindAll(query)
       .then((res) => res.data)
       .catch((err) => {
-        handleApiError(err)
         throw err.response.data
       })
   },
@@ -29,7 +28,6 @@ const essayApi = {
       .essayControllerFindOne(id)
       .then((res) => res.data)
       .catch((err) => {
-        handleApiError(err)
         throw err.response.data
       })
   },

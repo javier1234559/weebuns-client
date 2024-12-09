@@ -263,12 +263,12 @@ export interface CorrectionSentence {
   rating: number
   /**
    * @format date-time
-   * @example "2024-12-05T05:34:32.735Z"
+   * @example "2024-12-09T05:19:40.749Z"
    */
   createdAt: string
   /**
    * @format date-time
-   * @example "2024-12-05T05:34:32.735Z"
+   * @example "2024-12-09T05:19:40.749Z"
    */
   updatedAt: string
 }
@@ -643,6 +643,69 @@ export interface UserRefreshTokenResponse {
 }
 
 export interface LogoutResponse {
+  message: string
+}
+
+export interface RequestResetPasswordDto {
+  /**
+   * Email address of the user
+   * @example "user@example.com"
+   */
+  email: string
+}
+
+export interface RequestResetPasswordResponse {
+  /**
+   * Status message
+   * @example "Reset code sent to email"
+   */
+  message: string
+}
+
+export interface VerifyResetCodeDto {
+  /**
+   * Email address of the user
+   * @example "user@example.com"
+   */
+  email: string
+  /**
+   * Six-digit verification code sent to email
+   * @example "123456"
+   */
+  code: string
+}
+
+export interface VerifyResetCodeResponse {
+  /**
+   * Status message
+   * @example "Code verified successfully"
+   */
+  message: string
+}
+
+export interface ResetPasswordDto {
+  /**
+   * Email address of the user
+   * @example "user@example.com"
+   */
+  email: string
+  /**
+   * Verification code for password reset
+   * @example "123456"
+   */
+  code: string
+  /**
+   * New password (minimum 6 characters)
+   * @example "newPassword123"
+   */
+  newPassword: string
+}
+
+export interface ResetPasswordResponse {
+  /**
+   * Status message
+   * @example "Password reset successfully"
+   */
   message: string
 }
 
@@ -1356,6 +1419,43 @@ export interface CheckPaymentStatusResponseDto {
   message: string | null
 }
 
+export interface CreateSubscriptionPaymentDto {
+  /** UUID of subscription */
+  subscriptionId: string
+  /**
+   * Payment amount
+   * @format decimal
+   */
+  amount: number
+  /** Type of payment */
+  paymentType: 'stripe' | 'momo' | 'zalopay'
+  /**
+   * Date of payment
+   * @format date-time
+   */
+  paymentDate: string
+  /** Payment status */
+  status: string
+}
+
+export interface FindOneSubscriptionPaymentResponseDto {
+  payment: SubscriptionPayment
+}
+
+export interface SubscriptionPaymentResponse {
+  data?: SubscriptionPayment[]
+  pagination: PaginationOutputDto
+}
+
+export interface UpdateSubscriptionPaymentDto {
+  /** @format double */
+  amount?: number
+  paymentType?: 'stripe' | 'momo' | 'zalopay'
+  /** @format date-time */
+  paymentDate?: string
+  status?: string
+}
+
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse, HeadersDefaults, ResponseType } from 'axios'
 import axios from 'axios'
 
@@ -1820,6 +1920,60 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<LogoutResponse, any>({
         path: `/api/auth/logout`,
         method: 'POST',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags auth
+     * @name AuthControllerRequestPasswordReset
+     * @summary Request password reset code
+     * @request POST:/api/auth/password-reset/request
+     */
+    authControllerRequestPasswordReset: (data: RequestResetPasswordDto, params: RequestParams = {}) =>
+      this.request<RequestResetPasswordResponse, void>({
+        path: `/api/auth/password-reset/request`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags auth
+     * @name AuthControllerVerifyResetCode
+     * @summary Verify reset code
+     * @request POST:/api/auth/password-reset/verify
+     */
+    authControllerVerifyResetCode: (data: VerifyResetCodeDto, params: RequestParams = {}) =>
+      this.request<VerifyResetCodeResponse, void>({
+        path: `/api/auth/password-reset/verify`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags auth
+     * @name AuthControllerResetPassword
+     * @summary Reset password with code
+     * @request POST:/api/auth/password-reset/reset
+     */
+    authControllerResetPassword: (data: ResetPasswordDto, params: RequestParams = {}) =>
+      this.request<ResetPasswordResponse, void>({
+        path: `/api/auth/password-reset/reset`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
         format: 'json',
         ...params
       }),
@@ -3048,6 +3202,95 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<CheckPaymentStatusResponseDto, any>({
         path: `/api/subscriptions/payment/${provider}/callback`,
         method: 'POST',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags subscription-payments
+     * @name SubscriptionPaymentControllerCreate
+     * @request POST:/api/subscription-payments
+     */
+    subscriptionPaymentControllerCreate: (data: CreateSubscriptionPaymentDto, params: RequestParams = {}) =>
+      this.request<FindOneSubscriptionPaymentResponseDto, any>({
+        path: `/api/subscription-payments`,
+        method: 'POST',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags subscription-payments
+     * @name SubscriptionPaymentControllerFindAll
+     * @request GET:/api/subscription-payments
+     */
+    subscriptionPaymentControllerFindAll: (
+      query?: {
+        /** @default 1 */
+        page?: number
+        /** @default 10 */
+        perPage?: number
+        search?: string
+      },
+      params: RequestParams = {}
+    ) =>
+      this.request<SubscriptionPaymentResponse, any>({
+        path: `/api/subscription-payments`,
+        method: 'GET',
+        query: query,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags subscription-payments
+     * @name SubscriptionPaymentControllerFindOne
+     * @request GET:/api/subscription-payments/{id}
+     */
+    subscriptionPaymentControllerFindOne: (id: string, params: RequestParams = {}) =>
+      this.request<FindOneSubscriptionPaymentResponseDto, any>({
+        path: `/api/subscription-payments/${id}`,
+        method: 'GET',
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags subscription-payments
+     * @name SubscriptionPaymentControllerUpdate
+     * @request PATCH:/api/subscription-payments/{id}
+     */
+    subscriptionPaymentControllerUpdate: (id: string, data: UpdateSubscriptionPaymentDto, params: RequestParams = {}) =>
+      this.request<FindOneSubscriptionPaymentResponseDto, any>({
+        path: `/api/subscription-payments/${id}`,
+        method: 'PATCH',
+        body: data,
+        type: ContentType.Json,
+        format: 'json',
+        ...params
+      }),
+
+    /**
+     * No description
+     *
+     * @tags subscription-payments
+     * @name SubscriptionPaymentControllerRemove
+     * @request DELETE:/api/subscription-payments/{id}
+     */
+    subscriptionPaymentControllerRemove: (id: string, params: RequestParams = {}) =>
+      this.request<FindOneSubscriptionPaymentResponseDto, any>({
+        path: `/api/subscription-payments/${id}`,
+        method: 'DELETE',
         format: 'json',
         ...params
       })

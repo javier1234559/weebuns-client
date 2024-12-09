@@ -5,6 +5,7 @@ import MenuItem from '@mui/material/MenuItem'
 import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { Controller, useForm } from 'react-hook-form'
+import { Link } from 'react-router-dom'
 import * as yup from 'yup'
 
 import { AppButton } from '~/components/common/AppButton'
@@ -13,6 +14,7 @@ import authApi from '~/features/auth/services/authApi'
 import { LANGUAGE_LABELS } from '~/features/space/space.constants'
 import { LanguageCode } from '~/features/space/space.type'
 import { useLoadingToast } from '~/hooks/useLoadingToast'
+import { RouteNames } from '~/router/route-name'
 import { RegisterDto } from '~/services/api/api-axios'
 import logOnDev from '~/utils/log-on-dev'
 
@@ -119,7 +121,6 @@ function RegisterForm({ onSubmit }: RegisterFormProps) {
         error={!!errors.email}
         helperText={errors.email?.message}
       />
-
       <Box py={1}>
         <Controller
           name='nativeLanguage'
@@ -165,6 +166,24 @@ function RegisterForm({ onSubmit }: RegisterFormProps) {
         error={!!errors.confirmPassword}
         helperText={errors.confirmPassword?.message}
       />
+      <Box display='flex' alignItems='center' mt={2}>
+        <Typography variant='body2' sx={{ mr: 0.5 }}>
+          Already have an account?
+        </Typography>
+        <Typography color='primary' variant='body2'>
+          <Link
+            style={{
+              color: 'inherit',
+              textDecoration: 'none',
+              fontWeight: 500
+            }}
+            to={`${RouteNames.Login}`}
+          >
+            Login
+          </Link>
+        </Typography>
+      </Box>
+
       <AppButton type='submit' fullWidth variant='black' sx={{ mt: 3, mb: 2, py: 2 }}>
         Register
       </AppButton>

@@ -33,6 +33,9 @@ const EssayDetail = lazy(() => import('~/pages/essay/[id]/essay-detail'))
 const EssayUpdate = lazy(() => import('~/pages/essay/[id]/essay-update'))
 const Thanks = lazy(() => import('~/pages/thanks'))
 const Pricing = lazy(() => import('~/pages/pricing'))
+const Blog = lazy(() => import('~/pages/blog/index'))
+const About = lazy(() => import('~/pages/about'))
+const ForgotPassword = lazy(() => import('~/pages/(auth)/forgot-password'))
 
 const USER_ROUTES = [
   {
@@ -85,6 +88,14 @@ const USER_ROUTES = [
             )
           },
           {
+            path: RouteNames.ForgotPassword,
+            element: (
+              <AuthWrapper>
+                <ForgotPassword />
+              </AuthWrapper>
+            )
+          },
+          {
             path: RouteNames.Thanks,
             element: (
               <Suspense fallback={<AppLoading />}>
@@ -97,6 +108,22 @@ const USER_ROUTES = [
             element: (
               <Suspense fallback={<AppLoading />}>
                 <Pricing />
+              </Suspense>
+            )
+          },
+          {
+            path: RouteNames.Blog,
+            element: (
+              <Suspense fallback={<AppLoading />}>
+                <Blog />
+              </Suspense>
+            )
+          },
+          {
+            path: RouteNames.About,
+            element: (
+              <Suspense fallback={<AppLoading />}>
+                <About />
               </Suspense>
             )
           }

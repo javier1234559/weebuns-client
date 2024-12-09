@@ -122,6 +122,9 @@ importers:
       react-transition-group:
         specifier: ^4.4.5
         version: 4.4.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      reactjs-otp-input:
+        specifier: ^2.0.10
+        version: 2.0.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       reactjs-tiptap-editor:
         specifier: ^0.1.2
         version: 0.1.2(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(y-prosemirror@1.2.12(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.35.0)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20))
@@ -5713,6 +5716,12 @@ packages:
   react@18.3.1:
     resolution: {integrity: sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==}
     engines: {node: '>=0.10.0'}
+
+  reactjs-otp-input@2.0.10:
+    resolution: {integrity: sha512-JNHvMs0AYNcXw2EmbfOgNVlLzPoX6i8UfsUSjhcFl7I0SdIPxxfiaNEUly4ys9TUgXgIElUxY+dqKRgrbKYT1w==}
+    peerDependencies:
+      react: '>=17.0.0'
+      react-dom: '>=17.0.0'
 
   reactjs-tiptap-editor@0.1.2:
     resolution: {integrity: sha512-M29IWBnXWmcziOJ1DfkNqybL1te6826y2HjXcTz51sIiwsNTf2LwW867szpxTZFmJnpzJdsX6GYflV0I99LD5g==}
@@ -12939,6 +12948,11 @@ snapshots:
   react@18.3.1:
     dependencies:
       loose-envify: 1.4.0
+
+  reactjs-otp-input@2.0.10(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+    dependencies:
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
 
   reactjs-tiptap-editor@0.1.2(@types/react-dom@18.3.1)(@types/react@18.3.11)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(y-prosemirror@1.2.12(prosemirror-model@1.23.0)(prosemirror-state@1.4.3)(prosemirror-view@1.35.0)(y-protocols@1.0.6(yjs@13.6.20))(yjs@13.6.20)):
     dependencies:

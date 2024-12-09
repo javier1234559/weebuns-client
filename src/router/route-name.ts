@@ -3,6 +3,7 @@ export enum RouteNames {
   Home = '/',
   Dashboard = '/app',
   About = '/about',
+  Blog = '/blog',
 
   Auth = '/auth',
   Register = '/register',
