@@ -5,3 +5,5 @@ codegen.ts
 dist/*
 services/*
 vite.config.d.ts
+/cypress
+cypress.config.ts

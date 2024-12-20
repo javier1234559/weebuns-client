@@ -124,7 +124,7 @@ function LoginForm({ onSubmit }: LoginFormProps) {
         </Typography>
       </Box>
 
-      <AppButton type='submit' fullWidth variant='black' sx={{ mt: 3, mb: 2, py: 2 }}>
+      <AppButton data-test-id='login-btn' type='submit' fullWidth variant='black' sx={{ mt: 3, mb: 2, py: 2 }}>
         Login
       </AppButton>
     </form>
