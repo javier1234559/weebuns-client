@@ -1,4 +1,8 @@
 import {
+  CHECK_CORRECTION_EXIST_QUERY,
+  GET_LIST_CORRECTION_BY_ESSAY_QUERY
+} from '~/features/essay/services/essay-queries'
+import {
   useCreateCorrectionEssayMutation,
   useGetCorrectionIfExistQuery,
   useGetCorrectionsByEssayQuery,
@@ -31,13 +35,27 @@ export const useGetExistingCorrectedByEssay = (essayId: string) => {
 
 export const useCreateCorrectByEssay = () => {
   return useCreateCorrectionEssayMutation({
-    refetchQueries: ['GetCorrectionsByEssay', 'GetCorrectionIfExist']
+    refetchQueries: [
+      {
+        query: GET_LIST_CORRECTION_BY_ESSAY_QUERY
+      },
+      {
+        query: CHECK_CORRECTION_EXIST_QUERY
+      }
+    ]
   })
 }
 
 export const useUpdateCorrectionEssay = () => {
   return useUpdateCorrectionEssayMutation({
-    refetchQueries: ['GetCorrectionsByEssay', 'GetCorrectionIfExist'],
+    refetchQueries: [
+      {
+        query: GET_LIST_CORRECTION_BY_ESSAY_QUERY
+      },
+      {
+        query: CHECK_CORRECTION_EXIST_QUERY
+      }
+    ],
     onCompleted: (data) => {
       // Handle success if needed
       console.log('Updated correction:', data)

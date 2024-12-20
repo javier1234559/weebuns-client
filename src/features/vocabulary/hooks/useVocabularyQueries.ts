@@ -31,7 +31,8 @@ export const useCreateVocabulary = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: VOCABULARY_KEY_FACTORY.lists(),
-        exact: false
+        exact: false,
+        refetchType: 'active'
       })
     }
   })
@@ -82,7 +83,8 @@ export const useUpdateVocabulary = () => {
     onSettled: (_data, _error, { id }) => {
       // Always refetch after error or success to ensure we're in sync with server
       queryClient.invalidateQueries({
-        queryKey: VOCABULARY_KEY_FACTORY.detail(id)
+        queryKey: VOCABULARY_KEY_FACTORY.detail(id),
+        refetchType: 'active'
       })
     }
   })
@@ -96,7 +98,8 @@ export const useDeleteVocabulary = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: VOCABULARY_KEY_FACTORY.lists(),
-        exact: false
+        exact: false,
+        refetchType: 'active'
       })
     }
   })

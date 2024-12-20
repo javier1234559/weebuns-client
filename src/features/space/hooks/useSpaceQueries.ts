@@ -54,7 +54,11 @@ export const useCreateSpace = () => {
     mutationFn: (data: CreateSpaceDto) => spaceApi.create(data),
     onSuccess: () => {
       // Invalidate React Query cache
-      queryClient.invalidateQueries({ queryKey: SPACE_KEY_FACTORY.lists() })
+      queryClient.invalidateQueries({
+        queryKey: SPACE_KEY_FACTORY.lists(),
+        exact: false,
+        refetchType: 'active'
+      })
 
       // Optional: Refetch GraphQL query by document type
       apolloClient.refetchQueries({
@@ -70,8 +74,16 @@ export const useUpdateSpace = () => {
 
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: UpdateSpaceDto }) => spaceApi.update(id, data),
-    onSuccess: (_updatedSpace) => {
-      queryClient.invalidateQueries({ queryKey: SPACE_KEY_FACTORY.lists() })
+    onSuccess: (_updatedSpace, { id }) => {
+      queryClient.invalidateQueries({
+        queryKey: SPACE_KEY_FACTORY.lists(),
+        exact: false,
+        refetchType: 'active'
+      })
+      queryClient.invalidateQueries({
+        queryKey: SPACE_KEY_FACTORY.detail(id),
+        refetchType: 'active'
+      })
 
       // Optional: Refetch GraphQL query by document type
       apolloClient.refetchQueries({
@@ -87,8 +99,18 @@ export const useDeleteSpace = () => {
 
   return useMutation({
     mutationFn: (id: string) => spaceApi.delete(id),
-    onSuccess: (_) => {
-      queryClient.invalidateQueries({ queryKey: SPACE_KEY_FACTORY.lists() })
+    onSuccess: (_, id) => {
+      // Invalidate React Query cache
+      queryClient.invalidateQueries({
+        queryKey: SPACE_KEY_FACTORY.lists(),
+        exact: false,
+        refetchType: 'active'
+      })
+
+      // Remove deleted space from cache
+      queryClient.removeQueries({
+        queryKey: SPACE_KEY_FACTORY.detail(id)
+      })
 
       // Optional: Refetch GraphQL query by document type
       apolloClient.refetchQueries({

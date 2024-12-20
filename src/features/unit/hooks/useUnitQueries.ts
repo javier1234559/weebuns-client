@@ -38,7 +38,7 @@ export const useCreateUnit = () => {
   return useMutation({
     mutationFn: (data: CreateUnitDto) => unitApi.create(data),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.lists() })
+      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.lists(), refetchType: 'active', exact: false })
     }
   })
 }
@@ -48,8 +48,15 @@ export const useUpdateUnit = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: UpdateUnitDto }) => unitApi.update(id, data),
     onSuccess: (_data, { id }) => {
-      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.detail(id) })
-      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.lists() })
+      queryClient.invalidateQueries({
+        queryKey: UNIT_KEY_FACTORY.detail(id),
+        refetchType: 'active'
+      })
+      queryClient.invalidateQueries({
+        queryKey: UNIT_KEY_FACTORY.lists(),
+        refetchType: 'active',
+        exact: false
+      })
     }
   })
 }
@@ -59,7 +66,11 @@ export const useDeleteUnit = () => {
   return useMutation({
     mutationFn: (id: string) => unitApi.delete(id),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.lists() })
+      queryClient.invalidateQueries({
+        queryKey: UNIT_KEY_FACTORY.lists(),
+        refetchType: 'active',
+        exact: false
+      })
     }
   })
 }
@@ -93,10 +104,23 @@ export const useCreateLesson = () => {
   return useMutation({
     mutationFn: ({ unitId, data }: { unitId: string; data: CreateLessonDto }) => unitApi.createLesson(unitId, data),
     onSuccess: (_data, { unitId }) => {
-      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.lessons(unitId) })
-      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.detail(unitId) })
-      queryClient.invalidateQueries({ queryKey: LESSON_KEY_FACTORY.detail(unitId) })
-      queryClient.invalidateQueries({ queryKey: COURSE_KEY_FACTORY.all, exact: false })
+      queryClient.invalidateQueries({
+        queryKey: UNIT_KEY_FACTORY.lessons(unitId),
+        refetchType: 'active'
+      })
+      queryClient.invalidateQueries({
+        queryKey: UNIT_KEY_FACTORY.detail(unitId),
+        refetchType: 'active'
+      })
+      queryClient.invalidateQueries({
+        queryKey: LESSON_KEY_FACTORY.detail(unitId),
+        refetchType: 'active'
+      })
+      queryClient.invalidateQueries({
+        queryKey: COURSE_KEY_FACTORY.all,
+        exact: false,
+        refetchType: 'active'
+      })
     }
   })
 }
@@ -107,8 +131,14 @@ export const useUpdateLesson = () => {
     mutationFn: ({ unitId, lessonId, data }: { unitId: string; lessonId: string; data: UpdateLessonDto }) =>
       unitApi.updateLesson(unitId, lessonId, data),
     onSuccess: (_data, { unitId, lessonId }) => {
-      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.lesson(lessonId) })
-      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.lessons(unitId) })
+      queryClient.invalidateQueries({
+        queryKey: UNIT_KEY_FACTORY.lesson(lessonId),
+        refetchType: 'active'
+      })
+      queryClient.invalidateQueries({
+        queryKey: UNIT_KEY_FACTORY.lessons(unitId),
+        refetchType: 'active'
+      })
     }
   })
 }
@@ -118,8 +148,14 @@ export const useDeleteLesson = () => {
   return useMutation({
     mutationFn: ({ unitId, lessonId }: { unitId: string; lessonId: string }) => unitApi.deleteLesson(unitId, lessonId),
     onSuccess: (_data, { unitId }) => {
-      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.lessons(unitId) })
-      queryClient.invalidateQueries({ queryKey: UNIT_KEY_FACTORY.detail(unitId) })
+      queryClient.invalidateQueries({
+        queryKey: UNIT_KEY_FACTORY.lessons(unitId),
+        refetchType: 'active'
+      })
+      queryClient.invalidateQueries({
+        queryKey: UNIT_KEY_FACTORY.detail(unitId),
+        refetchType: 'active'
+      })
     }
   })
 }
@@ -140,9 +176,9 @@ export const useBulkUpdateLesson = () => {
   return useMutation({
     mutationFn: (data: { data: BulkUpdateUnitsDto }) => unitApi.bulkUpdateUnit(data.data),
     onSuccess: (_data, variables) => {
-      // Only invalidate after successful update
       queryClient.invalidateQueries({
-        queryKey: COURSE_KEY_FACTORY.units(variables.data.courseId)
+        queryKey: COURSE_KEY_FACTORY.units(variables.data.courseId),
+        refetchType: 'active'
       })
     }
   })

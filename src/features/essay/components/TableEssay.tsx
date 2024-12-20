@@ -40,7 +40,7 @@ function TableEssay() {
   const theme = useTheme()
   const { openModal } = useModal()
   const spaceId = useSelector((state: RootState) => state.space.currentSpace?.id)
-  const { page, perPage, updateQueryParams } = usePagination({ defaultPage: 1, defaultPerPage: 2 })
+  const { page, perPage, updateQueryParams } = usePagination({ defaultPage: 1, defaultPerPage: 5 })
   const { status, updateStatus, resetStatus } = useFilterParams({
     defaultStatus: ''
   })

@@ -34,29 +34,12 @@ export const useCreateNote = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: NOTE_KEY_FACTORY.lists(),
-        exact: false
+        exact: false,
+        refetchType: 'active'
       })
     }
   })
 }
-
-// export const useCreateOrUpdateNote = () => {
-//   const queryClient = useQueryClient()
-
-//   return useMutation({
-//     mutationFn: (data: CreateNoteDto) => noteApi.createOrUpdate(data),
-//     onSuccess: (response: FindOneNoteResponseDto) => {
-//       queryClient.invalidateQueries({
-//         queryKey: NOTE_KEY_FACTORY.lists(),
-//         exact: false
-//       })
-//       queryClient.invalidateQueries({
-//         queryKey: response.note ? NOTE_KEY_FACTORY.detail(response.note.id) : undefined,
-//         exact: false
-//       })
-//     }
-//   })
-// }
 
 export const useCreateOrUpdateNote = () => {
   const queryClient = useQueryClient()
@@ -87,13 +70,15 @@ export const useCreateOrUpdateNote = () => {
       // Invalidate lists
       queryClient.invalidateQueries({
         queryKey: NOTE_KEY_FACTORY.lists(),
-        exact: false
+        exact: false,
+        refetchType: 'active'
       })
 
       // Invalidate unit notes if note exists
       if (_data && _data.note?.lessonId) {
         queryClient.invalidateQueries({
-          queryKey: UNIT_KEY_FACTORY.lessonNote(_data.note?.lessonId)
+          queryKey: UNIT_KEY_FACTORY.lessonNote(_data.note?.lessonId),
+          refetchType: 'active'
         })
       }
     }
@@ -150,10 +135,10 @@ export const useUpdateNote = () => {
 
     onSettled: (_data, _error, { data }) => {
       // If we have lessonId in the data
-      console.log(data.lessonId)
       if (data.lessonId) {
         queryClient.invalidateQueries({
-          queryKey: UNIT_KEY_FACTORY.note(data.lessonId)
+          queryKey: UNIT_KEY_FACTORY.note(data.lessonId),
+          refetchType: 'active'
         })
       }
 
@@ -161,7 +146,8 @@ export const useUpdateNote = () => {
       if ('isBookmarked' in data) {
         queryClient.invalidateQueries({
           queryKey: NOTE_KEY_FACTORY.bookmark(),
-          exact: false
+          exact: false,
+          refetchType: 'active'
         })
       }
     }
@@ -176,7 +162,8 @@ export const useDeleteNote = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: NOTE_KEY_FACTORY.lists(),
-        exact: false
+        exact: false,
+        refetchType: 'active'
       })
     }
   })

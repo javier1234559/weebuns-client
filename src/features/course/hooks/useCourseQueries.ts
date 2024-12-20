@@ -46,9 +46,13 @@ export const useUpdateCourse = () => {
       // Invalidate all list-related queries and the specific detail
       queryClient.invalidateQueries({
         queryKey: COURSE_KEY_FACTORY.lists(),
-        exact: false
+        exact: false,
+        refetchType: 'active'
       })
-      queryClient.invalidateQueries({ queryKey: COURSE_KEY_FACTORY.detail(id) })
+      queryClient.invalidateQueries({
+        queryKey: COURSE_KEY_FACTORY.detail(id),
+        refetchType: 'active'
+      })
     }
   })
 }
@@ -69,10 +73,10 @@ export const useCreateCourse = () => {
   return useMutation({
     mutationFn: (data: CreateCourseDto) => courseApi.create(data),
     onSuccess: () => {
-      // Invalidate all list-related queries
       queryClient.invalidateQueries({
         queryKey: COURSE_KEY_FACTORY.lists(),
-        exact: false
+        exact: false,
+        refetchType: 'active'
       })
     }
   })
@@ -84,10 +88,10 @@ export const useDeleteCourse = () => {
   return useMutation({
     mutationFn: (id: string) => courseApi.delete(id),
     onSuccess: () => {
-      // Invalidate all list-related queries
       queryClient.invalidateQueries({
         queryKey: COURSE_KEY_FACTORY.lists(),
-        exact: false
+        exact: false,
+        refetchType: 'active'
       })
     }
   })
@@ -108,19 +112,20 @@ export const useJoinCourse = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: JoinCourseRequestDto }) => courseApi.join(id, data),
     onSuccess: () => {
-      // Invalidate both joined and explore queries with all params
       queryClient.invalidateQueries({
         queryKey: COURSE_KEY_FACTORY.joined(),
-        exact: false
+        exact: false,
+        refetchType: 'active'
       })
       queryClient.invalidateQueries({
         queryKey: COURSE_KEY_FACTORY.explore(),
-        exact: false
+        exact: false,
+        refetchType: 'active'
       })
-
       queryClient.invalidateQueries({
         queryKey: COURSE_KEY_FACTORY.join(),
-        exact: false
+        exact: false,
+        refetchType: 'active'
       })
     }
   })
@@ -142,11 +147,18 @@ export const useUpdateCourseProgress = () => {
     mutationFn: ({ courseId, data }: { courseId: string; data: UpdateCourseProgressDto }) =>
       courseApi.updateCourseProgress(courseId, data),
     onSuccess: (_data, { courseId }) => {
-      queryClient.invalidateQueries({ queryKey: COURSE_KEY_FACTORY.progress(courseId) })
-      queryClient.invalidateQueries({ queryKey: COURSE_KEY_FACTORY.detail(courseId) })
+      queryClient.invalidateQueries({
+        queryKey: COURSE_KEY_FACTORY.progress(courseId),
+        refetchType: 'active'
+      })
+      queryClient.invalidateQueries({
+        queryKey: COURSE_KEY_FACTORY.detail(courseId),
+        refetchType: 'active'
+      })
       queryClient.invalidateQueries({
         queryKey: COURSE_KEY_FACTORY.joined(),
-        exact: false
+        exact: false,
+        refetchType: 'active'
       })
     }
   })
