@@ -65,7 +65,7 @@ function GoogleForm({ onSubmit }: GoogleFormProps) {
   // })
 
   return (
-    <button className='custom-google-btn' onClick={() => login()}>
+    <button data-testid='google-login-btn' className='custom-google-btn' onClick={() => login()}>
       <AppIcon icon='google' style={{ marginRight: 4 }} />
       <span>Login with Google</span>
     </button>

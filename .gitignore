@@ -29,3 +29,4 @@ dist-ssr
 tsconfig.node.tsbuildinfo
 vite.config.js
 tsconfig.tsbuildinfo
+cypress.env.json

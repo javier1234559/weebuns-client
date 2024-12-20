@@ -7,6 +7,11 @@
       "DOM.Iterable",
       "ES2023"
     ],
+    "types": [
+      "cypress",
+      "@testing-library/cypress",
+      "node"
+    ],
     "module": "ESNext",
     "skipLibCheck": true,
     /* Bundler mode */

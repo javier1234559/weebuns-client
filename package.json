@@ -12,7 +12,9 @@
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix --config .eslintrc.cjs",
     "prettier": "prettier --check \"src/**/(*.tsx|*.ts|*.css|*.scss)\"",
     "prettier:fix": "prettier --write \"src/**/(*.tsx|*.ts|*.css|*.scss)\"",
-    "gen:types": "swagger-typescript-api-es && graphql-codegen --config codegen.ts"
+    "gen:types": "swagger-typescript-api-es && graphql-codegen --config codegen.ts",
+    "test:e2e": "cypress run",
+    "test:e2e:dev": "cypress open --e2e --browser chrome"
   },
   "dependencies": {
     "@apollo/client": "^3.11.8",
@@ -67,6 +69,8 @@
     "@graphql-codegen/typescript": "^4.1.0",
     "@graphql-codegen/typescript-operations": "^4.3.0",
     "@graphql-codegen/typescript-react-apollo": "^4.3.2",
+    "@testing-library/cypress": "^10.0.2",
+    "@types/cypress": "^1.1.6",
     "@types/dompurify": "^3.0.5",
     "@types/js-cookie": "^3.0.6",
     "@types/node": "^22.7.0",
@@ -80,6 +84,7 @@
     "@typescript-eslint/parser": "^8.8.0",
     "@vitejs/plugin-basic-ssl": "^1.1.0",
     "@vitejs/plugin-react": "^4.3.1",
+    "cypress": "^13.17.0",
     "eslint": "^8.55.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-mui-path-imports": "^0.0.15",
